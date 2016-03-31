@@ -5,11 +5,12 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 
 public class CustomGameCountHandler implements RequestHandler<Gamertag, Integer> {
 	
+
     @Override
     public Integer handleRequest(Gamertag input, Context context) {
-        context.getLogger().log("Input: " + input.getGamertag());
+        context.getLogger().log("Input: " + input);
 
-        return input.getGamertag().length();
+        return 999;
     }
 
 }

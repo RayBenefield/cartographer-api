@@ -1,0 +1,20 @@
+package com.cartographerapi.customgames;
+
+public class Gamertag {
+	String gamertag;
+
+	public String getFirstName() {
+		return gamertag;
+	}
+
+	public void setGamertag(String gamertag) {
+		this.gamertag = gamertag;
+	}
+
+	public RequestClass(String gamertag) {
+		this.gamertag = gamertag;
+	}
+
+	public RequestClass() {
+	}
+}
