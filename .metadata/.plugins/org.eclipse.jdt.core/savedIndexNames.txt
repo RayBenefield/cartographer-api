@@ -1,0 +1,6 @@
+INDEX VERSION 1.127+/Users/GodlyPerfection/CAPI-Workspace/.metadata/.plugins/org.eclipse.jdt.core
+3966808030.index
+524126782.index
+424328164.index
+1630085307.index
+677361136.index
