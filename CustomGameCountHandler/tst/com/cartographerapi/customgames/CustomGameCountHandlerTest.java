@@ -12,12 +12,11 @@ import com.amazonaws.services.lambda.runtime.Context;
  */
 public class CustomGameCountHandlerTest {
 
-    private static String input;
+    private static Gamertag input;
 
     @BeforeClass
     public static void createInput() throws IOException {
-        // TODO: set up your sample input object here.
-        input = null;
+        input = new Gamertag("GodlyPerfection");
     }
 
     private Context createContext() {
