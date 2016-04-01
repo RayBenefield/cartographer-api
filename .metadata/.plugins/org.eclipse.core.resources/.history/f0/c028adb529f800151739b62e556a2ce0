@@ -2,6 +2,8 @@ package com.cartographerapi.customgames;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
+import java.util.Properties;
+import java.io.InputStream;
 import java.io.IOException;
 
 public class CustomGameCountHandler implements RequestHandler<Gamertag, Integer> {
@@ -15,7 +17,7 @@ public class CustomGameCountHandler implements RequestHandler<Gamertag, Integer>
 			String result = api.serviceRecord(input.getGamertag());
 			return result.length();
         } catch (IOException exception) {
-        	return -1;
+        	return 1;
         }
 
     }

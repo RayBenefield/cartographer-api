@@ -1329,3 +1329,24 @@ Caused by: org.eclipse.jface.text.BadPositionCategoryException
 	at org.eclipse.jface.text.AbstractDocument.removePositionCategory(AbstractDocument.java:1138)
 	at net.sourceforge.vrapper.eclipse.platform.EclipseCursorAndSelection.uninstallHooks(EclipseCursorAndSelection.java:137)
 	... 96 more
+
+!ENTRY org.eclipse.jdt.core 4 0 2016-04-01 08:59:36.958
+!MESSAGE Invalid ZIP archive: halo-api.properties [in CustomGameCountHandler]
+
+!ENTRY org.eclipse.jdt.core 4 0 2016-04-01 09:02:51.662
+!MESSAGE Invalid ZIP archive: halo-api.properties [in CustomGameCountHandler]
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-01 09:04:30.262
+!MESSAGE Exporting project [CustomGameCountHandler] to /var/folders/wd/vn858j0j11b4hzhhkrtm0y540000gn/T/CustomGameCountHandler-lambda7265663641763456436.zip
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-01 09:04:30.286
+!MESSAGE Project exported to /var/folders/wd/vn858j0j11b4hzhhkrtm0y540000gn/T/CustomGameCountHandler-lambda7265663641763456436.zip
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-01 09:04:31.794
+!MESSAGE Function arn:aws:lambda:us-west-2:789201490085:function:CustomGameCountHandler updated.
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-01 09:04:32.077
+!MESSAGE Project metadata saved.
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-01 09:04:32.078
+!MESSAGE Upload complete! Funtion arn arn:aws:lambda:us-west-2:789201490085:function:CustomGameCountHandler
