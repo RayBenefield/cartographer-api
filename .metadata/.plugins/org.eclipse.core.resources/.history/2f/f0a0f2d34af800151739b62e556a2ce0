@@ -1,0 +1,5 @@
+package com.cartographerapi.customgames;
+
+public class PlayerGameCounts {
+
+}

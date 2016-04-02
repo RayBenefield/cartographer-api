@@ -1,7 +1,6 @@
 package com.cartographerapi.customgames;
 
 import java.io.IOException;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -33,11 +32,13 @@ public class CustomGameCountHandlerTest {
         CustomGameCountHandler handler = new CustomGameCountHandler();
         Context ctx = createContext();
 
-        Integer output = handler.handleRequest(input, ctx);
+        PlayerGameCounts output = handler.handleRequest(input, ctx);
 
         // TODO: validate output here if needed.
         if (output != null) {
-            System.out.println(output.toString());
+            System.out.println(output.getGamertag());
+            System.out.println(output.getGamesCompleted());
+            System.out.println(output.getTotalGames());
         }
     }
 }

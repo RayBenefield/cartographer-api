@@ -1,0 +1,22 @@
+package com.cartographerapi.customgames;
+
+public class PlayerGameCounts {
+	String gamertag;
+
+	public String getGamertag() {
+		return gamertag;
+	}
+
+	public void setGamertag(String gamertag) {
+		this.gamertag = gamertag;
+	}
+
+	public PlayerGameCounts(String gamertag, Integer gamesCompleted, Integer totalGames) {
+		this.gamertag = gamertag;
+		this.gamesCompleted = gamesCompleted;
+		this.totalGames = totalGames;
+	}
+
+	public PlayerGameCounts() {
+	}
+}

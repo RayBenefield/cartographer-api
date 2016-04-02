@@ -1350,3 +1350,6 @@ Caused by: org.eclipse.jface.text.BadPositionCategoryException
 
 !ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-01 09:04:32.078
 !MESSAGE Upload complete! Funtion arn arn:aws:lambda:us-west-2:789201490085:function:CustomGameCountHandler
+
+!ENTRY net.sourceforge.vrapper.eclipse 1 0 2016-04-01 13:51:13.258
+!MESSAGE Position M70 was not visible.
