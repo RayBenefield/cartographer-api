@@ -1353,3 +1353,69 @@ Caused by: org.eclipse.jface.text.BadPositionCategoryException
 
 !ENTRY net.sourceforge.vrapper.eclipse 1 0 2016-04-01 13:51:13.258
 !MESSAGE Position M70 was not visible.
+!SESSION 2016-04-04 14:00:11.048 -----------------------------------------------
+eclipse.buildId=4.5.2.M20160212-1500
+java.version=1.8.0_66
+java.vendor=Oracle Corporation
+BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.java.product -keyring /Users/GodlyPerfection/.eclipse_keyring -showlocation
+Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product org.eclipse.epp.package.java.product -keyring /Users/GodlyPerfection/.eclipse_keyring -showlocation
+
+!ENTRY org.eclipse.core.resources 2 10035 2016-04-04 14:00:27.365
+!MESSAGE The workspace exited with unsaved changes in the previous session; refreshing workspace to recover changes.
+
+!ENTRY com.amazonaws.eclipse.core 1 0 2016-04-04 14:00:33.273
+!MESSAGE Starting the AWS toolkit core plugin...
+
+!ENTRY org.eclipse.core.net 1 0 2016-04-04 14:00:33.420
+!MESSAGE System property http.nonProxyHosts has been set to local|*.local|169.254/16|*.169.254/16 by an external source. This value will be overwritten using the values from the preferences
+
+!ENTRY com.amazonaws.eclipse.core 1 0 2016-04-04 14:00:42.068
+!MESSAGE Monitoring content of /Users/GodlyPerfection/.aws/credentials
+
+!ENTRY com.amazonaws.eclipse.core 1 0 2016-04-04 14:00:42.912
+!MESSAGE AWS toolkit core plugin initialized after 9641 milliseconds.
+
+!ENTRY com.amazonaws.eclipse.core 1 0 2016-04-04 14:00:42.922
+!MESSAGE Found valid identity id cache us-east-1:77bbf291-b719-4c56-8d37-3a7ddf379f33
+
+!ENTRY com.amazonaws.eclipse.sdk.ui 1 0 2016-04-04 14:00:55.092
+!MESSAGE Downloading the SDK from CloudFront to location /var/folders/wd/vn858j0j11b4hzhhkrtm0y540000gn/T/aws-java-sdk6669779270022170231/sdk.zip
+
+!ENTRY org.eclipse.ui 2 0 2016-04-04 14:01:04.566
+!MESSAGE The 'org.eclipse.ui.startup' extension from 'com.amazonaws.eclipse.elasticbeanstalk' does not provide a 'class' attribute.
+This usage is deprecated and a 'class' attribute should be provided.
+The release after Mars (4.5) will no longer support the deprecated usage!
+
+!ENTRY com.amazonaws.eclipse.sdk.ui 1 0 2016-04-04 14:02:06.595
+!MESSAGE SDK download completes. Location: /var/folders/wd/vn858j0j11b4hzhhkrtm0y540000gn/T/aws-java-sdk6669779270022170231/sdk.zip, File-length: 166969041
+!SESSION 2016-04-04 16:43:28.321 -----------------------------------------------
+eclipse.buildId=4.5.2.M20160212-1500
+java.version=1.8.0_66
+java.vendor=Oracle Corporation
+BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.java.product -keyring /Users/GodlyPerfection/.eclipse_keyring -showlocation
+Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product org.eclipse.epp.package.java.product -keyring /Users/GodlyPerfection/.eclipse_keyring -showlocation
+
+!ENTRY org.eclipse.core.resources 2 10035 2016-04-04 16:43:31.040
+!MESSAGE The workspace exited with unsaved changes in the previous session; refreshing workspace to recover changes.
+
+!ENTRY org.eclipse.core.net 1 0 2016-04-04 16:44:05.100
+!MESSAGE System property http.nonProxyHosts has been set to local|*.local|169.254/16|*.169.254/16 by an external source. This value will be overwritten using the values from the preferences
+
+!ENTRY com.amazonaws.eclipse.core 1 0 2016-04-04 16:44:16.034
+!MESSAGE Starting the AWS toolkit core plugin...
+
+!ENTRY com.amazonaws.eclipse.core 1 0 2016-04-04 16:44:19.455
+!MESSAGE Monitoring content of /Users/GodlyPerfection/.aws/credentials
+
+!ENTRY com.amazonaws.eclipse.core 1 0 2016-04-04 16:44:19.775
+!MESSAGE AWS toolkit core plugin initialized after 3741 milliseconds.
+
+!ENTRY com.amazonaws.eclipse.core 1 0 2016-04-04 16:44:19.849
+!MESSAGE Found valid identity id cache us-east-1:77bbf291-b719-4c56-8d37-3a7ddf379f33
+
+!ENTRY org.eclipse.ui 2 0 2016-04-04 16:44:23.858
+!MESSAGE The 'org.eclipse.ui.startup' extension from 'com.amazonaws.eclipse.elasticbeanstalk' does not provide a 'class' attribute.
+This usage is deprecated and a 'class' attribute should be provided.
+The release after Mars (4.5) will no longer support the deprecated usage!

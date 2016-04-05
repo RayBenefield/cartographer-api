@@ -10,6 +10,7 @@ public class Halo5ApiWrapper {
 	private String token;
 	
 	private final String URL_CUSTOM_SERVICE_RECORD = "https://www.haloapi.com/stats/h5/servicerecords/custom?players=%s";
+	private final String URL_CUSTOM_GAMES = "https://www.haloapi.com/stats/h5/players/%s/matches?modes=custom&start=%s&count=%s";
 	
 	public Halo5ApiWrapper(String token) {
 		this.token = token;
@@ -18,6 +19,20 @@ public class Halo5ApiWrapper {
 	public String serviceRecord(String gamertag) throws IOException {
 		return call(
 			String.format(URL_CUSTOM_SERVICE_RECORD, gamertag)
+		);
+	}
+	
+	public String customGames(String gamertag) throws IOException {
+		return customGames(gamertag, 0, 25);
+	}
+	
+	public String customGames(String gamertag, Integer start) throws IOException {
+		return customGames(gamertag, start, 25);
+	}
+	
+	public String customGames(String gamertag, Integer start, Integer count) throws IOException {
+		return call(
+			String.format(URL_CUSTOM_GAMES, gamertag, start, count)
 		);
 	}
 

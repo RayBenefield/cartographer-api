@@ -2,6 +2,10 @@ package com.cartographerapi.customgames;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
+import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -16,13 +20,36 @@ public class CustomGameCountHandler implements RequestHandler<Gamertag, PlayerGa
 		ObjectMapper mapper = new ObjectMapper();
         
         try {
+            AmazonDynamoDBClient client = new AmazonDynamoDBClient();
+            client.setRegion(Region.getRegion(Regions.US_WEST_2));
+            DynamoDBMapper dbMapper = new DynamoDBMapper(client);
 			Halo5ApiWrapper api = new Halo5ApiWrapper("ae4df7c91357455ea30be2d7bdf15522");
-			String result = api.serviceRecord(input.getGamertag());
-			JsonNode root = mapper.readTree(result);
-			Integer totalGames = root.path("Results").path(0).path("Result").path("CustomStats").path("TotalGamesCompleted").asInt();
+			JsonNode root;
+             
+            PlayerGameCounts counts = dbMapper.load(PlayerGameCounts.class, input.getGamertag());
+
+            Integer completedGames = 0;
+			String totalResult = api.serviceRecord(input.getGamertag());
+			root = mapper.readTree(totalResult);
+			completedGames = root.path("Results").path(0).path("Result").path("CustomStats").path("TotalGamesCompleted").asInt();
+			counts = new PlayerGameCounts(input.getGamertag(), completedGames, completedGames);
+			Integer totalGames = completedGames;
+            if (counts != null) {
+            	totalGames = counts.getTotalGames();
+            }
+
+			Integer lastGames = 25;
+			while (lastGames == 25) {
+				String lastResult = api.customGames(input.getGamertag(), totalGames);
+				root = mapper.readTree(lastResult);
+				lastGames = root.path("ResultCount").asInt();
+				totalGames += lastGames;
+			}
 
 			// TODO: Properly decode gamertag into actual string (`%20` or `+` is used instead of spaces)
-			return new PlayerGameCounts(input.getGamertag(), totalGames, totalGames);
+			counts.setTotalGames(totalGames);
+			dbMapper.save(counts);
+			return counts;
         } catch (JsonGenerationException exception) {
         	return new PlayerGameCounts(input.getGamertag(), 0, 0);
         } catch (JsonMappingException exception) {
