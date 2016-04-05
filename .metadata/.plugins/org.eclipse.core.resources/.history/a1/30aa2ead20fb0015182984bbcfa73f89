@@ -32,11 +32,11 @@ public class CustomGameCountHandler implements RequestHandler<Gamertag, PlayerGa
 			String totalResult = api.serviceRecord(input.getGamertag());
 			root = mapper.readTree(totalResult);
 			completedGames = root.path("Results").path(0).path("Result").path("CustomStats").path("TotalGamesCompleted").asInt();
+			counts = new PlayerGameCounts(input.getGamertag(), completedGames, completedGames);
 			Integer totalGames = completedGames;
             if (counts != null) {
             	totalGames = counts.getTotalGames();
             }
-			counts = new PlayerGameCounts(input.getGamertag(), completedGames, totalGames);
 
 			Integer lastGames = 25;
 			while (lastGames == 25) {

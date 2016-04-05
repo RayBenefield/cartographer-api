@@ -8,11 +8,11 @@ public class Gamertag {
 	}
 
 	public void setGamertag(String gamertag) {
-		this.gamertag = gamertag.toLowerCase();
+		this.gamertag = gamertag;
 	}
 
 	public Gamertag(String gamertag) {
-		this.gamertag = gamertag.toLowerCase();
+		this.gamertag = gamertag;
 	}
 
 	public Gamertag() {

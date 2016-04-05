@@ -1,7 +1,6 @@
 package com.cartographerapi.customgames;
 
 import java.net.URL;
-import java.net.URLEncoder;
 import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -19,7 +18,7 @@ public class Halo5ApiWrapper {
 	
 	public String serviceRecord(String gamertag) throws IOException {
 		return call(
-			String.format(URL_CUSTOM_SERVICE_RECORD, URLEncoder.encode(gamertag, "UTF-8"))
+			String.format(URL_CUSTOM_SERVICE_RECORD, gamertag)
 		);
 	}
 	
@@ -33,7 +32,7 @@ public class Halo5ApiWrapper {
 	
 	public String customGames(String gamertag, Integer start, Integer count) throws IOException {
 		return call(
-			String.format(URL_CUSTOM_GAMES, URLEncoder.encode(gamertag, "UTF-8"), start, count)
+			String.format(URL_CUSTOM_GAMES, gamertag, start, count)
 		);
 	}
 

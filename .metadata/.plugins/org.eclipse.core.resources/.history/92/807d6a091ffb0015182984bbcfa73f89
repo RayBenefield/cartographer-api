@@ -19,7 +19,7 @@ public class Halo5ApiWrapper {
 	
 	public String serviceRecord(String gamertag) throws IOException {
 		return call(
-			String.format(URL_CUSTOM_SERVICE_RECORD, URLEncoder.encode(gamertag, "UTF-8"))
+			String.format(URL_CUSTOM_SERVICE_RECORD, URLEncoder.encode(gamertag)
 		);
 	}
 	
