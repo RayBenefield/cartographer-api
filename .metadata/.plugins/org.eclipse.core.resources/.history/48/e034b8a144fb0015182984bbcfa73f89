@@ -1,0 +1,7 @@
+package com.cartographerapi.customgames;
+
+public interface PlayerGameCountsReader {
+	
+	public PlayerGameCounts getPlayerGameCountsByGamertag(String gamertag);
+
+}

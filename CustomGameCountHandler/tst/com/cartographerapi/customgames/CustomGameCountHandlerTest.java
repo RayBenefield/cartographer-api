@@ -15,7 +15,7 @@ public class CustomGameCountHandlerTest {
 
     @BeforeClass
     public static void createInput() throws IOException {
-        input = new Gamertag("GodlyPerfection");
+        input = new Gamertag("black picture");
     }
 
     private Context createContext() {

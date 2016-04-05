@@ -1,5 +1,5 @@
 #Lambda Function Project Metadata
-#Mon Apr 04 17:39:37 PDT 2016
+#Tue Apr 05 09:17:03 PDT 2016
 lastDeploymentFunctionName=CustomGameCountHandler
 lastDeploymentBucketName=cartographer-api-lambda-code
 lastDeploymentEndpoint=https\://lambda.us-west-2.amazonaws.com/

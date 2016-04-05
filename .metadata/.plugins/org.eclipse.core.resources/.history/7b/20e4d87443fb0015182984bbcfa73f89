@@ -1,0 +1,11 @@
+package com.cartographerapi.customgames;
+
+public class PlayerGameCountsDynamoReader implements PlayerGameCountsReader {
+
+	@Override
+	public PlayerGameCounts getPlayerGameCounts(String gamertag) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}
