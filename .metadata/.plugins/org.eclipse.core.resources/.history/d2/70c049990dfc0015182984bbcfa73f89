@@ -17,9 +17,13 @@ package com.cartographerapi.customgames;
  *
  */
 public class Gamertag {
+	String gamertag;
 
-	private String gamertag;
-
+	/**
+	 * The valid unique gamertag.
+	 * 
+	 * @return
+	 */
 	public String getGamertag() {
 		return gamertag;
 	}
