@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename Java project &apos;CustomGameCountHandler&apos; to &apos;PlayerGameCountsUpdater&apos;&#x0A;- Original element: &apos;CustomGameCountHandler&apos;&#x0A;- Renamed element: &apos;CustomGameCountHandler&apos;&#x0A;- Update references to refactored element" description="Rename Java project &apos;CustomGameCountHandler&apos;" flags="7" id="org.eclipse.jdt.ui.rename.java.project" input="=CustomGameCountHandler" name="PlayerGameCountsUpdater" references="true" stamp="1459963468091" version="1.0"/>
+</session>
