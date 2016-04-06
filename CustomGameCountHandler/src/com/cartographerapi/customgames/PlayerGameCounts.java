@@ -4,6 +4,17 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 
+/**
+ * Holds the data relevant to the counts for Games for a single Player.
+ * <pre>
+ *    Gamertag
+ *    GamesCompleted
+ *    TotalGames
+ * </pre>
+ * 
+ * @author GodlyPerfection
+ *
+ */
 @DynamoDBTable(tableName="PlayerGameCounts")
 public class PlayerGameCounts {
 	String gamertag;

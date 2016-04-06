@@ -1,0 +1,15 @@
+package com.cartographerapi.customgames;
+
+/**
+ * 
+ * 
+ * @author GodlyPerfection
+ *
+ */
+public interface PlayerGameCountsReader {
+	
+	public PlayerGameCounts getPlayerGameCountsByGamertag(String gamertag);
+
+	public PlayerGameCounts getPlayerGameCountsByPlayerGameCounts(PlayerGameCounts counts);
+
+}

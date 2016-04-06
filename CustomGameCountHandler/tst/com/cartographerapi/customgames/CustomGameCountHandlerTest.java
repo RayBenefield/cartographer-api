@@ -8,6 +8,9 @@ import com.amazonaws.services.lambda.runtime.Context;
 
 /**
  * A simple test harness for locally invoking your Lambda function handler.
+ * 
+ * @author GodlyPerfection
+ * 
  */
 public class CustomGameCountHandlerTest {
 
@@ -15,7 +18,7 @@ public class CustomGameCountHandlerTest {
 
     @BeforeClass
     public static void createInput() throws IOException {
-        input = new Gamertag("black picture");
+        input = new Gamertag("MythicFritz");
     }
 
     private Context createContext() {
