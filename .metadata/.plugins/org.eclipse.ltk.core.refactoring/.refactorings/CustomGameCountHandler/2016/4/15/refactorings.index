@@ -1,2 +1,8 @@
 1459854903296	Delete element
 1459870775106	Rename method 'getPlayerGameCounts'
+1459961336618	Rename type 'CustomGameCountHandler'
+1459961551773	Rename type 'CustomGameCountHandlerTest'
+1459961575323	Rename type 'PlayerGameCountsRefresherExecutionTest'
+1459961780991	Rename local variable 'handler'
+1459962175885	Rename type 'PlayerGameCountsUpdaterExecutionTest'
+1459962240594	Rename method 'testCustomGameCountHandler'
