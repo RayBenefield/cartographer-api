@@ -7,3 +7,5 @@
 1459976323967	Rename method 'testCustomGameCountHandler'
 1459976599968	Rename package 'com.cartographerapi.customgames'
 1459976810465	Rename package 'com.cartographerapi.playergame'
+1459977173588	Rename type 'PlayerGameCountsUpdaterExecutionTest'
+1459977194004	Rename package 'com.cartographerapi.customgames'

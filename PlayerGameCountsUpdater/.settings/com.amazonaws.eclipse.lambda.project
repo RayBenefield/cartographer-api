@@ -1,6 +1,5 @@
 #Lambda Function Project Metadata
-#Tue Apr 05 09:17:03 PDT 2016
-lastDeploymentFunctionName=CustomGameCountHandler
+#Wed Apr 06 14:12:30 PDT 2016
+lastDeploymentFunctionName=PlayerGameCountsUpdater
 lastDeploymentBucketName=cartographer-api-lambda-code
 lastDeploymentEndpoint=https\://lambda.us-west-2.amazonaws.com/
-lastInvokeInput={\n    "gamertag"\: "GodlyPerfection"\n}
