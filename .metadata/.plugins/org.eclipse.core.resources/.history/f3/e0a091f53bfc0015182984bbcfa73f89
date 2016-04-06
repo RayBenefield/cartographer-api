@@ -14,7 +14,6 @@ import java.net.HttpURLConnection;
  *
  */
 public class Halo5ApiWrapper {
-
 	private String token;
 	
 	private final String URL_CUSTOM_SERVICE_RECORD = "https://www.haloapi.com/stats/h5/servicerecords/custom?players=%s";

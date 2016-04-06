@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="PlayerGameCountsUpdaterExecutionTest" project="PlayerGameCountsUpdater" tests="1" started="1" failures="0" errors="0" ignored="0">
+  <testsuite name="com.cartographerapi.customgames.PlayerGameCountsUpdaterExecutionTest" time="2.271">
+    <testcase name="executePlayerGameCountsUpdater" classname="com.cartographerapi.customgames.PlayerGameCountsUpdaterExecutionTest" time="2.272"/>
+  </testsuite>
+</testrun>

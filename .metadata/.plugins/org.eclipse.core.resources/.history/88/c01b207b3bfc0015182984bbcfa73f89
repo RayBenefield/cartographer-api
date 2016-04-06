@@ -4,9 +4,9 @@ import java.io.IOException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import com.amazonaws.services.lambda.runtime.Context;
-import com.cartographerapi.functions.Gamertag;
-import com.cartographerapi.functions.PlayerGameCounts;
-import com.cartographerapi.functions.PlayerGameCountsUpdater;
+import com.cartographerapi.playergame.Gamertag;
+import com.cartographerapi.playergame.PlayerGameCounts;
+import com.cartographerapi.playergame.PlayerGameCountsUpdater;
 
 /**
  * Test the functionality of the PlayerGameCountsUpdater function from

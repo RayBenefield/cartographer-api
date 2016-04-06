@@ -4,9 +4,6 @@ import java.io.IOException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import com.amazonaws.services.lambda.runtime.Context;
-import com.cartographerapi.functions.Gamertag;
-import com.cartographerapi.functions.PlayerGameCounts;
-import com.cartographerapi.functions.PlayerGameCountsUpdater;
 
 /**
  * Test the functionality of the PlayerGameCountsUpdater function from
@@ -29,7 +26,7 @@ public class PlayerGameCountsUpdaterExecutionTest {
     }
 
     @Test
-    public void executePlayerGameCountsUpdater() {
+    public void testCustomGameCountHandler() {
         PlayerGameCountsUpdater updater = new PlayerGameCountsUpdater();
         Context ctx = createContext();
 

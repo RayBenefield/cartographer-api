@@ -4,3 +4,6 @@
 1459961551773	Rename type 'CustomGameCountHandlerTest'
 1459961575323	Rename type 'PlayerGameCountsRefresherExecutionTest'
 1459961780991	Rename local variable 'handler'
+1459976323967	Rename method 'testCustomGameCountHandler'
+1459976599968	Rename package 'com.cartographerapi.customgames'
+1459976810465	Rename package 'com.cartographerapi.playergame'
