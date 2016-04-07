@@ -29,9 +29,7 @@ public class PlayerGameCountsDynamoWriter implements PlayerGameCountsWriter {
 	 */
 	@Override
 	public PlayerGameCounts savePlayerGameCounts(PlayerGameCounts counts) {
-		if (counts.getTotalGames() > 0) {
-			dbMapper.save(counts);
-		}
+		dbMapper.save(counts);
 		return counts;
 	}
 
