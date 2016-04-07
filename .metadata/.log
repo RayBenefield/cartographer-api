@@ -5561,3 +5561,18 @@ Binding(COMMAND+W,
 		,,true),null),
 	org.eclipse.ui.defaultAcceleratorConfiguration,
 	org.eclipse.ui.contexts.dialog,,,system)
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-07 05:15:37.488
+!MESSAGE Exporting project [PlayerGameCountsUpdater] to /var/folders/wd/vn858j0j11b4hzhhkrtm0y540000gn/T/PlayerGameCountsUpdater-lambda5029464115314090751.zip
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-07 05:15:39.199
+!MESSAGE Project exported to /var/folders/wd/vn858j0j11b4hzhhkrtm0y540000gn/T/PlayerGameCountsUpdater-lambda5029464115314090751.zip
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-07 05:16:49.963
+!MESSAGE Function arn:aws:lambda:us-west-2:789201490085:function:PlayerGameCountsUpdater updated.
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-07 05:16:50.014
+!MESSAGE Project metadata saved.
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-07 05:16:50.014
+!MESSAGE Upload complete! Funtion arn arn:aws:lambda:us-west-2:789201490085:function:PlayerGameCountsUpdater
