@@ -1,0 +1,6 @@
+#Lambda Function Project Metadata
+#Thu Apr 07 05:08:57 PDT 2016
+lastDeploymentFunctionName=PlayerGameCountsGetter
+lastDeploymentBucketName=godlyperfection-lambda-code
+lastDeploymentEndpoint=https\://lambda.us-west-2.amazonaws.com/
+lastInvokeInput={\n    "gamertag"\: "GodlyPerfection"\n}

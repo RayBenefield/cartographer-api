@@ -54,6 +54,10 @@ public class PlayerGameCounts {
 		this.totalGames = totalGames;
 	}
 
+	public PlayerGameCounts(String gamertag) {
+		this(gamertag, 0, 0);
+	}
+
 	public PlayerGameCounts() {
 	}
 }

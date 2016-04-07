@@ -1,0 +1,5 @@
+package com.cartographerapi.domain;
+
+public class CapiWrapper {
+
+}

@@ -1,0 +1,17 @@
+package com.cartographerapi.domain;
+
+public class PlayerGameCountsCapiReader implements PlayerGameCountsReader {
+
+	@Override
+	public PlayerGameCounts getPlayerGameCountsByGamertag(String gamertag) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public PlayerGameCounts getPlayerGameCountsByPlayerGameCounts(PlayerGameCounts counts) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}
