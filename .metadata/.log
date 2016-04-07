@@ -5576,3 +5576,58 @@ Binding(COMMAND+W,
 
 !ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-07 05:16:50.014
 !MESSAGE Upload complete! Funtion arn arn:aws:lambda:us-west-2:789201490085:function:PlayerGameCountsUpdater
+
+!ENTRY com.amazonaws.eclipse.sdk.ui 2 0 2016-04-07 08:36:02.880
+!MESSAGE Unable to initialize previous AWS SDK for Java classpath entries - defaulting to latest version
+!STACK 0
+java.lang.Exception: No SDK install directory specified
+	at com.amazonaws.eclipse.sdk.ui.classpath.ClasspathContainerInitializer.initialize(ClasspathContainerInitializer.java:52)
+	at org.eclipse.jdt.internal.core.JavaModelManager.initializeContainer(JavaModelManager.java:2868)
+	at org.eclipse.jdt.internal.core.JavaModelManager.getClasspathContainer(JavaModelManager.java:1900)
+	at org.eclipse.jdt.core.JavaCore.getClasspathContainer(JavaCore.java:3298)
+	at org.eclipse.jdt.internal.ui.wizards.buildpaths.CPListElement.create(CPListElement.java:597)
+	at org.eclipse.jdt.internal.ui.wizards.buildpaths.CPListElement.create(CPListElement.java:582)
+	at org.eclipse.jdt.internal.ui.wizards.buildpaths.BuildPathsBlock.getCPListElements(BuildPathsBlock.java:423)
+	at org.eclipse.jdt.internal.ui.wizards.buildpaths.BuildPathsBlock.init(BuildPathsBlock.java:327)
+	at org.eclipse.jdt.ui.wizards.JavaCapabilityConfigurationPage.init(JavaCapabilityConfigurationPage.java:151)
+	at org.eclipse.jdt.ui.wizards.NewJavaProjectWizardPageTwo.initializeBuildPath(NewJavaProjectWizardPageTwo.java:318)
+	at org.eclipse.jdt.ui.wizards.NewJavaProjectWizardPageTwo.updateProject(NewJavaProjectWizardPageTwo.java:252)
+	at org.eclipse.jdt.ui.wizards.NewJavaProjectWizardPageTwo.performFinish(NewJavaProjectWizardPageTwo.java:484)
+	at com.amazonaws.eclipse.lambda.project.wizard.NewLambdaJavaFunctionProjectWizard.finishPage(NewLambdaJavaFunctionProjectWizard.java:94)
+	at org.eclipse.jdt.internal.ui.wizards.NewElementWizard$2.run(NewElementWizard.java:118)
+	at org.eclipse.jdt.internal.core.BatchOperation.executeOperation(BatchOperation.java:39)
+	at org.eclipse.jdt.internal.core.JavaModelOperation.run(JavaModelOperation.java:729)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2241)
+	at org.eclipse.jdt.core.JavaCore.run(JavaCore.java:5409)
+	at org.eclipse.jdt.internal.ui.actions.WorkbenchRunnableAdapter.run(WorkbenchRunnableAdapter.java:106)
+	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:119)
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-07 09:08:03.572
+!MESSAGE Exporting project [PlayerGameCountsCacher] to /var/folders/wd/vn858j0j11b4hzhhkrtm0y540000gn/T/PlayerGameCountsCacher-lambda3085922763583078565.zip
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-07 09:08:05.452
+!MESSAGE Project exported to /var/folders/wd/vn858j0j11b4hzhhkrtm0y540000gn/T/PlayerGameCountsCacher-lambda3085922763583078565.zip
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-07 09:09:21.139
+!MESSAGE Function arn:aws:lambda:us-west-2:789201490085:function:PlayerGameCountsCacher created.
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-07 09:09:21.850
+!MESSAGE Project metadata saved.
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-07 09:09:21.850
+!MESSAGE Upload complete! Funtion arn arn:aws:lambda:us-west-2:789201490085:function:PlayerGameCountsCacher
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-07 09:17:48.483
+!MESSAGE Exporting project [PlayerGameCountsCacher] to /var/folders/wd/vn858j0j11b4hzhhkrtm0y540000gn/T/PlayerGameCountsCacher-lambda453890645496114527.zip
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-07 09:17:50.261
+!MESSAGE Project exported to /var/folders/wd/vn858j0j11b4hzhhkrtm0y540000gn/T/PlayerGameCountsCacher-lambda453890645496114527.zip
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-07 09:19:03.209
+!MESSAGE Function arn:aws:lambda:us-west-2:789201490085:function:PlayerGameCountsCacher updated.
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-07 09:19:03.363
+!MESSAGE Project metadata saved.
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-07 09:19:03.363
+!MESSAGE Upload complete! Funtion arn arn:aws:lambda:us-west-2:789201490085:function:PlayerGameCountsCacher
