@@ -17,10 +17,9 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
  */
 @DynamoDBTable(tableName="PlayerGameCounts")
 public class PlayerGameCounts {
-
-	private String gamertag;
-	private Integer gamesCompleted;
-	private Integer totalGames;
+	String gamertag;
+	Integer gamesCompleted;
+	Integer totalGames;
 
 	@DynamoDBHashKey(attributeName="Gamertag")
 	public String getGamertag() {
