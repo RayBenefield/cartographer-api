@@ -35,7 +35,7 @@ public class PlayerGameCountsCacher implements RequestHandler<DynamodbEvent, Boo
 
 
 		String day = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
-		Long time = new Date().getTime();
+		Long time = (Long) new Date().getTime();
 		for (DynamodbStreamRecord record : input.getRecords()) {
 			Map<String, AttributeValue> newData = record.getDynamodb().getNewImage();
 			if (newData == null) continue; // Ignore deletes.

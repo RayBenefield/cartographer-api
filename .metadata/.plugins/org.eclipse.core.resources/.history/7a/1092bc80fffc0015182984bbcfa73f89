@@ -4,13 +4,12 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBRangeKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
-import java.util.List;
 
 @DynamoDBTable(tableName="Cache-PlayerGameCounts")
 public class PlayerGameCountCacheEntry {
 	private String day;
 	private Long time;
-	private List<String> gamertag;
+	private String gamertag;
 
 	@DynamoDBHashKey(attributeName="Day")
 	public String getDay() {
@@ -31,15 +30,15 @@ public class PlayerGameCountCacheEntry {
 	}
 
 	@DynamoDBAttribute(attributeName="Gamertag")
-	public List<String> getGamertag() {
+	public String getGamertag() {
 		return gamertag;
 	}
 	
-	public void setGamertag(List<String> gamertag) {
+	public void setGamertag(String gamertag) {
 		this.gamertag = gamertag;
 	}
 
-	public PlayerGameCountCacheEntry(String day, Long time, List<String> gamertag) {
+	public PlayerGameCountCacheEntry(String day, Long time, String gamertag) {
 		this.day = day;
 		this.time = time;
 		this.gamertag = gamertag;

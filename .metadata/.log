@@ -5631,3 +5631,96 @@ java.lang.Exception: No SDK install directory specified
 
 !ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-07 09:19:03.363
 !MESSAGE Upload complete! Funtion arn arn:aws:lambda:us-west-2:789201490085:function:PlayerGameCountsCacher
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-07 13:31:32.924
+!MESSAGE Exporting project [PlayerGameCountsCacher] to /var/folders/wd/vn858j0j11b4hzhhkrtm0y540000gn/T/PlayerGameCountsCacher-lambda4991464301980053709.zip
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-07 13:31:34.695
+!MESSAGE Project exported to /var/folders/wd/vn858j0j11b4hzhhkrtm0y540000gn/T/PlayerGameCountsCacher-lambda4991464301980053709.zip
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-07 13:32:50.220
+!MESSAGE Function arn:aws:lambda:us-west-2:789201490085:function:PlayerGameCountsCacher updated.
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-07 13:32:50.291
+!MESSAGE Project metadata saved.
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-07 13:32:50.292
+!MESSAGE Upload complete! Funtion arn arn:aws:lambda:us-west-2:789201490085:function:PlayerGameCountsCacher
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-07 14:55:32.603
+!MESSAGE Exporting project [PlayerGameCountsCacher] to /var/folders/wd/vn858j0j11b4hzhhkrtm0y540000gn/T/PlayerGameCountsCacher-lambda264094892357515929.zip
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-07 14:55:34.313
+!MESSAGE Project exported to /var/folders/wd/vn858j0j11b4hzhhkrtm0y540000gn/T/PlayerGameCountsCacher-lambda264094892357515929.zip
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-07 14:56:46.245
+!MESSAGE Function arn:aws:lambda:us-west-2:789201490085:function:PlayerGameCountsCacher updated.
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-07 14:56:46.303
+!MESSAGE Project metadata saved.
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-07 14:56:46.303
+!MESSAGE Upload complete! Funtion arn arn:aws:lambda:us-west-2:789201490085:function:PlayerGameCountsCacher
+!SESSION 2016-04-07 21:03:25.932 -----------------------------------------------
+eclipse.buildId=4.5.2.M20160212-1500
+java.version=1.8.0_66
+java.vendor=Oracle Corporation
+BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.java.product -keyring /Users/GodlyPerfection/.eclipse_keyring -showlocation
+Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product org.eclipse.epp.package.java.product -keyring /Users/GodlyPerfection/.eclipse_keyring -showlocation
+
+!ENTRY org.eclipse.core.resources 2 10035 2016-04-07 21:03:57.552
+!MESSAGE The workspace exited with unsaved changes in the previous session; refreshing workspace to recover changes.
+
+!ENTRY org.eclipse.core.net 1 0 2016-04-07 21:04:05.868
+!MESSAGE System property http.nonProxyHosts has been set to local|*.local|169.254/16|*.169.254/16 by an external source. This value will be overwritten using the values from the preferences
+
+!ENTRY com.amazonaws.eclipse.core 1 0 2016-04-07 21:04:08.594
+!MESSAGE Starting the AWS toolkit core plugin...
+
+!ENTRY com.amazonaws.eclipse.core 1 0 2016-04-07 21:04:10.782
+!MESSAGE Monitoring content of /Users/GodlyPerfection/.aws/credentials
+
+!ENTRY com.amazonaws.eclipse.core 1 0 2016-04-07 21:04:11.060
+!MESSAGE AWS toolkit core plugin initialized after 2466 milliseconds.
+
+!ENTRY com.amazonaws.eclipse.core 1 0 2016-04-07 21:04:11.072
+!MESSAGE Found valid identity id cache us-east-1:77bbf291-b719-4c56-8d37-3a7ddf379f33
+
+!ENTRY com.amazonaws.eclipse.sdk.ui 1 0 2016-04-07 21:04:17.342
+!MESSAGE Downloading the SDK from CloudFront to location /var/folders/wd/vn858j0j11b4hzhhkrtm0y540000gn/T/aws-java-sdk6940923149906030044/sdk.zip
+
+!ENTRY org.eclipse.ui 2 0 2016-04-07 21:04:19.754
+!MESSAGE The 'org.eclipse.ui.startup' extension from 'com.amazonaws.eclipse.elasticbeanstalk' does not provide a 'class' attribute.
+This usage is deprecated and a 'class' attribute should be provided.
+The release after Mars (4.5) will no longer support the deprecated usage!
+
+!ENTRY com.amazonaws.eclipse.sdk.ui 1 0 2016-04-07 21:05:19.573
+!MESSAGE SDK download completes. Location: /var/folders/wd/vn858j0j11b4hzhhkrtm0y540000gn/T/aws-java-sdk6940923149906030044/sdk.zip, File-length: 167624686
+!SESSION 2016-04-07 22:14:00.751 -----------------------------------------------
+eclipse.buildId=4.5.2.M20160212-1500
+java.version=1.8.0_66
+java.vendor=Oracle Corporation
+BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.java.product -keyring /Users/GodlyPerfection/.eclipse_keyring -showlocation
+Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product org.eclipse.epp.package.java.product -keyring /Users/GodlyPerfection/.eclipse_keyring -showlocation
+
+!ENTRY org.eclipse.core.net 1 0 2016-04-07 22:14:08.425
+!MESSAGE System property http.nonProxyHosts has been set to local|*.local|169.254/16|*.169.254/16 by an external source. This value will be overwritten using the values from the preferences
+
+!ENTRY com.amazonaws.eclipse.core 1 0 2016-04-07 22:14:09.989
+!MESSAGE Starting the AWS toolkit core plugin...
+
+!ENTRY com.amazonaws.eclipse.core 1 0 2016-04-07 22:14:11.816
+!MESSAGE Monitoring content of /Users/GodlyPerfection/.aws/credentials
+
+!ENTRY com.amazonaws.eclipse.core 1 0 2016-04-07 22:14:11.946
+!MESSAGE AWS toolkit core plugin initialized after 1958 milliseconds.
+
+!ENTRY com.amazonaws.eclipse.core 1 0 2016-04-07 22:14:11.951
+!MESSAGE Found valid identity id cache us-east-1:77bbf291-b719-4c56-8d37-3a7ddf379f33
+
+!ENTRY org.eclipse.ui 2 0 2016-04-07 22:14:18.714
+!MESSAGE The 'org.eclipse.ui.startup' extension from 'com.amazonaws.eclipse.elasticbeanstalk' does not provide a 'class' attribute.
+This usage is deprecated and a 'class' attribute should be provided.
+The release after Mars (4.5) will no longer support the deprecated usage!
