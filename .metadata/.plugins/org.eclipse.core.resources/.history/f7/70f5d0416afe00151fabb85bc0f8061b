@@ -1,0 +1,17 @@
+package com.cartographerapi.functions;
+
+import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.RequestHandler;
+import com.cartographerapi.domain.ScheduledEvent;
+
+public class PlayerGameCountsRefresher implements RequestHandler<ScheduledEvent, Boolean> {
+
+    @Override
+    public Boolean handleRequest(ScheduledEvent input, Context context) {
+        context.getLogger().log("Input: " + input);
+
+        // TODO: implement your handler
+        return true;
+    }
+
+}

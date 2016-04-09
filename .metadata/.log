@@ -5877,3 +5877,48 @@ java.lang.NullPointerException
 
 !ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-09 08:07:48.057
 !MESSAGE Upload complete! Funtion arn arn:aws:lambda:us-west-2:789201490085:function:PlayerGameCountsGetter
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-09 08:47:23.275
+!MESSAGE Exporting project [PlayerGameCountsRefresher] to /var/folders/wd/vn858j0j11b4hzhhkrtm0y540000gn/T/PlayerGameCountsRefresher-lambda3947351810873771691.zip
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-09 08:47:24.992
+!MESSAGE Project exported to /var/folders/wd/vn858j0j11b4hzhhkrtm0y540000gn/T/PlayerGameCountsRefresher-lambda3947351810873771691.zip
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-09 08:48:41.060
+!MESSAGE Function arn:aws:lambda:us-west-2:789201490085:function:PlayerGameCountsRefresher created.
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-09 08:48:41.113
+!MESSAGE Project metadata saved.
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-09 08:48:41.113
+!MESSAGE Upload complete! Funtion arn arn:aws:lambda:us-west-2:789201490085:function:PlayerGameCountsRefresher
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-09 08:57:38.060
+!MESSAGE Exporting project [PlayerGameCountsRefresher] to /var/folders/wd/vn858j0j11b4hzhhkrtm0y540000gn/T/PlayerGameCountsRefresher-lambda1910528230470198814.zip
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-09 08:57:39.725
+!MESSAGE Project exported to /var/folders/wd/vn858j0j11b4hzhhkrtm0y540000gn/T/PlayerGameCountsRefresher-lambda1910528230470198814.zip
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-09 08:59:00.008
+!MESSAGE Function arn:aws:lambda:us-west-2:789201490085:function:PlayerGameCountsRefresher updated.
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-09 08:59:00.088
+!MESSAGE Project metadata saved.
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-09 08:59:00.088
+!MESSAGE Upload complete! Funtion arn arn:aws:lambda:us-west-2:789201490085:function:PlayerGameCountsRefresher
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-09 09:10:35.034
+!MESSAGE Exporting project [PlayerGameCountsRefresher] to /var/folders/wd/vn858j0j11b4hzhhkrtm0y540000gn/T/PlayerGameCountsRefresher-lambda2652116728580454924.zip
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-09 09:10:36.800
+!MESSAGE Project exported to /var/folders/wd/vn858j0j11b4hzhhkrtm0y540000gn/T/PlayerGameCountsRefresher-lambda2652116728580454924.zip
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-09 09:11:49.758
+!MESSAGE Function arn:aws:lambda:us-west-2:789201490085:function:PlayerGameCountsRefresher updated.
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-09 09:11:49.809
+!MESSAGE Project metadata saved.
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-09 09:11:49.810
+!MESSAGE Upload complete! Funtion arn arn:aws:lambda:us-west-2:789201490085:function:PlayerGameCountsRefresher

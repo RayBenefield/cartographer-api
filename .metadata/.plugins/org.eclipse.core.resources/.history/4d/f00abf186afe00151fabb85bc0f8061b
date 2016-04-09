@@ -1,0 +1,63 @@
+package com.cartographerapi.domain;
+
+{
+	  "account": "123456789012",
+	  "region": "us-east-1",
+	  "detail": {},
+	  "detail-type": "Scheduled Event",
+	  "source": "aws.events",
+	  "time": "1970-01-01T00:00:00Z",
+	  "id": "cdc73f9d-aea9-11e3-9d5a-835b769c0d9c",
+	  "resources": [
+	    "arn:aws:events:us-east-1:123456789012:rule/my-schedule"
+	  ]
+}
+
+public class ScheduledEvent {
+	
+	private String account;
+	private String region;
+	private String source;
+	private String time;
+	private String id;
+	
+	public String getAccount() {
+		return account;
+	}
+	
+	public void setAccount(String account) {
+		this.account = account;
+	}
+
+	public String getRegion() {
+		return region;
+	}
+	
+	public void setRegion(String region) {
+		this.region = region;
+	}
+
+	public String getSource() {
+		return source;
+	}
+	
+	public void setSource(String source) {
+		this.source = source;
+	}
+
+	public String getTime() {
+		return time;
+	}
+	
+	public void setTime(String time) {
+		this.time = time;
+	}
+
+	public String getId() {
+		return id;
+	}
+	
+	public void setId(String id) {
+		this.id = id;
+	}
+}
