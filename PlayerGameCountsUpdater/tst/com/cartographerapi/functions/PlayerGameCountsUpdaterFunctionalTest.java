@@ -40,6 +40,7 @@ public class PlayerGameCountsUpdaterFunctionalTest {
             System.out.println(output.getGamertag());
             System.out.println(output.getGamesCompleted());
             System.out.println(output.getTotalGames());
+            System.out.println(output.getLastUpdated());
         }
     }
 }

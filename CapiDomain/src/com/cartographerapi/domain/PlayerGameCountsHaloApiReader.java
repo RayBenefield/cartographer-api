@@ -3,6 +3,7 @@ package com.cartographerapi.domain;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import java.io.IOException;
+import java.util.Date;
 
 /**
  * Reader repository for PlayerGameCounts from the Halo API.
@@ -45,7 +46,7 @@ public class PlayerGameCountsHaloApiReader implements PlayerGameCountsReader {
 				totalGames += lastGames;
 			}
 		} catch (IOException exception) {
-			return new PlayerGameCounts(gamertag, 0, 0);
+			return new PlayerGameCounts(gamertag);
 		}
 
 		return new PlayerGameCounts(gamertag, completedGames, totalGames);

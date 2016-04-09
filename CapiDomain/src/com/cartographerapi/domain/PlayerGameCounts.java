@@ -3,6 +3,7 @@ package com.cartographerapi.domain;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
+import java.util.Date;
 
 /**
  * Holds the data relevant to the counts for Games for a single Player.
@@ -21,6 +22,7 @@ public class PlayerGameCounts {
 	private String gamertag;
 	private Integer gamesCompleted;
 	private Integer totalGames;
+	private Date lastUpdated;
 
 	@DynamoDBHashKey(attributeName="Gamertag")
 	public String getGamertag() {
@@ -49,14 +51,28 @@ public class PlayerGameCounts {
 		this.totalGames = totalGames;
 	}
 
-	public PlayerGameCounts(String gamertag, Integer gamesCompleted, Integer totalGames) {
+	@DynamoDBAttribute(attributeName="LastUpdated")
+	public Date getLastUpdated() {
+		return lastUpdated;
+	}
+
+	public void setLastUpdated(Date lastUpdated) {
+		this.lastUpdated = lastUpdated;
+	}
+
+	public PlayerGameCounts(String gamertag, Integer gamesCompleted, Integer totalGames, Date lastUpdated) {
 		this.gamertag = gamertag;
 		this.gamesCompleted = gamesCompleted;
 		this.totalGames = totalGames;
+		this.lastUpdated = lastUpdated;
+	}
+
+	public PlayerGameCounts(String gamertag, Integer gamesCompleted, Integer totalGames) {
+		this(gamertag, gamesCompleted, totalGames, new Date());
 	}
 
 	public PlayerGameCounts(String gamertag) {
-		this(gamertag, 0, 0);
+		this(gamertag, 0, 0, new Date());
 	}
 
 	public PlayerGameCounts() {

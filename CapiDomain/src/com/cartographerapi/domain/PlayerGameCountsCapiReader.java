@@ -32,7 +32,7 @@ public class PlayerGameCountsCapiReader implements PlayerGameCountsReader {
 			String totalResult = api.playerGameCountsGetter(gamertag);
 			counts = mapper.readValue(totalResult, PlayerGameCounts.class);
 		} catch (IOException exception) {
-			return new PlayerGameCounts(gamertag, 0, 0);
+			return new PlayerGameCounts(gamertag);
 		}
 
 		return counts;
