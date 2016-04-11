@@ -1,9 +1,11 @@
 package com.cartographerapi.functions;
 
+import java.util.List;
 import java.io.IOException;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
+import com.cartographerapi.domain.ScheduledEvent;
+import com.cartographerapi.domain.PlayerGameCounts;
 
 import com.amazonaws.services.lambda.runtime.Context;
 
@@ -17,7 +19,7 @@ public class PlayerGameCountsRefresherTest {
     @BeforeClass
     public static void createInput() throws IOException {
         // TODO: set up your sample input object here.
-        input = null;
+        input = new ScheduledEvent("2016-04-09T23:59:00.000Z");
     }
 
     private Context createContext() {
@@ -34,11 +36,12 @@ public class PlayerGameCountsRefresherTest {
         PlayerGameCountsRefresher handler = new PlayerGameCountsRefresher();
         Context ctx = createContext();
 
-        Boolean output = handler.handleRequest(input, ctx);
+        List<PlayerGameCounts> output = handler.handleRequest(input, ctx);
 
-        // TODO: validate output here if needed.
-        if (output != null) {
-            System.out.println(output.toString());
-        }
+		if (output != null) {
+			for (PlayerGameCounts counts : output) {
+				System.out.println(counts.getGamertag());
+			}
+		}
     }
 }

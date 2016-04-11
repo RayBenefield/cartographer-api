@@ -47,4 +47,8 @@ public class ScheduledEvent {
 	public void setId(String id) {
 		this.id = id;
 	}
+	
+	public ScheduledEvent(String time) {
+		this.time = time;
+	}
 }
