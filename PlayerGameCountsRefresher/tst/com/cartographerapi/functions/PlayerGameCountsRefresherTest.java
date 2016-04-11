@@ -6,7 +6,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import com.cartographerapi.domain.ScheduledEvent;
 import com.cartographerapi.domain.PlayerGameCounts;
-
 import com.amazonaws.services.lambda.runtime.Context;
 
 /**
@@ -18,14 +17,12 @@ public class PlayerGameCountsRefresherTest {
 
     @BeforeClass
     public static void createInput() throws IOException {
-        // TODO: set up your sample input object here.
-        input = new ScheduledEvent("2016-04-09T23:59:00.000Z");
+        input = new ScheduledEvent("2016-04-11T00:00:00.000Z");
     }
 
     private Context createContext() {
         TestContext ctx = new TestContext();
 
-        // TODO: customize your context here if needed.
         ctx.setFunctionName("Your Function Name");
 
         return ctx;

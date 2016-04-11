@@ -1,0 +1,15 @@
+package com.cartographerapi.domain;
+
+import java.util.List;
+
+public interface PlayerGameCountsUpdatedReader extends PlayerGameCountsReader {
+
+	/**
+	 * Get all PlayerGameCounts object that have not been updated since given date.
+	 * 
+	 * @param date
+	 * @return
+	 */
+	public List<PlayerGameCounts> getAllPlayerGameCountsNotUpdatedSince(String date);
+
+}

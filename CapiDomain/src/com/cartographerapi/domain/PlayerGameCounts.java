@@ -3,7 +3,10 @@ package com.cartographerapi.domain;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
+import com.amazonaws.services.dynamodbv2.document.Item;
 import java.util.Date;
+import org.joda.time.DateTimeZone;
+import org.joda.time.DateTime;
 
 /**
  * Holds the data relevant to the counts for Games for a single Player.
@@ -69,6 +72,15 @@ public class PlayerGameCounts {
 
 	public PlayerGameCounts(String gamertag, Integer gamesCompleted, Integer totalGames) {
 		this(gamertag, gamesCompleted, totalGames, new Date());
+	}
+
+	public PlayerGameCounts(Item item) {
+		this(
+			item.getString("Gamertag"),
+			item.getNumber("GamesCompleted").intValue(),
+			item.getNumber("TotalGames").intValue(),
+			new DateTime(item.getString("LastUpdated"), DateTimeZone.UTC).toDate()
+		);
 	}
 
 	public PlayerGameCounts(String gamertag) {
