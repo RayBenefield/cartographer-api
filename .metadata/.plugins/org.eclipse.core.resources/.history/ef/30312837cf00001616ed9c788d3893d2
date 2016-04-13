@@ -1,0 +1,11 @@
+package com.cartographerapi.domain;
+
+public class PlayerGameCountsSnsWriter implements PlayerGameCountsWriter {
+
+	@Override
+	public PlayerGameCounts savePlayerGameCounts(PlayerGameCounts counts) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

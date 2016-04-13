@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename type &apos;com.cartographerapi.functions.PlayerGameCountPublisher&apos; to &apos;PlayerGameCountsPublisher&apos;&#x0A;- Original project: &apos;PlayerGameCountPublisher&apos;&#x0A;- Original element: &apos;com.cartographerapi.functions.PlayerGameCountPublisher&apos;&#x0A;- Renamed element: &apos;com.cartographerapi.functions.PlayerGameCountsPublisher&apos;&#x0A;- Update references to refactored element&#x0A;- Update textual occurrences in comments and strings" description="Rename type &apos;PlayerGameCountPublisher&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.type" input="/src&lt;com.cartographerapi.functions{PlayerGameCountPublisher.java[PlayerGameCountPublisher" matchStrategy="1" name="PlayerGameCountsPublisher" qualified="false" references="true" similarDeclarations="false" stamp="1460479908357" textual="false" version="1.0"/>
+</session>

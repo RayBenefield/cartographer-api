@@ -1,0 +1,73 @@
+package com.cartographerapi.functions;
+
+import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
+import com.amazonaws.services.lambda.runtime.RequestHandler;
+import com.amazonaws.services.lambda.runtime.events.DynamodbEvent;
+import com.amazonaws.services.lambda.runtime.events.DynamodbEvent.DynamodbStreamRecord;
+import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.dynamodbv2.document.Item;
+import com.amazonaws.services.dynamodbv2.document.internal.InternalUtils;
+import java.util.Map;
+import com.amazonaws.services.sns.AmazonSNSClient;
+import com.amazonaws.services.sns.model.PublishRequest;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.cartographerapi.domain.PlayerGameCounts;
+
+public class PlayerGameCountPublisher implements RequestHandler<DynamodbEvent, Boolean> {
+
+	private AmazonDynamoDBClient client;
+
+    @Override
+    public Boolean handleRequest(DynamodbEvent input, Context context) {
+        context.getLogger().log("Input: " + input);
+
+		client = new AmazonDynamoDBClient();
+		client.setRegion(Region.getRegion(Regions.US_WEST_2));
+        AmazonSNSClient snsClient = new AmazonSNSClient();		                           
+        snsClient.setRegion(Region.getRegion(Regions.US_WEST_2));
+        String newTopicArn = "arn:aws:sns:us-west-2:789201490085:capi-playergamecounts-new";
+        String updatedTopicArn = "arn:aws:sns:us-west-2:789201490085:capi-playergamecounts-new";
+        ObjectMapper mapper = new ObjectMapper();
+
+		for (DynamodbStreamRecord record : input.getRecords()) {
+			Map<String, AttributeValue> newData = record.getDynamodb().getNewImage();
+			if (newData == null) continue; // Ignore deletes for now;
+
+			Item newItem = Item.fromMap(InternalUtils.toSimpleMapValue(newData));
+			PlayerGameCounts counts = new PlayerGameCounts(newItem);
+			try {
+				PublishRequest publishRequest;
+				Map<String, AttributeValue> oldData = record.getDynamodb().getOldImage();
+
+				if (oldData != null) {
+					Item oldItem = Item.fromMap(InternalUtils.toSimpleMapValue(oldData));
+					PlayerGameCounts oldCounts = new PlayerGameCounts(oldItem);
+					// Not really an update.
+					if (counts.getTotalGames().equals(oldCounts.getTotalGames())) continue;
+					// This is an update.
+					publishRequest = new PublishRequest(updatedTopicArn, mapper.writeValueAsString(counts));
+				} else {
+					// This is new.
+					publishRequest = new PublishRequest(newTopicArn, mapper.writeValueAsString(counts));
+				}
+
+				snsClient.publish(publishRequest);
+			} catch (JsonGenerationException e) {
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				e.printStackTrace();
+			} catch (JsonProcessingException e) {
+				e.printStackTrace();
+			}
+		}
+		
+        return true;
+    }
+
+}
