@@ -1,0 +1,25 @@
+package com.cartographerapi.domain;
+
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMarshaller;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+public class JsonNodeMarshaller implements DynamoDBMarshaller<JsonNode> {
+
+	private ObjectMapper mapper;
+
+	@Override
+	public String marshall(JsonNode getterReturnResult) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public JsonNode unmarshall(Class<JsonNode> clazz, String obj) {
+		return mapper.readTree(obj);
+	}
+	
+	public JsonNodeMarshaller() {
+		this.mapper = new ObjectMapper();
+	}
+}

@@ -1,0 +1,38 @@
+package com.cartographerapi.functions;
+
+import java.io.IOException;
+import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.RequestHandler;
+import java.util.List;
+import java.util.ArrayList;
+import com.cartographerapi.domain.Gamertag;
+import com.cartographerapi.domain.PlayerGame;
+import com.cartographerapi.domain.Halo5ApiWrapper;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+public class PlayerGamesGetter implements RequestHandler<Gamertag, JsonNode> {
+
+    @Override
+    public JsonNode handleRequest(Gamertag input, Context context) {
+        context.getLogger().log("Input: " + input);
+        
+        List<PlayerGame> result = new ArrayList<PlayerGame>();
+		Halo5ApiWrapper api = new Halo5ApiWrapper("ae4df7c91357455ea30be2d7bdf15522");
+
+		PlayerGame game;
+		String totalResult = "";
+		JsonNode node = null;
+		try {
+			totalResult = api.customGames(input.getGamertag());
+			game = new PlayerGame(input.getGamertag(), 1, totalResult);
+			node = new ObjectMapper().readTree(totalResult);
+		} catch (IOException exception) {
+			game = new PlayerGame(input.getGamertag(), 0, "");
+		}
+
+		result.add(game);
+        return totalResult;
+    }
+
+}

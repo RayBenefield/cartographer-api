@@ -1,0 +1,13 @@
+package com.cartographerapi.domain;
+
+import java.util.List;
+
+public class PlayerGamesDynamoReader implements PlayerGamesReader {
+
+	@Override
+	public List<PlayerGame> getPlayerGamesByGamertag(String gamertag) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}
