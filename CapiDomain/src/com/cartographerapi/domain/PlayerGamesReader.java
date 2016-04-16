@@ -19,4 +19,12 @@ public interface PlayerGamesReader {
 	 */
 	public List<PlayerGame> getPlayerGamesByGamertag(String gamertag);
 
+	/**
+	 * Get PlayerGame objects for a given Gamertag.
+	 * 
+	 * @param gamertag
+	 * @return
+	 */
+	public List<PlayerGame> getPlayerGamesByGamertag(String gamertag, Integer start, Integer count);
+
 }

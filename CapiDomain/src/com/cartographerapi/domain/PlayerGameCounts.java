@@ -15,6 +15,7 @@ import org.joda.time.DateTime;
  *    Gamertag
  *    GamesCompleted
  *    TotalGames
+ *    LastUpdated
  * </pre>
  * 
  * @author GodlyPerfection
@@ -87,8 +88,8 @@ public class PlayerGameCounts {
 	public PlayerGameCounts(Map<String, Object> map) {
 		this(
 			(String)map.get("gamertag"),
-			(Integer)map.get("totalGames"),
 			(Integer)map.get("gamesCompleted"),
+			(Integer)map.get("totalGames"),
 			new DateTime(map.get("lastUpdated"), DateTimeZone.UTC).toDate()
 		);
 	}

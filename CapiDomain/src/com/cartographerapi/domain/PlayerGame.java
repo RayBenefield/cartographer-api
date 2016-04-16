@@ -2,6 +2,7 @@ package com.cartographerapi.domain;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBRangeKey;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMarshalling;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -13,6 +14,7 @@ public class PlayerGame {
 	
 	private ObjectMapper mapper;
 	private String gamertag;
+	private String matchId;
 	private Integer gameNumber;
 	private JsonNode gameData;
 
@@ -23,6 +25,15 @@ public class PlayerGame {
 
 	public void setGamertag(String gamertag) {
 		this.gamertag = gamertag;
+	}
+
+	@DynamoDBAttribute(attributeName="MatchId")
+	public String getMatchId() {
+		return matchId;
+	}
+
+	public void setMatchId(String matchId) {
+		this.matchId = matchId;
 	}
 
 	@DynamoDBRangeKey(attributeName="GameNumber")
@@ -58,6 +69,16 @@ public class PlayerGame {
 		this.gamertag = gamertag;
 		this.gameNumber = gameNumber;
 		this.setGameData(gameData);
+		this.matchId = this.gameData.path("Id").path("MatchId").asText();
+	}
+
+	public PlayerGame(String gamertag, Integer gameNumber, JsonNode gameData) {
+		mapper = new ObjectMapper();
+
+		this.gamertag = gamertag;
+		this.gameNumber = gameNumber;
+		this.gameData = gameData;
+		this.matchId = this.gameData.path("Id").path("MatchId").asText();
 	}
 	
 	public PlayerGame() {

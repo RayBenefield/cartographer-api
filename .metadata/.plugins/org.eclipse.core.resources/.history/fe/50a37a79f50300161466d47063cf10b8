@@ -1,0 +1,43 @@
+package com.cartographerapi.domain;
+
+import java.util.List;
+import java.util.ArrayList;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import com.fasterxml.jackson.databind.JsonNode;
+
+public class PlayerGamesHaloApiReader implements PlayerGamesReader {
+
+	private Halo5ApiWrapper api;
+	private ObjectMapper mapper;
+	
+	public PlayerGamesHaloApiReader() {
+		this.api = new Halo5ApiWrapper("ae4df7c91357455ea30be2d7bdf15522");
+		this.mapper = new ObjectMapper();
+	}
+
+	@Override
+	public List<PlayerGame> getPlayerGamesByGamertag(String gamertag) {
+		List<PlayerGame> results = new ArrayList<PlayerGame>();
+		try {
+			String gamesResult = api.customGames(gamertag);
+			JsonNode root = mapper.readTree(gamesResult);
+			Integer numberOfGame = 0;
+			for (JsonNode game : root.path("Results")) {
+				PlayerGame newGame = new PlayerGame(gamertag, numberOfGame, game);
+				results.add(newGame);
+				numberOfGame++;
+			}
+		} catch (IOException exception) {
+			return null;
+		}
+		return results;
+	}
+
+	@Override
+	public List<PlayerGame> getPlayerGamesByGamertag(String gamertag, Integer start, Integer count) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

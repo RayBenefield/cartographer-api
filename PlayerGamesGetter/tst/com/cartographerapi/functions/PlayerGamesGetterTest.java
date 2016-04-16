@@ -17,8 +17,7 @@ public class PlayerGamesGetterTest {
 
     @BeforeClass
     public static void createInput() throws IOException {
-        // TODO: set up your sample input object here.
-        input = new Gamertag("GodlyPerfection");
+        input = new Gamertag("Unyshek");
     }
 
     private Context createContext() {

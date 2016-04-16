@@ -34,4 +34,18 @@ public class PlayerGamesDynamoReader implements PlayerGamesReader {
 		return games;
 	}
 
+	@Override
+	//TODO actually implement this method with the start and count
+	public List<PlayerGame> getPlayerGamesByGamertag(String gamertag, Integer start, Integer count) {
+        Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
+        eav.put(":val1", new AttributeValue().withS(gamertag));
+
+        DynamoDBQueryExpression<PlayerGame> queryExpression = new DynamoDBQueryExpression<PlayerGame>()
+			.withKeyConditionExpression("Gamertag = :val1")
+			.withExpressionAttributeValues(eav);
+                    
+		List<PlayerGame> games = dbMapper.query(PlayerGame.class, queryExpression);
+		return games;
+	}
+
 }
