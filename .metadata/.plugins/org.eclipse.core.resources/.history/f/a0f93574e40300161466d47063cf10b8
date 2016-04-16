@@ -1,0 +1,19 @@
+package com.cartographerapi.functions;
+
+import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.RequestHandler;
+import com.amazonaws.services.lambda.runtime.events.SNSEvent;
+import com.cartographerapi.domain.PlayerGame;
+import java.util.List;
+
+public class PlayerGamesAdder implements RequestHandler<SNSEvent, List<PlayerGame>> {
+
+    @Override
+    public List<PlayerGame> handleRequest(SNSEvent input, Context context) {
+        context.getLogger().log("Input: " + input);
+
+        // TODO: implement your handler
+        return null;
+    }
+
+}

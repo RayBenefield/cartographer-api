@@ -9,7 +9,7 @@
         "MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
         "TopicArn": "arn:aws:sns:EXAMPLE",
         "Subject": "TestInvoke",
-        "Message": "Hello from SNS!",
+        "Message": "{\"gamertag\":\"duke of mearl\",\"gamesCompleted\":1150,\"totalGames\":1183,\"lastUpdated\":1460420675865}",
         "Timestamp": "1970-01-01T00:00:00.000Z",
         "SignatureVersion": "1",
         "Signature": "EXAMPLE",

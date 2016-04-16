@@ -5,6 +5,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import java.util.Date;
+import java.util.Map;
 import org.joda.time.DateTimeZone;
 import org.joda.time.DateTime;
 
@@ -80,6 +81,15 @@ public class PlayerGameCounts {
 			item.getNumber("GamesCompleted").intValue(),
 			item.getNumber("TotalGames").intValue(),
 			new DateTime(item.getString("LastUpdated"), DateTimeZone.UTC).toDate()
+		);
+	}
+
+	public PlayerGameCounts(Map<String, Object> map) {
+		this(
+			(String)map.get("gamertag"),
+			(Integer)map.get("totalGames"),
+			(Integer)map.get("gamesCompleted"),
+			new DateTime(map.get("lastUpdated"), DateTimeZone.UTC).toDate()
 		);
 	}
 
