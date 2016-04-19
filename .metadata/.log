@@ -7845,3 +7845,48 @@ java.lang.Exception: No SDK install directory specified
 	at org.eclipse.jdt.core.JavaCore.run(JavaCore.java:5409)
 	at org.eclipse.jdt.internal.ui.actions.WorkbenchRunnableAdapter.run(WorkbenchRunnableAdapter.java:106)
 	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:119)
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-19 08:47:50.072
+!MESSAGE Exporting project [PlayerGamesPublisher] to /var/folders/wd/vn858j0j11b4hzhhkrtm0y540000gn/T/PlayerGamesPublisher-lambda7600469003354291099.zip
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-19 08:47:51.821
+!MESSAGE Project exported to /var/folders/wd/vn858j0j11b4hzhhkrtm0y540000gn/T/PlayerGamesPublisher-lambda7600469003354291099.zip
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-19 08:49:06.684
+!MESSAGE Function arn:aws:lambda:us-west-2:789201490085:function:PlayerGamesPublisher created.
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-19 08:49:06.739
+!MESSAGE Project metadata saved.
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-19 08:49:06.740
+!MESSAGE Upload complete! Funtion arn arn:aws:lambda:us-west-2:789201490085:function:PlayerGamesPublisher
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-19 09:01:38.249
+!MESSAGE Exporting project [PlayerGameCountsPublisher] to /var/folders/wd/vn858j0j11b4hzhhkrtm0y540000gn/T/PlayerGameCountsPublisher-lambda4115280136208836620.zip
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-19 09:01:40.016
+!MESSAGE Project exported to /var/folders/wd/vn858j0j11b4hzhhkrtm0y540000gn/T/PlayerGameCountsPublisher-lambda4115280136208836620.zip
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-19 09:02:52.570
+!MESSAGE Function arn:aws:lambda:us-west-2:789201490085:function:PlayerGameCountsPublisher updated.
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-19 09:02:52.623
+!MESSAGE Project metadata saved.
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-19 09:02:52.650
+!MESSAGE Upload complete! Funtion arn arn:aws:lambda:us-west-2:789201490085:function:PlayerGameCountsPublisher
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-19 09:12:18.224
+!MESSAGE Exporting project [PlayerGamesPublisher] to /var/folders/wd/vn858j0j11b4hzhhkrtm0y540000gn/T/PlayerGamesPublisher-lambda637269952527071424.zip
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-19 09:12:19.990
+!MESSAGE Project exported to /var/folders/wd/vn858j0j11b4hzhhkrtm0y540000gn/T/PlayerGamesPublisher-lambda637269952527071424.zip
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-19 09:13:33.754
+!MESSAGE Function arn:aws:lambda:us-west-2:789201490085:function:PlayerGamesPublisher updated.
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-19 09:13:33.862
+!MESSAGE Project metadata saved.
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-19 09:13:33.862
+!MESSAGE Upload complete! Funtion arn arn:aws:lambda:us-west-2:789201490085:function:PlayerGamesPublisher

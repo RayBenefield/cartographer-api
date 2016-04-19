@@ -76,6 +76,7 @@ public class PlayerGameCounts {
 		this(gamertag, gamesCompleted, totalGames, new Date());
 	}
 
+	// TODO Figure out how to get rid of this Dynamo specific thing.
 	public PlayerGameCounts(Item item) {
 		this(
 			item.getString("Gamertag"),

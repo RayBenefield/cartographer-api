@@ -1,0 +1,46 @@
+package com.cartographerapi.functions;
+
+import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.RequestHandler;
+import com.amazonaws.services.lambda.runtime.events.DynamodbEvent;
+import com.amazonaws.services.lambda.runtime.events.DynamodbEvent.DynamodbStreamRecord;
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.cartographerapi.domain.PlayerGame;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+
+public class PlayerGamesPublisher implements RequestHandler<DynamodbEvent, List<PlayerGame>> {
+
+    @Override
+    public List<PlayerGame> handleRequest(DynamodbEvent input, Context context) {
+        context.getLogger().log("Input: " + input);
+        List<PlayerGame> results = new ArrayList<PlayerGame>();
+
+		for (DynamodbStreamRecord record : input.getRecords()) {
+			Map<String, AttributeValue> newData = record.getDynamodb().getNewImage();
+			if (newData == null) continue; // Ignore deletes for now;
+
+			Item newItem = Item.fromMap(InternalUtils.toSimpleMapValue(newData));
+			PlayerGameCounts counts = new PlayerGameCounts(newItem);
+			Map<String, AttributeValue> oldData = record.getDynamodb().getOldImage();
+
+			// This is new.
+			if (oldData == null) {
+				newWriter.savePlayerGameCounts(counts);
+			}
+
+			Item oldItem = Item.fromMap(InternalUtils.toSimpleMapValue(oldData));
+			PlayerGameCounts oldCounts = new PlayerGameCounts(oldItem);
+
+			// Not really an update.
+			if (counts.getTotalGames().equals(oldCounts.getTotalGames())) continue;
+
+			// This is an update.
+			updatedWriter.savePlayerGameCounts(counts);
+		}
+
+        return results;
+    }
+
+}

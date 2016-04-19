@@ -4,6 +4,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBRangeKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
+import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMarshalling;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -79,6 +80,14 @@ public class PlayerGame {
 		this.gameNumber = gameNumber;
 		this.gameData = gameData;
 		this.matchId = this.gameData.path("Id").path("MatchId").asText();
+	}
+
+	public PlayerGame(Item item) {
+		this(
+			item.getString("Gamertag"),
+			item.getNumber("GameNumber").intValue(),
+			item.getJSON("gameData")
+		);
 	}
 	
 	public PlayerGame() {
