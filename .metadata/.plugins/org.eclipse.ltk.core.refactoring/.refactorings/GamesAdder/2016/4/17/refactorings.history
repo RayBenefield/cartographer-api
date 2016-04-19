@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Move element &apos;Game.java&apos; to &apos;CapiDomain/src/com.cartographerapi.domain&apos;&#x0A;- Original project: &apos;GamesAdder&apos;&#x0A;- Destination element: &apos;CapiDomain/src/com.cartographerapi.domain&apos;&#x0A;- Original element: &apos;com.cartographerapi.functions.Game.java&apos;&#x0A;- Update references to refactored element" description="Move compilation unit" destination="=CapiDomain/src&lt;com.cartographerapi.domain" element1="/src&lt;com.cartographerapi.functions{Game.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.move" patterns="*" policy="org.eclipse.jdt.ui.moveResources" qualified="false" references="true" stamp="1461087419243" units="1" version="1.0"/>
+</session>
