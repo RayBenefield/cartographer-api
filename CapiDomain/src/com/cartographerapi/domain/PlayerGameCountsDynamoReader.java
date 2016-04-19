@@ -59,6 +59,7 @@ public class PlayerGameCountsDynamoReader implements PlayerGameCountsUpdatedRead
 	 */
 	@Override
 	public List<PlayerGameCounts> getAllPlayerGameCountsNotUpdatedSince(String date) {
+		// TODO Refactor this to use the DBMapper scanning instead which will clean up some code.
         List<PlayerGameCounts> result = new ArrayList<PlayerGameCounts>();
         Map<String, AttributeValue> expressionAttributeValues = new HashMap<String, AttributeValue>();
         expressionAttributeValues.put(":val", new AttributeValue().withS(date)); 

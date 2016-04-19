@@ -31,6 +31,7 @@ public class PlayerGamesGetter implements RequestStreamHandler, RequestHandler<G
         outputStream.write(mapper.writeValueAsString(games).getBytes(java.nio.charset.Charset.forName("UTF-8")));
     }
 
+    // TODO Properly move over this code to a handy service.
     static String convertStreamToString(java.io.InputStream is) {
         java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
         return s.hasNext() ? s.next() : "";

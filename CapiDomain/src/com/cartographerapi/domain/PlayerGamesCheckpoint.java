@@ -3,11 +3,7 @@ package com.cartographerapi.domain;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
-import com.amazonaws.services.dynamodbv2.document.Item;
 import java.util.Date;
-import java.util.Map;
-import org.joda.time.DateTimeZone;
-import org.joda.time.DateTime;
 
 @DynamoDBTable(tableName="PlayerGamesCheckpoints")
 public class PlayerGamesCheckpoint {
@@ -58,6 +54,10 @@ public class PlayerGamesCheckpoint {
 		this.totalGamesLoaded = totalGamesLoaded;
 		this.lastMatch = lastMatch;
 		this.lastUpdated = new Date();
+	}
+
+	public PlayerGamesCheckpoint(String gamertag) {
+		this(gamertag, 0, "");
 	}
 
 	public PlayerGamesCheckpoint() {

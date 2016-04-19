@@ -1,35 +1,34 @@
 package com.cartographerapi.functions;
 
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.SNSEvent;
 import com.cartographerapi.domain.PlayerGame;
+import com.cartographerapi.domain.PlayerGameCountsWriter;
+import com.cartographerapi.domain.PlayerGameCountsSnsWriter;
+import com.cartographerapi.domain.PlayerGamesCheckpointReader;
+import com.cartographerapi.domain.PlayerGamesCheckpointDynamoReader;
+import com.cartographerapi.domain.PlayerGamesCheckpointWriter;
+import com.cartographerapi.domain.PlayerGamesCheckpointDynamoWriter;
+import com.cartographerapi.domain.PlayerGamesDynamoWriter;
+import com.cartographerapi.domain.PlayerGameCounts;
+import com.cartographerapi.domain.PlayerGamesCheckpoint;
+import com.cartographerapi.domain.PlayerGamesHaloApiReader;
+import com.cartographerapi.domain.PlayerGamesWriter;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
-import com.amazonaws.services.sns.AmazonSNSClient;
-import com.amazonaws.auth.ClasspathPropertiesFileCredentialsProvider;
-import com.amazonaws.regions.Region;
-import com.amazonaws.regions.Regions;
-import com.amazonaws.services.sns.model.CreateTopicRequest;
-import com.amazonaws.services.sns.model.CreateTopicResult;
-import com.amazonaws.services.sns.model.SubscribeRequest;
-import com.amazonaws.services.sns.model.PublishRequest;
-import com.amazonaws.services.sns.model.PublishResult;
-import com.amazonaws.services.sns.model.DeleteTopicRequest;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.cartographerapi.domain.PlayerGameCounts;
-import com.cartographerapi.domain.PlayerGamesCheckpoint;
-import com.cartographerapi.domain.PlayerGamesHaloApiReader;
 import java.io.IOException;
-import java.util.Date;
 
 public class PlayerGamesAdder implements RequestHandler<SNSEvent, List<PlayerGame>> {
+	
+	private PlayerGamesHaloApiReader gameReader;
+	private PlayerGamesWriter gameWriter;
+	private PlayerGamesCheckpointReader checkpointReader;
+	private PlayerGamesCheckpointWriter checkpointWriter;
+	private PlayerGameCountsWriter continueWriter;
 
 	@SuppressWarnings("unchecked")
     @Override
@@ -38,64 +37,69 @@ public class PlayerGamesAdder implements RequestHandler<SNSEvent, List<PlayerGam
         List<PlayerGame> results = new ArrayList<PlayerGame>();
         ObjectMapper mapper = new ObjectMapper();
         
-		String message = input.getRecords().get(0).getSNS().getMessage();
+        // Figure out who this is for.
 		PlayerGameCounts counts;
-		Map<String, Object> countsMap = new HashMap<String, Object>();
 		try {
-			countsMap = mapper.readValue(message, HashMap.class);
+			Map<String, Object> countsMap = mapper.readValue(input.getRecords().get(0).getSNS().getMessage(), HashMap.class);
 			counts = new PlayerGameCounts(countsMap);
 		} catch (IOException exception) {
-			counts = new PlayerGameCounts("Fake");
+			return results;
 		}
 		
-		results.add(new PlayerGame(counts.getGamertag(), counts.getTotalGames(), message));
+		String gamertag = counts.getGamertag();
+		PlayerGamesCheckpoint checkpoint = checkpointReader.getPlayerGamesCheckpointWithDefault(gamertag);
 		
-		AmazonDynamoDBClient client;
-		DynamoDBMapper dbMapper;
-		client = new AmazonDynamoDBClient();
-		client.setRegion(Region.getRegion(Regions.US_WEST_2));
-		dbMapper = new DynamoDBMapper(client);
-		
-		PlayerGamesCheckpoint checkpoint = dbMapper.load(PlayerGamesCheckpoint.class, counts.getGamertag());
-		
-		PlayerGamesHaloApiReader gameReader = new PlayerGamesHaloApiReader();
-		
-		if (checkpoint == null) {
-			results.get(0).setGamertag("No Checkpoint");
-			gameReader.setTotal(counts.getTotalGames());
-			results = gameReader.getPlayerGamesByGamertag(counts.getGamertag(), 0, 25);
-			dbMapper.batchSave(results);
-			checkpoint = new PlayerGamesCheckpoint(counts.getGamertag(), results.size(), results.get(results.size() - 1).getMatchId());
-			dbMapper.save(checkpoint);
-		} else {
-			gameReader.setTotal(counts.getTotalGames());
+		// If there is a checkpoint then start there and load up to the games possible.
+		if (checkpoint.getLastMatch().equals("")) {
 			gameReader.setLastMatch(checkpoint.getLastMatch());
-			results = gameReader.getPlayerGamesByGamertag(counts.getGamertag(), checkpoint.getTotalGamesLoaded(), 25);
-			if (results.size() > 0) {
-				dbMapper.batchSave(results);
-				checkpoint.setLastMatch(results.get(results.size() - 1).getMatchId());
-				checkpoint.setTotalGamesLoaded(checkpoint.getTotalGamesLoaded() + results.size());
-				checkpoint.setLastUpdated(new Date());
-				dbMapper.save(checkpoint);
+		}
+		gameReader.setTotal(counts.getTotalGames());
+		results = gameReader.getPlayerGamesByGamertag(gamertag, checkpoint.getTotalGamesLoaded(), 25);
 
-			}
+		// If we found some results then save the found results and save the checkpoint.
+		if (results.size() > 0) {
+			gameWriter.savePlayerGames(results);
+			checkpoint.setLastMatch(results.get(results.size() - 1).getMatchId());
+			checkpoint.setTotalGamesLoaded(checkpoint.getTotalGamesLoaded() + results.size());
+			checkpointWriter.savePlayerGamesCheckpoint(checkpoint);
 		}
 
+		// If we found the max number of games possible, then we need to continue.
 		if (results.size() == 24) {
-			String topicArn = "arn:aws:sns:us-west-2:789201490085:capi-playergamescontinue";
-			AmazonSNSClient snsClient = new AmazonSNSClient();		                           
-			snsClient.setRegion(Region.getRegion(Regions.US_WEST_2));
-
-			try {
-				PublishRequest publishRequest;
-				publishRequest = new PublishRequest(topicArn, mapper.writeValueAsString(counts));
-				snsClient.publish(publishRequest);
-			} catch (IOException exception) {
-				results.add(new PlayerGame("fake", 50, ""));
-			}
+			continueWriter.savePlayerGameCounts(counts);
 		}
         
         return results;
+    }
+    
+    /**
+     * The lazy IOC constructor for Lambda to instantiate.
+     */
+    public PlayerGamesAdder() {
+    	this(
+    		new PlayerGamesHaloApiReader(),
+    		new PlayerGamesDynamoWriter(),
+    		new PlayerGamesCheckpointDynamoReader(),
+    		new PlayerGamesCheckpointDynamoWriter(),
+			new PlayerGameCountsSnsWriter("arn:aws:sns:us-west-2:789201490085:capi-playergamescontinue")
+		);
+    }
+
+    /**
+     * The real constructor that supports dependency injection.
+     */
+    public PlayerGamesAdder(
+    	PlayerGamesHaloApiReader gameReader,
+    	PlayerGamesWriter gameWriter,
+    	PlayerGamesCheckpointReader checkpointReader,
+    	PlayerGamesCheckpointWriter checkpointWriter,
+    	PlayerGameCountsWriter continueWriter
+	) {
+    	this.gameReader = gameReader;
+    	this.gameWriter = gameWriter;
+    	this.checkpointReader = checkpointReader;
+    	this.checkpointWriter = checkpointWriter;
+    	this.continueWriter = continueWriter;
     }
 
 }

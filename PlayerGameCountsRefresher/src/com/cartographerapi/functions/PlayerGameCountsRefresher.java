@@ -28,7 +28,7 @@ public class PlayerGameCountsRefresher implements RequestHandler<ScheduledEvent,
     public List<PlayerGameCounts> handleRequest(ScheduledEvent input, Context context) {
         context.getLogger().log("Input: " + input);
         
-		String expireTime = new DateTime(input.getTime(), DateTimeZone.UTC).minusMinutes(5).toString();
+		String expireTime = new DateTime(input.getTime(), DateTimeZone.UTC).minusHours(24).toString();
         List<PlayerGameCounts> result = cacheReader.getAllPlayerGameCountsNotUpdatedSince(expireTime);
         
         for (PlayerGameCounts counts : result) {

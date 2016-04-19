@@ -1,0 +1,11 @@
+package com.cartographerapi.domain;
+
+public class PlayerGamesCheckpointDynamoReader implements PlayerGamesCheckpointReader {
+
+	@Override
+	public PlayerGamesCheckpoint getPlayerGamesCheckpointWithDefault(String gamertag) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

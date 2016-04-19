@@ -7772,3 +7772,76 @@ Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product org.eclipse.
 !MESSAGE The 'org.eclipse.ui.startup' extension from 'com.amazonaws.eclipse.elasticbeanstalk' does not provide a 'class' attribute.
 This usage is deprecated and a 'class' attribute should be provided.
 The release after Mars (4.5) will no longer support the deprecated usage!
+
+!ENTRY net.sourceforge.vrapper.eclipse 1 0 2016-04-18 08:41:50.322
+!MESSAGE Position M110 was not visible.
+
+!ENTRY net.sourceforge.vrapper.eclipse 1 0 2016-04-18 08:42:16.472
+!MESSAGE Position M110 was not visible.
+!SESSION 2016-04-19 07:34:50.638 -----------------------------------------------
+eclipse.buildId=4.5.2.M20160212-1500
+java.version=1.8.0_66
+java.vendor=Oracle Corporation
+BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.java.product -keyring /Users/GodlyPerfection/.eclipse_keyring -showlocation
+Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product org.eclipse.epp.package.java.product -keyring /Users/GodlyPerfection/.eclipse_keyring -showlocation
+
+!ENTRY org.eclipse.core.net 1 0 2016-04-19 07:35:32.462
+!MESSAGE System property http.nonProxyHosts has been set to local|*.local|169.254/16|*.169.254/16 by an external source. This value will be overwritten using the values from the preferences
+
+!ENTRY com.amazonaws.eclipse.core 1 0 2016-04-19 07:35:45.543
+!MESSAGE Starting the AWS toolkit core plugin...
+
+!ENTRY com.amazonaws.eclipse.core 1 0 2016-04-19 07:35:48.050
+!MESSAGE Monitoring content of /Users/GodlyPerfection/.aws/credentials
+
+!ENTRY com.amazonaws.eclipse.core 1 0 2016-04-19 07:35:48.311
+!MESSAGE AWS toolkit core plugin initialized after 2769 milliseconds.
+
+!ENTRY com.amazonaws.eclipse.core 1 0 2016-04-19 07:35:48.320
+!MESSAGE Found valid identity id cache us-east-1:77bbf291-b719-4c56-8d37-3a7ddf379f33
+
+!ENTRY org.eclipse.ui 2 0 2016-04-19 07:36:13.385
+!MESSAGE The 'org.eclipse.ui.startup' extension from 'com.amazonaws.eclipse.elasticbeanstalk' does not provide a 'class' attribute.
+This usage is deprecated and a 'class' attribute should be provided.
+The release after Mars (4.5) will no longer support the deprecated usage!
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-19 08:21:33.289
+!MESSAGE Exporting project [PlayerGameCountsRefresher] to /var/folders/wd/vn858j0j11b4hzhhkrtm0y540000gn/T/PlayerGameCountsRefresher-lambda5025153152492989801.zip
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-19 08:21:35.475
+!MESSAGE Project exported to /var/folders/wd/vn858j0j11b4hzhhkrtm0y540000gn/T/PlayerGameCountsRefresher-lambda5025153152492989801.zip
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-19 08:22:50.838
+!MESSAGE Function arn:aws:lambda:us-west-2:789201490085:function:PlayerGameCountsRefresher updated.
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-19 08:22:52.988
+!MESSAGE Project metadata saved.
+
+!ENTRY com.amazonaws.eclipse.lambda 1 0 2016-04-19 08:22:52.988
+!MESSAGE Upload complete! Funtion arn arn:aws:lambda:us-west-2:789201490085:function:PlayerGameCountsRefresher
+
+!ENTRY com.amazonaws.eclipse.sdk.ui 2 0 2016-04-19 08:24:18.357
+!MESSAGE Unable to initialize previous AWS SDK for Java classpath entries - defaulting to latest version
+!STACK 0
+java.lang.Exception: No SDK install directory specified
+	at com.amazonaws.eclipse.sdk.ui.classpath.ClasspathContainerInitializer.initialize(ClasspathContainerInitializer.java:52)
+	at org.eclipse.jdt.internal.core.JavaModelManager.initializeContainer(JavaModelManager.java:2868)
+	at org.eclipse.jdt.internal.core.JavaModelManager.getClasspathContainer(JavaModelManager.java:1900)
+	at org.eclipse.jdt.core.JavaCore.getClasspathContainer(JavaCore.java:3298)
+	at org.eclipse.jdt.internal.ui.wizards.buildpaths.CPListElement.create(CPListElement.java:597)
+	at org.eclipse.jdt.internal.ui.wizards.buildpaths.CPListElement.create(CPListElement.java:582)
+	at org.eclipse.jdt.internal.ui.wizards.buildpaths.BuildPathsBlock.getCPListElements(BuildPathsBlock.java:423)
+	at org.eclipse.jdt.internal.ui.wizards.buildpaths.BuildPathsBlock.init(BuildPathsBlock.java:327)
+	at org.eclipse.jdt.ui.wizards.JavaCapabilityConfigurationPage.init(JavaCapabilityConfigurationPage.java:151)
+	at org.eclipse.jdt.ui.wizards.NewJavaProjectWizardPageTwo.initializeBuildPath(NewJavaProjectWizardPageTwo.java:318)
+	at org.eclipse.jdt.ui.wizards.NewJavaProjectWizardPageTwo.updateProject(NewJavaProjectWizardPageTwo.java:252)
+	at org.eclipse.jdt.ui.wizards.NewJavaProjectWizardPageTwo.performFinish(NewJavaProjectWizardPageTwo.java:484)
+	at com.amazonaws.eclipse.lambda.project.wizard.NewLambdaJavaFunctionProjectWizard.finishPage(NewLambdaJavaFunctionProjectWizard.java:94)
+	at org.eclipse.jdt.internal.ui.wizards.NewElementWizard$2.run(NewElementWizard.java:118)
+	at org.eclipse.jdt.internal.core.BatchOperation.executeOperation(BatchOperation.java:39)
+	at org.eclipse.jdt.internal.core.JavaModelOperation.run(JavaModelOperation.java:729)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2241)
+	at org.eclipse.jdt.core.JavaCore.run(JavaCore.java:5409)
+	at org.eclipse.jdt.internal.ui.actions.WorkbenchRunnableAdapter.run(WorkbenchRunnableAdapter.java:106)
+	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:119)

@@ -1,0 +1,13 @@
+package com.cartographerapi.domain;
+
+import java.util.List;
+
+public class PlayerGamesDynamoWriter implements PlayerGamesWriter {
+
+	@Override
+	public List<PlayerGame> savePlayerGames(List<PlayerGame> games) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}
