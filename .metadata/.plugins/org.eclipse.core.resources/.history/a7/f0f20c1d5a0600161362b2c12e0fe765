@@ -1,0 +1,19 @@
+package com.cartographerapi.domain;
+
+/**
+ * Reader repository for PlayerGameCounts from the Halo API.
+ * 
+ * @see PlayerGameCountsReader
+ * 
+ * @author GodlyPerfection
+ *
+ */
+public class GamesHaloApiReader implements GamesReader {
+
+	@Override
+	public Game getGameByMatchId(String matchId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

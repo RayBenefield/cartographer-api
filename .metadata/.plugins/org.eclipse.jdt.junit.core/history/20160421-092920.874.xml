@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="GamesAdderTest" project="GamesAdder" tests="1" started="1" failures="0" errors="0" ignored="0">
+  <testsuite name="com.cartographerapi.functions.GamesAdderTest" time="2.261">
+    <testcase name="testGamesAdder" classname="com.cartographerapi.functions.GamesAdderTest" time="2.261"/>
+  </testsuite>
+</testrun>

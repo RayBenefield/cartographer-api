@@ -1,0 +1,36 @@
+package com.cartographerapi.domain;
+
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
+
+/**
+ * Writer repository for Games into a DynamoDB table.
+ * 
+ * @see GameWriter
+ * 
+ * @author GodlyPerfection
+ *
+ */
+public class GameDynamoWriter implements GameWriter {
+
+	private AmazonDynamoDBClient client;
+	private DynamoDBMapper dbMapper;
+	
+	public GameDynamoWriter() {
+		client = new AmazonDynamoDBClient();
+		client.setRegion(Region.getRegion(Regions.US_WEST_2));
+		dbMapper = new DynamoDBMapper(client);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Game saveGames(Game game) {
+		dbMapper.save(game);
+		return game;
+	}
+
+}

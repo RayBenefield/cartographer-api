@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * Simple wrapper to allow for querying the Halo API.
@@ -16,14 +18,37 @@ import java.net.HttpURLConnection;
 public class Halo5ApiWrapper {
 
 	private String token;
-	
+
 	private final String URL_CUSTOM_SERVICE_RECORD = "https://www.haloapi.com/stats/h5/servicerecords/custom?players=%s";
 	private final String URL_CUSTOM_GAMES = "https://www.haloapi.com/stats/h5/players/%s/matches?modes=custom&start=%s&count=%s";
-	
+	private final String URL_CUSTOM_MATCH = "https://www.haloapi.com/stats/h5/custom/matches/%s";
+
 	public Halo5ApiWrapper(String token) {
 		this.token = token;
 	}
-	
+
+	public Halo5ApiWrapper() {
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode config = mapper.createObjectNode();
+		try {
+			config = mapper.readTree(getClass().getClassLoader().getResource("config.json"));
+		} catch (IOException exception) {
+		}
+
+		this.token = config.path("haloApiKey").asText();
+	}
+
+	/**
+	 * Get the details on a Match.
+	 * 
+	 * @param matchId
+	 * @return
+	 * @throws IOException
+	 */
+	public String match(String matchId) throws IOException {
+		return call(String.format(URL_CUSTOM_MATCH, URLEncoder.encode(matchId, "UTF-8")));
+	}
+
 	/**
 	 * Get the service record for a player.
 	 * 
@@ -32,11 +57,9 @@ public class Halo5ApiWrapper {
 	 * @throws IOException
 	 */
 	public String serviceRecord(String gamertag) throws IOException {
-		return call(
-			String.format(URL_CUSTOM_SERVICE_RECORD, URLEncoder.encode(gamertag, "UTF-8"))
-		);
+		return call(String.format(URL_CUSTOM_SERVICE_RECORD, URLEncoder.encode(gamertag, "UTF-8")));
 	}
-	
+
 	/**
 	 * Get the custom games for a player.
 	 * 
@@ -47,7 +70,7 @@ public class Halo5ApiWrapper {
 	public String customGames(String gamertag) throws IOException {
 		return customGames(gamertag, 0, 25);
 	}
-	
+
 	/**
 	 * Get the custom games for a player, starting at a given index.
 	 * 
@@ -59,9 +82,10 @@ public class Halo5ApiWrapper {
 	public String customGames(String gamertag, Integer start) throws IOException {
 		return customGames(gamertag, start, 25);
 	}
-	
+
 	/**
-	 * Get a given number of custom games for a player, starting at a given index.
+	 * Get a given number of custom games for a player, starting at a given
+	 * index.
 	 * 
 	 * @param gamertag
 	 * @param start
@@ -70,9 +94,7 @@ public class Halo5ApiWrapper {
 	 * @throws IOException
 	 */
 	public String customGames(String gamertag, Integer start, Integer count) throws IOException {
-		return call(
-			String.format(URL_CUSTOM_GAMES, URLEncoder.encode(gamertag, "UTF-8"), start, count)
-		);
+		return call(String.format(URL_CUSTOM_GAMES, URLEncoder.encode(gamertag, "UTF-8"), start, count));
 	}
 
 	/**
@@ -84,7 +106,7 @@ public class Halo5ApiWrapper {
 	 */
 	private String call(String url) throws IOException {
 		URL apiUrl = new URL(url);
-		HttpURLConnection urlConn = (HttpURLConnection)apiUrl.openConnection();
+		HttpURLConnection urlConn = (HttpURLConnection) apiUrl.openConnection();
 		urlConn.setRequestMethod("GET");
 		urlConn.setRequestProperty("Ocp-Apim-Subscription-Key", token);
 

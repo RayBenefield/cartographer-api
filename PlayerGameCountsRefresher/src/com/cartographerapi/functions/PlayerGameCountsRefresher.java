@@ -12,6 +12,7 @@ import java.util.List;
 import org.joda.time.DateTimeZone;
 import org.joda.time.DateTime;
 
+// TODO Move into using SNS publishing to trigger a refresh.
 /**
  * Refreshes the PlayerGameCounts for all gamertags that have not been updated
  * in X amount of time.

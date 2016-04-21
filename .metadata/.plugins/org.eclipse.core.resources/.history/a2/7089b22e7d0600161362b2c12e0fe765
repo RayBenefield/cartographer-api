@@ -1,0 +1,11 @@
+package com.cartographerapi.domain;
+
+public class GameDynamoWriter implements GameWriter {
+
+	@Override
+	public Game saveGames(Game game) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

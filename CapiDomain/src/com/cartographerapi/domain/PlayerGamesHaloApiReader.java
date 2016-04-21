@@ -15,7 +15,7 @@ public class PlayerGamesHaloApiReader implements PlayerGamesReader {
 	private String lastMatch;
 	
 	public PlayerGamesHaloApiReader() {
-		this.api = new Halo5ApiWrapper("ae4df7c91357455ea30be2d7bdf15522");
+		this.api = new Halo5ApiWrapper();
 		this.mapper = new ObjectMapper();
 	}
 

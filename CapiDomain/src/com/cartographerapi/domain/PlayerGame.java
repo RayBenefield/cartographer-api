@@ -86,7 +86,7 @@ public class PlayerGame {
 		this(
 			item.getString("Gamertag"),
 			item.getNumber("GameNumber").intValue(),
-			item.getJSON("gameData")
+			item.getString("gameData")
 		);
 	}
 	

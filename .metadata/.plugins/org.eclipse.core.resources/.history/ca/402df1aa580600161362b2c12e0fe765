@@ -1,0 +1,67 @@
+package com.cartographerapi.domain;
+
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMarshalling;
+import java.io.IOException;
+import java.util.Map;
+
+@DynamoDBTable(tableName="Games")
+public class Game {
+
+	private ObjectMapper mapper;
+	private String matchId;
+	private JsonNode gameData;
+
+	@DynamoDBHashKey(attributeName="MatchId")
+	public String getMatchId() {
+		return matchId;
+	}
+
+	public void setMatchId(String matchId) {
+		this.matchId = matchId;
+	}
+	
+	@DynamoDBAttribute(attributeName="GameData")
+	@DynamoDBMarshalling (marshallerClass = JsonNodeMarshaller.class)
+	public JsonNode getGameData() {
+		return gameData;
+	}
+	
+	public void setGameData(JsonNode gameData) {
+		this.gameData = gameData;
+	}
+	
+	public void setGameData(String gameData) {
+		try {
+			this.gameData = mapper.readTree(gameData);
+		} catch (IOException exception) {
+			this.gameData = mapper.createObjectNode();
+		}
+	}
+
+	public Game(Map<String, Object> map) {
+		this(
+			(String)map.get("matchId"),
+			(Map)map.get("gameData")
+		);
+	}
+	
+	public Game(String matchId, Map gameData) {
+		mapper = new ObjectMapper();
+
+		this.matchId = matchId;
+		try {
+			this.setGameData(mapper.writeValueAsString(gameData));
+		} catch (IOException exception) {
+		}
+		}
+	}
+	
+	public Game() {
+	}
+
+}

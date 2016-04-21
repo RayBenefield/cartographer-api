@@ -1,0 +1,22 @@
+package com.cartographerapi.domain;
+
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
+import com.fasterxml.jackson.databind.JsonNode;
+
+@DynamoDBTable(tableName="Games")
+public class Game {
+
+	private String matchId;
+	private JsonNode gameData;
+
+	@DynamoDBHashKey(attributeName="MatchId")
+	public String getMatchId() {
+		return matchId;
+	}
+
+	public void setMatchId(String matchId) {
+		this.matchId = matchId;
+	}
+
+}

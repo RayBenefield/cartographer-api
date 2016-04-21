@@ -1,8 +1,10 @@
 package com.cartographerapi.domain;
 
 import java.net.URL;
-import java.net.URLEncoder;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -15,9 +17,19 @@ import java.net.HttpURLConnection;
  */
 public class CapiWrapper {
 	
-	private final String URL_PLAYER_GAMES_COUNT = "https://q98m1h2tv6.execute-api.us-west-2.amazonaws.com/test/player/%s/game/count";
+	private final String URL_PLAYER_GAMES_COUNT = "%s/test/player/%s/game/count";
+	
+	private String host;
 	
 	public CapiWrapper() {
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode config = mapper.createObjectNode();
+		try {
+			config = mapper.readTree(getClass().getClassLoader().getResource("config.json"));
+		} catch (IOException exception) {
+		}
+
+		this.host = config.path("capiHost").asText();
 	}
 	
 	/**
@@ -29,7 +41,7 @@ public class CapiWrapper {
 	 */
 	public String playerGameCountsUpdater(String gamertag) throws IOException {
 		return call(
-			String.format(URL_PLAYER_GAMES_COUNT, URLEncoder.encode(gamertag, "UTF-8")),
+			String.format(URL_PLAYER_GAMES_COUNT, host, URLEncoder.encode(gamertag, "UTF-8")),
 			"POST"
 		);
 	}
@@ -43,7 +55,7 @@ public class CapiWrapper {
 	 */
 	public String playerGameCountsGetter(String gamertag) throws IOException {
 		return call(
-			String.format(URL_PLAYER_GAMES_COUNT, URLEncoder.encode(gamertag, "UTF-8"))
+			String.format(URL_PLAYER_GAMES_COUNT, host, URLEncoder.encode(gamertag, "UTF-8"))
 		);
 	}
 

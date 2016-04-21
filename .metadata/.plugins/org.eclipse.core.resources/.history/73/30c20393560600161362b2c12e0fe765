@@ -1,0 +1,11 @@
+package com.cartographerapi.domain;
+
+public class GamesDynamoReader implements GamesReader {
+
+	@Override
+	public Game getPlayerGamesByGamertag(String matchId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}
