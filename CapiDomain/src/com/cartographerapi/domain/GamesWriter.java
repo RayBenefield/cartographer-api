@@ -1,5 +1,7 @@
 package com.cartographerapi.domain;
 
+import java.util.List;
+
 /**
  * Writer repository interface for Game. This provides access to a
  * data source that contains the Game object.
@@ -16,5 +18,13 @@ public interface GamesWriter {
 	 * @return
 	 */
 	public Game saveGame(Game game);
+	
+	/**
+	 * Save multiple Game objects.
+	 * 
+	 * @param games
+	 * @return
+	 */
+	public List<Game> saveGames(List<Game> games);
 
 }

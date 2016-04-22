@@ -21,6 +21,9 @@ public class PlayerGamesDynamoReader implements PlayerGamesReader {
 		dbMapper = new DynamoDBMapper(client);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public List<PlayerGame> getPlayerGamesByGamertag(String gamertag) {
         Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
@@ -34,6 +37,9 @@ public class PlayerGamesDynamoReader implements PlayerGamesReader {
 		return games;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	//TODO actually implement this method with the start and count
 	public List<PlayerGame> getPlayerGamesByGamertag(String gamertag, Integer start, Integer count) {

@@ -32,6 +32,7 @@ public class PlayerGameCountsPublisher implements RequestHandler<DynamodbEvent, 
 			// This is new.
 			if (oldData == null) {
 				newWriter.savePlayerGameCounts(counts);
+				continue;
 			}
 
 			Item oldItem = Item.fromMap(InternalUtils.toSimpleMapValue(oldData));

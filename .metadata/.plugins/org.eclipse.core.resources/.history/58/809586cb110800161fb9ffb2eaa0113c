@@ -1,0 +1,13 @@
+package com.cartographerapi.domain;
+
+import java.util.List;
+
+public class PlayerGamesSqsReader implements PlayerGamesQueueReader {
+
+	@Override
+	public List<PlayerGame> getNumberOfPlayerGames(Integer count) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

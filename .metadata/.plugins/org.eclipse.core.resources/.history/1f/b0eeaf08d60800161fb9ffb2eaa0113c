@@ -1,0 +1,38 @@
+package com.cartographerapi.functions;
+
+import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.RequestHandler;
+import com.amazonaws.services.lambda.runtime.events.DynamodbEvent;
+import java.util.List;
+import com.cartographerapi.domain.Game;
+import com.cartographerapi.domain.GamesWriter;
+
+public class GamesPublisher implements RequestHandler<DynamodbEvent, List<Game>> {
+
+	private GamesWriter newWriter;
+
+    @Override
+    public List<Game> handleRequest(DynamodbEvent input, Context context) {
+        context.getLogger().log("Input: " + input);
+
+        // TODO: implement your handler
+        return null;
+    }
+    
+    /**
+     * The lazy IOC constructor for Lambda to instantiate.
+     */
+    public GamesPublisher() {
+    	this(
+			new GamesSnsWriter("arn:aws:sns:us-west-2:789201490085:capi-games-new")
+		);
+    }
+
+    /**
+     * The real constructor that supports dependency injection.
+     */
+    public GamesPublisher(GamesWriter newWriter) {
+    	this.newWriter = newWriter;
+    }
+
+}

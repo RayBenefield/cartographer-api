@@ -1,0 +1,13 @@
+package com.cartographerapi.domain;
+
+public interface PlayerGamesQueueReader {
+
+	/**
+	 * Get a number of PlayerGame objects.
+	 * 
+	 * @param gamertag
+	 * @return
+	 */
+	public List<PlayerGame> getNumberOfPlayerGames(Integer count);
+
+}

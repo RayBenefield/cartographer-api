@@ -4,6 +4,7 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
+import java.util.List;
 
 /**
  * Writer repository for Games into a DynamoDB table.
@@ -31,6 +32,15 @@ public class GamesDynamoWriter implements GamesWriter {
 	public Game saveGame(Game game) {
 		dbMapper.save(game);
 		return game;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<Game> saveGames(List<Game> games) {
+		dbMapper.batchSave(games);
+		return games;
 	}
 
 }

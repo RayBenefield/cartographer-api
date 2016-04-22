@@ -51,4 +51,7 @@ public class ScheduledEvent {
 	public ScheduledEvent(String time) {
 		this.time = time;
 	}
+	
+	public ScheduledEvent() {
+	}
 }

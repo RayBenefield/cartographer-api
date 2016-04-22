@@ -1,6 +1,7 @@
 package com.cartographerapi.domain;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
+import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -65,6 +66,20 @@ public class Game {
 	public Game(String matchId, JsonNode gameData) {
 		this.matchId = matchId;
 		this.gameData = gameData;
+	}
+	
+	public Game(String matchId, String gameData) {
+		mapper = new ObjectMapper();
+
+		this.matchId = matchId;
+		this.setGameData(gameData);
+	}
+
+	public Game(Item item) {
+		this(
+			item.getString("MatchId"),
+			item.getString("GameData")
+		);
 	}
 
 	public Game() {
