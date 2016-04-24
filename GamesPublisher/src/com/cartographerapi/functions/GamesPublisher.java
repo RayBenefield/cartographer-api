@@ -6,10 +6,11 @@ import com.amazonaws.services.lambda.runtime.events.DynamodbEvent;
 import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
-import com.cartographerapi.domain.Game;
-import com.cartographerapi.domain.GamesWriter;
-import com.cartographerapi.domain.GamesSnsWriter;
+
 import com.amazonaws.services.lambda.runtime.events.DynamodbEvent.DynamodbStreamRecord;
+import com.cartographerapi.domain.game.Game;
+import com.cartographerapi.domain.game.GamesSnsWriter;
+import com.cartographerapi.domain.game.GamesWriter;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.internal.InternalUtils;

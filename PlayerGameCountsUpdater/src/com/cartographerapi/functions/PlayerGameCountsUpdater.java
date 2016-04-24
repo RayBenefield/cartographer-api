@@ -3,12 +3,12 @@ package com.cartographerapi.functions;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.cartographerapi.domain.Gamertag;
-import com.cartographerapi.domain.PlayerGameCounts;
-import com.cartographerapi.domain.PlayerGameCountsDynamoReader;
-import com.cartographerapi.domain.PlayerGameCountsDynamoWriter;
-import com.cartographerapi.domain.PlayerGameCountsHaloApiReader;
-import com.cartographerapi.domain.PlayerGameCountsReader;
-import com.cartographerapi.domain.PlayerGameCountsWriter;
+import com.cartographerapi.domain.playergamecounts.PlayerGameCounts;
+import com.cartographerapi.domain.playergamecounts.PlayerGameCountsDynamoReader;
+import com.cartographerapi.domain.playergamecounts.PlayerGameCountsDynamoWriter;
+import com.cartographerapi.domain.playergamecounts.PlayerGameCountsHaloApiReader;
+import com.cartographerapi.domain.playergamecounts.PlayerGameCountsReader;
+import com.cartographerapi.domain.playergamecounts.PlayerGameCountsWriter;
 
 /**
  * Refreshes the PlayerGameCounts for a given Gamertag.

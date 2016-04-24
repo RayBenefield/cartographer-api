@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import com.cartographerapi.domain.ScheduledEvent;
-import com.cartographerapi.domain.PlayerGameCounts;
+import com.cartographerapi.domain.playergamecounts.PlayerGameCounts;
 import com.amazonaws.services.lambda.runtime.Context;
 
 /**

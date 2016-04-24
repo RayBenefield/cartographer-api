@@ -35,7 +35,6 @@ INDEX VERSION 1.127+/Users/GodlyPerfection/CAPI-Workspace/.metadata/.plugins/org
 2947302773.index
 2641567205.index
 677361136.index
-3295732018.index
 2547517375.index
 3701608260.index
 21698207.index
@@ -68,7 +67,6 @@ INDEX VERSION 1.127+/Users/GodlyPerfection/CAPI-Workspace/.metadata/.plugins/org
 3099101150.index
 397940947.index
 943359375.index
-3822043521.index
 3517430492.index
 2259853718.index
 2171593174.index

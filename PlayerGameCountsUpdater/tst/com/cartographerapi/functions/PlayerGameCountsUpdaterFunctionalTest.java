@@ -5,7 +5,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.cartographerapi.domain.Gamertag;
-import com.cartographerapi.domain.PlayerGameCounts;
+import com.cartographerapi.domain.playergamecounts.PlayerGameCounts;
 import com.cartographerapi.functions.PlayerGameCountsUpdater;
 
 /**

@@ -6,7 +6,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.events.SNSEvent;
-import com.cartographerapi.domain.PlayerGame;
+import com.cartographerapi.domain.playergames.PlayerGame;
 
 /**
  * A simple test harness for locally invoking your Lambda function handler.

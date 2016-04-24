@@ -5,9 +5,10 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import java.util.List;
 import com.cartographerapi.domain.Gamertag;
-import com.cartographerapi.domain.PlayerGame;
-import com.cartographerapi.domain.PlayerGamesReader;
-import com.cartographerapi.domain.PlayerGamesDynamoReader;
+import com.cartographerapi.domain.playergames.PlayerGame;
+import com.cartographerapi.domain.playergames.PlayerGamesDynamoReader;
+import com.cartographerapi.domain.playergames.PlayerGamesReader;
+
 import java.io.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

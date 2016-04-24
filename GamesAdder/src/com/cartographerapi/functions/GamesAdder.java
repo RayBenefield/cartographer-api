@@ -3,15 +3,16 @@ package com.cartographerapi.functions;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.cartographerapi.domain.ScheduledEvent;
-import com.cartographerapi.domain.PlayerGamesQueueReader;
-import com.cartographerapi.domain.PlayerGamesSqsReader;
-import com.cartographerapi.domain.PlayerGame;
-import com.cartographerapi.domain.Game;
-import com.cartographerapi.domain.GamesReader;
-import com.cartographerapi.domain.GamesDynamoReader;
-import com.cartographerapi.domain.GamesWriter;
-import com.cartographerapi.domain.GamesDynamoWriter;
-import com.cartographerapi.domain.GamesHaloApiReader;
+import com.cartographerapi.domain.game.Game;
+import com.cartographerapi.domain.game.GamesDynamoReader;
+import com.cartographerapi.domain.game.GamesDynamoWriter;
+import com.cartographerapi.domain.game.GamesHaloApiReader;
+import com.cartographerapi.domain.game.GamesReader;
+import com.cartographerapi.domain.game.GamesWriter;
+import com.cartographerapi.domain.playergames.PlayerGame;
+import com.cartographerapi.domain.playergames.PlayerGamesQueueReader;
+import com.cartographerapi.domain.playergames.PlayerGamesSqsReader;
+
 import java.util.List;
 import java.util.ArrayList;
 

@@ -9,7 +9,7 @@ import org.junit.Test;
 import com.amazonaws.services.lambda.runtime.Context;
 
 import com.amazonaws.services.lambda.runtime.events.DynamodbEvent;
-import com.cartographerapi.domain.Game;
+import com.cartographerapi.domain.game.Game;
 
 /**
  * A simple test harness for locally invoking your Lambda function handler.

@@ -5,7 +5,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.events.DynamodbEvent;
-import com.cartographerapi.domain.PlayerGame;
+import com.cartographerapi.domain.playergames.PlayerGame;
+
 import java.util.List;
 
 /**

@@ -3,11 +3,12 @@ package com.cartographerapi.functions;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.cartographerapi.domain.ScheduledEvent;
-import com.cartographerapi.domain.PlayerGameCounts;
-import com.cartographerapi.domain.PlayerGameCountsWriter;
-import com.cartographerapi.domain.PlayerGameCountsUpdatedReader;
-import com.cartographerapi.domain.PlayerGameCountsCapiWriter;
-import com.cartographerapi.domain.PlayerGameCountsDynamoReader;
+import com.cartographerapi.domain.playergamecounts.PlayerGameCounts;
+import com.cartographerapi.domain.playergamecounts.PlayerGameCountsCapiWriter;
+import com.cartographerapi.domain.playergamecounts.PlayerGameCountsDynamoReader;
+import com.cartographerapi.domain.playergamecounts.PlayerGameCountsUpdatedReader;
+import com.cartographerapi.domain.playergamecounts.PlayerGameCountsWriter;
+
 import java.util.List;
 import org.joda.time.DateTimeZone;
 import org.joda.time.DateTime;

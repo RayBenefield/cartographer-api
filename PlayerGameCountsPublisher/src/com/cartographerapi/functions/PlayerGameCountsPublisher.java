@@ -4,13 +4,13 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.DynamodbEvent;
 import com.amazonaws.services.lambda.runtime.events.DynamodbEvent.DynamodbStreamRecord;
+import com.cartographerapi.domain.playergamecounts.PlayerGameCounts;
+import com.cartographerapi.domain.playergamecounts.PlayerGameCountsSnsWriter;
+import com.cartographerapi.domain.playergamecounts.PlayerGameCountsWriter;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.internal.InternalUtils;
 import java.util.Map;
-import com.cartographerapi.domain.PlayerGameCounts;
-import com.cartographerapi.domain.PlayerGameCountsSnsWriter;
-import com.cartographerapi.domain.PlayerGameCountsWriter;
 
 public class PlayerGameCountsPublisher implements RequestHandler<DynamodbEvent, Boolean> {
 
