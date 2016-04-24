@@ -1,7 +1,0 @@
-package com.cartographerapi.domain;
-
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMarshaller;
-
-public class JsonNodeMarshaller implements DynamoDBMarshaller<T> {
-
-}

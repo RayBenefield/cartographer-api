@@ -17,11 +17,9 @@ public class GamesHaloApiReader implements GamesReader {
 	private Halo5ApiWrapper api;
 	private ObjectMapper mapper;
 
-	public GamesHaloApiReader() {
-		this.api = new Halo5ApiWrapper();
-		this.mapper = new ObjectMapper();
-	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Game getGameByMatchId(String matchId) {
 		JsonNode root;
@@ -34,6 +32,14 @@ public class GamesHaloApiReader implements GamesReader {
 		}
 
 		return new Game(matchId, root);
+	}
+
+    /**
+     * The lazy IOC constructor.
+     */
+	public GamesHaloApiReader() {
+		this.api = new Halo5ApiWrapper();
+		this.mapper = new ObjectMapper();
 	}
 
 }

@@ -18,12 +18,6 @@ public class PlayerGameCountsDynamoWriter implements PlayerGameCountsWriter {
 
 	private AmazonDynamoDBClient client;
 	private DynamoDBMapper dbMapper;
-	
-	public PlayerGameCountsDynamoWriter() {
-		client = new AmazonDynamoDBClient();
-		client.setRegion(Region.getRegion(Regions.US_WEST_2));
-		dbMapper = new DynamoDBMapper(client);
-	}
 
 	/**
 	 * {@inheritDoc}
@@ -35,6 +29,15 @@ public class PlayerGameCountsDynamoWriter implements PlayerGameCountsWriter {
 			dbMapper.save(counts);
 		}
 		return counts;
+	}
+	
+    /**
+     * The lazy IOC constructor.
+     */
+	public PlayerGameCountsDynamoWriter() {
+		client = new AmazonDynamoDBClient();
+		client.setRegion(Region.getRegion(Regions.US_WEST_2));
+		dbMapper = new DynamoDBMapper(client);
 	}
 
 }

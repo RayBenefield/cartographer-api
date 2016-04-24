@@ -23,21 +23,6 @@ public class Halo5ApiWrapper {
 	private final String URL_CUSTOM_GAMES = "https://www.haloapi.com/stats/h5/players/%s/matches?modes=custom&start=%s&count=%s";
 	private final String URL_CUSTOM_MATCH = "https://www.haloapi.com/stats/h5/custom/matches/%s";
 
-	public Halo5ApiWrapper(String token) {
-		this.token = token;
-	}
-
-	public Halo5ApiWrapper() {
-		ObjectMapper mapper = new ObjectMapper();
-		JsonNode config = mapper.createObjectNode();
-		try {
-			config = mapper.readTree(getClass().getClassLoader().getResource("config.json"));
-		} catch (IOException exception) {
-		}
-
-		this.token = config.path("haloApiKey").asText();
-	}
-
 	/**
 	 * Get the details on a Match.
 	 * 
@@ -118,6 +103,20 @@ public class Halo5ApiWrapper {
 		}
 		in.close();
 		return output.toString();
+	}
+
+    /**
+     * The lazy IOC constructor.
+     */
+	public Halo5ApiWrapper() {
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode config = mapper.createObjectNode();
+		try {
+			config = mapper.readTree(getClass().getClassLoader().getResource("config.json"));
+		} catch (IOException exception) {
+		}
+
+		this.token = config.path("haloApiKey").asText();
 	}
 
 }

@@ -10,12 +10,23 @@ import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.sns.model.PublishRequest;
 
+/**
+ * Writer repository for PlayerGames to an SNS topic.
+ * 
+ * @see PlayerGamesWriter
+ * 
+ * @author GodlyPerfection
+ *
+ */
 public class PlayerGamesSnsWriter implements PlayerGamesWriter {
 	
 	private String topicArn;
 	private AmazonSNSClient snsClient;
 	private ObjectMapper mapper;
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public List<PlayerGame> savePlayerGames(List<PlayerGame> games) {
 		// TODO clean up try catch
@@ -35,6 +46,9 @@ public class PlayerGamesSnsWriter implements PlayerGamesWriter {
 		return games;
 	}
 	
+    /**
+     * The lazy IOC constructor.
+     */
 	public PlayerGamesSnsWriter(String topicArn) {
 		this.topicArn = topicArn;
         mapper = new ObjectMapper();

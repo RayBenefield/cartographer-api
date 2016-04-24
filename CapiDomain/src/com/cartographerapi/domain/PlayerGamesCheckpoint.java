@@ -5,6 +5,19 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import java.util.Date;
 
+/**
+ * Domain object that handles the data relating to the last set of PlayerGames
+ * saved.
+ * <pre>
+ *    Gamertag
+ *    TotalGamesLoaded
+ *    LastMatch
+ *    LastUpdated
+ * </pre>
+ * 
+ * @author GodlyPerfection
+ *
+ */
 @DynamoDBTable(tableName="PlayerGamesCheckpoints")
 public class PlayerGamesCheckpoint {
 

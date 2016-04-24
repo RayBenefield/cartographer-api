@@ -10,6 +10,18 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 
+/**
+ * Domain object that handles the data for a Player to Game relationship.
+ * <pre>
+ *    Gamertag
+ *    MatchId
+ *    GameNumber
+ *    GameData
+ * </pre>
+ * 
+ * @author GodlyPerfection
+ *
+ */
 @DynamoDBTable(tableName="PlayerGames")
 public class PlayerGame {
 	
@@ -46,6 +58,7 @@ public class PlayerGame {
 		this.gameNumber = gameNumber;
 	}
 	
+	@DynamoDBAttribute(attributeName="GameData")
 	@DynamoDBMarshalling (marshallerClass = JsonNodeMarshaller.class)
 	public JsonNode getGameData() {
 		return gameData;
@@ -82,12 +95,11 @@ public class PlayerGame {
 		this.matchId = this.gameData.path("Id").path("MatchId").asText();
 	}
 
-	// TODO Change gameData column to be ProperCase instead of camel case
 	public PlayerGame(Item item) {
 		this(
 			item.getString("Gamertag"),
 			item.getNumber("GameNumber").intValue(),
-			item.getString("gameData")
+			item.getString("GameData")
 		);
 	}
 	

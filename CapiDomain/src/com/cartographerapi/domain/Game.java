@@ -11,6 +11,16 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.LinkedHashMap;
 
+/**
+ * Domain object that handles all relevant game details.
+ * <pre>
+ *    MatchId
+ *    GameData
+ * </pre>
+ * 
+ * @author GodlyPerfection
+ *
+ */
 @DynamoDBTable(tableName="Games")
 public class Game {
 

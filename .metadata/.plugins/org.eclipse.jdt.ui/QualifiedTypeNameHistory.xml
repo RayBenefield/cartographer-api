@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
 <fullyQualifiedTypeName name="com.cartographerapi.domain.PlayerGamesWriter"/>
+<fullyQualifiedTypeName name="com.amazonaws.services.sqs.AmazonSQSClient"/>
+<fullyQualifiedTypeName name="java.util.List"/>
+<fullyQualifiedTypeName name="com.fasterxml.jackson.databind.JsonNode"/>
+<fullyQualifiedTypeName name="com.cartographerapi.domain.Game"/>
 </qualifiedTypeNameHistroy>

@@ -1,0 +1,29 @@
+*** TODO List ***
+
+ - Fully document all classes
+ - Re-organize the CAPI Domain Folder by Domain objects
+ - Pull out the CAPI Wrapper into its own project
+ - Pull out the Halo 5 Wrapper into its own project
+ - Find a fix to the DynamoEvent test parsing
+ - Setup a system that updates all functions when the CAPI Domain is built
+ - Find fix for when a clean build unlinks the tst/ folder for projects
+ - Setup Unit Testing for all classes
+ - Move the PlayerGameCountsUpdater behind SNS
+ - Find a better way to dependency inject values from config.json at the Handler level
+ - Proper handling of the config.json file that allows for environment configs
+ - Create Templates:
+ 	 - Reader and Writer Repositories
+ 	 - Dynamo Domain Objects
+ 	 - Specific Repository types like SNS, Dynamo, etc.
+ - Create Snippets:
+ 	 - Import Packages like ObjectMapper, JsonNode, IOException
+ 	 - Basic ObjectMapper reading try/catch
+ 	 - Lazy IOC and Dependency Injection constructors
+ 	 - Dynamo Attribute/HashKey/RangeKey getters/setters
+ - Add Value Objects to Dynamo Domain Objects with proper marshalling/unmarshalling for "always valid" domain objects
+ - Implement Swagger, RAML, or API Blueprint for documentation generation and importing into API Gateway
+ - Script that automatically creates all SNS Topics, SQS Queues, API Endpoints, Dynamo Tables, and generates a local config.json
+ - Add Static CAPI Utilities to clean up messy Handler code
+ 	 - Better logging that prints out pretty input objects in JSON
+ 	 - Extract messages out of SNS Events
+ 	 - Extract New, Update, Delete events out of a DynamoEvent

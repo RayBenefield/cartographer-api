@@ -1,5 +1,19 @@
 package com.cartographerapi.domain;
 
+/**
+ * A custom domain object for a Cloudwatch ScheduledEvent, since I couldn't find
+ * one from the AWS SDK for Java.
+ * <pre>
+ *     Account
+ *     Region
+ *     Source
+ *     Time
+ *     Id
+ * </pre>
+ * 
+ * @author GodlyPerfection
+ *
+ */
 public class ScheduledEvent {
 	
 	private String account;

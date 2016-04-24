@@ -1,2 +1,2 @@
-commit_dialog_history_messages=<?xml version\="1.0" encoding\="UTF-8"?>\n<messages>\n<message>Setup to handle the full looping of custom games now.</message>\n</messages>
+commit_dialog_history_messages=<?xml version\="1.0" encoding\="UTF-8"?>\n<messages>\n<message>Fixed a issue with the GamesAdder and finished the GamesPublisher.</message>\n<message>Created a TODO List for CAPI.</message>\n<message>GameAdder working and refactored out Keys and CAPI Host to config.json.</message>\n<message>Setup to handle the full looping of custom games now.</message>\n</messages>
 eclipse.preferences.version=1

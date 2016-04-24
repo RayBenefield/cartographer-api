@@ -27,12 +27,6 @@ public class PlayerGameCountsDynamoReader implements PlayerGameCountsUpdatedRead
 	private AmazonDynamoDBClient client;
 	private DynamoDBMapper dbMapper;
 
-	public PlayerGameCountsDynamoReader() {
-		client = new AmazonDynamoDBClient();
-		client.setRegion(Region.getRegion(Regions.US_WEST_2));
-		dbMapper = new DynamoDBMapper(client);
-	}
-
 	/**
 	 * {@inheritDoc}
 	 */
@@ -77,6 +71,15 @@ public class PlayerGameCountsDynamoReader implements PlayerGameCountsUpdatedRead
 		}
 		
         return result;
+	}
+
+    /**
+     * The lazy IOC constructor.
+     */
+	public PlayerGameCountsDynamoReader() {
+		client = new AmazonDynamoDBClient();
+		client.setRegion(Region.getRegion(Regions.US_WEST_2));
+		dbMapper = new DynamoDBMapper(client);
 	}
 
 }

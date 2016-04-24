@@ -1,5 +1,0 @@
-package com.cartographerapi.functions;
-
-public interface PlayerGamesReader {
-
-}

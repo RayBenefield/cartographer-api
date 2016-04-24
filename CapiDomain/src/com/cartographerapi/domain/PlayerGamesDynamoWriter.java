@@ -19,12 +19,6 @@ public class PlayerGamesDynamoWriter implements PlayerGamesWriter {
 	private AmazonDynamoDBClient client;
 	private DynamoDBMapper dbMapper;
 
-	public PlayerGamesDynamoWriter() {
-		client = new AmazonDynamoDBClient();
-		client.setRegion(Region.getRegion(Regions.US_WEST_2));
-		dbMapper = new DynamoDBMapper(client);
-	}
-
 	/**
 	 * {@inheritDoc}
 	 */
@@ -32,6 +26,15 @@ public class PlayerGamesDynamoWriter implements PlayerGamesWriter {
 	public List<PlayerGame> savePlayerGames(List<PlayerGame> games) {
 		dbMapper.batchSave(games);
 		return games;
+	}
+
+    /**
+     * The lazy IOC constructor.
+     */
+	public PlayerGamesDynamoWriter() {
+		client = new AmazonDynamoDBClient();
+		client.setRegion(Region.getRegion(Regions.US_WEST_2));
+		dbMapper = new DynamoDBMapper(client);
 	}
 
 }

@@ -18,18 +18,21 @@ public class GamesDynamoReader implements GamesReader {
 	private AmazonDynamoDBClient client;
 	private DynamoDBMapper dbMapper;
 
-	public GamesDynamoReader() {
-		client = new AmazonDynamoDBClient();
-		client.setRegion(Region.getRegion(Regions.US_WEST_2));
-		dbMapper = new DynamoDBMapper(client);
-	}
-
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public Game getGameByMatchId(String matchId) {
 		return dbMapper.load(Game.class, matchId);
+	}
+
+    /**
+     * The lazy IOC constructor.
+     */
+	public GamesDynamoReader() {
+		client = new AmazonDynamoDBClient();
+		client.setRegion(Region.getRegion(Regions.US_WEST_2));
+		dbMapper = new DynamoDBMapper(client);
 	}
 
 }

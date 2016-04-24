@@ -9,12 +9,22 @@ import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.sns.model.PublishRequest;
 
+/**
+ * Writer repository interface for PlayerGameCounts. This provides access to a
+ * data source that contains the PlayerGameCounts object.
+ * 
+ * @author GodlyPerfection
+ *
+ */
 public class PlayerGameCountsSnsWriter implements PlayerGameCountsWriter {
 	
 	private String topicArn;
 	private AmazonSNSClient snsClient;
 	private ObjectMapper mapper;
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public PlayerGameCounts savePlayerGameCounts(PlayerGameCounts counts) {
 		try {
@@ -31,6 +41,9 @@ public class PlayerGameCountsSnsWriter implements PlayerGameCountsWriter {
 		return counts;
 	}
 	
+    /**
+     * The lazy IOC constructor.
+     */
 	public PlayerGameCountsSnsWriter(String topicArn) {
 		this.topicArn = topicArn;
         mapper = new ObjectMapper();

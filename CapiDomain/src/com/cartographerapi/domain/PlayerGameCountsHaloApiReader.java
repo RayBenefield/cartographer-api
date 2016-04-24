@@ -16,11 +16,6 @@ public class PlayerGameCountsHaloApiReader implements PlayerGameCountsReader {
 
 	private Halo5ApiWrapper api;
 	private ObjectMapper mapper;
-	
-	public PlayerGameCountsHaloApiReader() {
-		this.api = new Halo5ApiWrapper();
-		this.mapper = new ObjectMapper();
-	}
 
 	/**
 	 * {@inheritDoc}
@@ -78,6 +73,14 @@ public class PlayerGameCountsHaloApiReader implements PlayerGameCountsReader {
 		}
 
 		return new PlayerGameCounts(counts.getGamertag(), completedGames, totalGames);
+	}
+	
+    /**
+     * The lazy IOC constructor.
+     */
+	public PlayerGameCountsHaloApiReader() {
+		this.api = new Halo5ApiWrapper();
+		this.mapper = new ObjectMapper();
 	}
 
 }

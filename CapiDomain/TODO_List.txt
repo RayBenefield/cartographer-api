@@ -27,3 +27,4 @@
  	 - Better logging that prints out pretty input objects in JSON
  	 - Extract messages out of SNS Events
  	 - Extract New, Update, Delete events out of a DynamoEvent
+ 	 - ObjectMapper that converts string into a JsonNode or returns an empty JsonNode

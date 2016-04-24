@@ -12,19 +12,20 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 
+/**
+ * Queue Reader repository for PlayerGames from an SQS Queue.
+ * 
+ * @see PlayerGamesQueueReader
+ * 
+ * @author GodlyPerfection
+ *
+ */
 public class PlayerGamesSqsReader implements PlayerGamesQueueReader {
 
 	private AmazonSQSClient client;
 	private String queueUrl;
     private ObjectMapper mapper;
     private Map<PlayerGame, Message> messageMap;
-
-	public PlayerGamesSqsReader(String queueUrl) {
-		client = new AmazonSQSClient();
-		mapper = new ObjectMapper();
-		this.queueUrl = queueUrl;
-		this.messageMap = new HashMap<PlayerGame, Message>();
-	}
 
 	/**
 	 * {@inheritDoc}
@@ -35,6 +36,8 @@ public class PlayerGamesSqsReader implements PlayerGamesQueueReader {
         ReceiveMessageRequest receiveMessageRequest = new ReceiveMessageRequest(queueUrl);
         receiveMessageRequest.setMaxNumberOfMessages(count);
         List<Message> messages = client.receiveMessage(receiveMessageRequest).getMessages();
+        
+        // For each message map it to a PlayerGame for the message to be deleted after processing.
         for (Message message : messages) {
 			try {
 				JsonNode msgNode = mapper.readTree(mapper.readTree(message.getBody()).path("Message").textValue());
@@ -63,6 +66,16 @@ public class PlayerGamesSqsReader implements PlayerGamesQueueReader {
 			.withReceiptHandle(message.getReceiptHandle()));
 		
 		return game;
+	}
+
+    /**
+     * The lazy IOC constructor.
+     */
+	public PlayerGamesSqsReader(String queueUrl) {
+		client = new AmazonSQSClient();
+		mapper = new ObjectMapper();
+		this.queueUrl = queueUrl;
+		this.messageMap = new HashMap<PlayerGame, Message>();
 	}
 
 }

@@ -10,7 +10,8 @@ import org.joda.time.DateTimeZone;
 import org.joda.time.DateTime;
 
 /**
- * Holds the data relevant to the counts for Games for a single Player.
+ * Domain object that handles the data relevant to the counts for Games for a
+ * single Player.
  * <pre>
  *    Gamertag
  *    GamesCompleted

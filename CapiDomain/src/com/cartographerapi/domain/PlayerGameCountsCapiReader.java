@@ -15,11 +15,6 @@ public class PlayerGameCountsCapiReader implements PlayerGameCountsReader {
 
 	private CapiWrapper api;
 	private ObjectMapper mapper;
-	
-	public PlayerGameCountsCapiReader() {
-		this.api = new CapiWrapper();
-		this.mapper = new ObjectMapper();
-	}
 
 	/**
 	 * {@inheritDoc}
@@ -53,6 +48,14 @@ public class PlayerGameCountsCapiReader implements PlayerGameCountsReader {
 		}
 
 		return newCounts;
+	}
+	
+    /**
+     * The lazy IOC constructor.
+     */
+	public PlayerGameCountsCapiReader() {
+		this.api = new CapiWrapper();
+		this.mapper = new ObjectMapper();
 	}
 
 }

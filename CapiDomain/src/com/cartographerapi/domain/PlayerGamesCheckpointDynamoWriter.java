@@ -19,12 +19,6 @@ public class PlayerGamesCheckpointDynamoWriter implements PlayerGamesCheckpointW
 	private AmazonDynamoDBClient client;
 	private DynamoDBMapper dbMapper;
 
-	public PlayerGamesCheckpointDynamoWriter() {
-		client = new AmazonDynamoDBClient();
-		client.setRegion(Region.getRegion(Regions.US_WEST_2));
-		dbMapper = new DynamoDBMapper(client);
-	}
-
 	/**
 	 * {@inheritDoc}
 	 */
@@ -33,6 +27,15 @@ public class PlayerGamesCheckpointDynamoWriter implements PlayerGamesCheckpointW
 		checkpoint.setLastUpdated(new Date());
 		dbMapper.save(checkpoint);
 		return checkpoint;
+	}
+
+    /**
+     * The lazy IOC constructor.
+     */
+	public PlayerGamesCheckpointDynamoWriter() {
+		client = new AmazonDynamoDBClient();
+		client.setRegion(Region.getRegion(Regions.US_WEST_2));
+		dbMapper = new DynamoDBMapper(client);
 	}
 
 }

@@ -20,7 +20,7 @@ public interface PlayerGamesQueueReader {
 	public List<PlayerGame> getNumberOfPlayerGames(Integer count);
 
 	/**
-	 * Get a number of PlayerGame objects.
+	 * With the PlayerGame processed, we can delete the message in the queue
 	 * 
 	 * @param gamertag
 	 * @return
