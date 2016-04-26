@@ -1,3 +1,8 @@
 {
-    "haloApiKey": "ae4df7c91357455ea30be2d7bdf15522"
+    "haloApiKey": "ae4df7c91357455ea30be2d7bdf15522",
+    "capiGamesNew": "arn:aws:sns:us-west-2:789201490085:capi-games-new",
+    "capiPlayerGameCountsNew": "arn:aws:sns:us-west-2:789201490085:capi-playergamecounts-new",
+    "capiPlayerGameCountsUpdated": "arn:aws:sns:us-west-2:789201490085:capi-playergamecounts-updated",
+    "capiPlayerGameCountsContinue": "arn:aws:sns:us-west-2:789201490085:capi-playergamescontinue",
+    "capiPlayerGamesNew": "arn:aws:sns:us-west-2:789201490085:capi-playergames-new"
 }

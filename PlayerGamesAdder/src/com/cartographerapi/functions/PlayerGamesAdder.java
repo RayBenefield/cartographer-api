@@ -3,6 +3,7 @@ package com.cartographerapi.functions;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.SNSEvent;
+
 import com.cartographerapi.domain.playergamecounts.PlayerGameCounts;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCountsSnsWriter;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCountsWriter;
@@ -15,13 +16,22 @@ import com.cartographerapi.domain.playergamescheckpoints.PlayerGamesCheckpointDy
 import com.cartographerapi.domain.playergamescheckpoints.PlayerGamesCheckpointDynamoWriter;
 import com.cartographerapi.domain.playergamescheckpoints.PlayerGamesCheckpointReader;
 import com.cartographerapi.domain.playergamescheckpoints.PlayerGamesCheckpointWriter;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+
 import java.io.IOException;
 
+/**
+ * Pull a batch of 24 games to be saved into our PlayerGames cache.
+ * 
+ * @author GodlyPerfection
+ * 
+ */
 public class PlayerGamesAdder implements RequestHandler<SNSEvent, List<PlayerGame>> {
 	
 	private PlayerGamesHaloApiReader gameReader;
@@ -30,6 +40,17 @@ public class PlayerGamesAdder implements RequestHandler<SNSEvent, List<PlayerGam
 	private PlayerGamesCheckpointWriter checkpointWriter;
 	private PlayerGameCountsWriter continueWriter;
 
+	/**
+	 * Pull a batch of PlayerGames from the Halo API starting from a
+	 * PlayerGamesCheckpoint if one exists. If games are found then save them
+	 * and update the checkpoint. If we did not find the full batch of games
+	 * (results were maxed at 24), then we have more games to pull so published
+	 * to an SNS topic to trigger another batch pull.
+	 * 
+	 * @param input The SNS event that triggered this.
+	 * @param context The Lambda execution context.
+	 * @return The newly added PlayerGames.
+	 */
 	@SuppressWarnings("unchecked")
     @Override
     public List<PlayerGame> handleRequest(SNSEvent input, Context context) {
@@ -81,7 +102,7 @@ public class PlayerGamesAdder implements RequestHandler<SNSEvent, List<PlayerGam
     		new PlayerGamesDynamoWriter(),
     		new PlayerGamesCheckpointDynamoReader(),
     		new PlayerGamesCheckpointDynamoWriter(),
-			new PlayerGameCountsSnsWriter("arn:aws:sns:us-west-2:789201490085:capi-playergamescontinue")
+			new PlayerGameCountsSnsWriter("capiPlayerGameCountsContinue")
 		);
     }
 

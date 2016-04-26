@@ -10,7 +10,8 @@ import com.cartographerapi.domain.playergamecounts.PlayerGameCountsReader;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCountsWriter;
 
 /**
- * Refreshes the PlayerGameCounts for a given Gamertag.
+ * Gets the PlayerGameCounts from the cache, and adds to the cache if it doesn't
+ * exist.
  * 
  * @author GodlyPerfection
  * 
@@ -21,13 +22,12 @@ public class PlayerGameCountsGetter implements RequestHandler<Gamertag, PlayerGa
 	private PlayerGameCountsWriter sourceWriter;
 	
 	/**
-	 * Checks the cache to see if PlayerGameCounts already exist. Then uses that
-	 * (if exists) to update the current game counts for a Gamertag. Then saves
-	 * the refresh in the cache.
+	 * Checks the cache to see if PlayerGameCounts already exist. If it doesn't
+	 * exist then it calls the updater to try to add it to the cache.
 	 * 
 	 * @param gamertag The Gamertag given as input to the Lambda function.
 	 * @param context The Lambda execution context.
-	 * @return The newly refreshed PlayerGameCounts for a Gamertag.
+	 * @return The cached PlayerGameCounts for a Gamertag.
 	 */
     @Override
     public PlayerGameCounts handleRequest(Gamertag input, Context context) {

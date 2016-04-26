@@ -24,6 +24,7 @@
  - Implement Swagger, RAML, or API Blueprint for documentation generation and importing into API Gateway
  - Script that automatically creates all SNS Topics, SQS Queues, API Endpoints, Dynamo Tables, and generates a local config.json
  - Add Static CAPI Utilities to clean up messy Handler code
+ 	 - Different Utils for both Test and Src code
  	 - Better logging that prints out pretty input objects in JSON
  	 - Extract messages out of SNS Events
  	 - Extract New, Update, Delete events out of a DynamoEvent

@@ -3,27 +3,44 @@ package com.cartographerapi.functions;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.DynamodbEvent;
-import java.util.Map;
-import java.util.List;
-import java.util.ArrayList;
-
 import com.amazonaws.services.lambda.runtime.events.DynamodbEvent.DynamodbStreamRecord;
-import com.cartographerapi.domain.game.Game;
-import com.cartographerapi.domain.game.GamesSnsWriter;
-import com.cartographerapi.domain.game.GamesWriter;
+
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.internal.InternalUtils;
 
+import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
+
+import com.cartographerapi.domain.game.Game;
+import com.cartographerapi.domain.game.GamesSnsWriter;
+import com.cartographerapi.domain.game.GamesWriter;
+
+/**
+ * Publish any new games added to the database to a SNS topic.
+ * 
+ * @author GodlyPerfection
+ * 
+ */
 public class GamesPublisher implements RequestHandler<DynamodbEvent, List<Game>> {
 
 	private GamesWriter newWriter;
-
+	
+	/**
+	 * For every new DynamoDB PlayerGame entry publish it to the appropriate SNS
+	 * topic.
+	 * 
+	 * @param input The DynamoDB change event that triggered this.
+	 * @param context The Lambda execution context.
+	 * @return The newly added Games published to SNS.
+	 */
     @Override
     public List<Game> handleRequest(DynamodbEvent input, Context context) {
         context.getLogger().log("Input: " + input);
         List<Game> results = new ArrayList<Game>();
 
+        // For each record changed, if it is a new item then publish it
 		for (DynamodbStreamRecord record : input.getRecords()) {
 			Map<String, AttributeValue> newData = record.getDynamodb().getNewImage();
 			Map<String, AttributeValue> oldData = record.getDynamodb().getOldImage();
@@ -44,7 +61,7 @@ public class GamesPublisher implements RequestHandler<DynamodbEvent, List<Game>>
      */
     public GamesPublisher() {
     	this(
-			new GamesSnsWriter("arn:aws:sns:us-west-2:789201490085:capi-games-new")
+			new GamesSnsWriter("capiGamesNew")
 		);
     }
 

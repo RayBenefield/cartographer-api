@@ -2,6 +2,7 @@ package com.cartographerapi.functions;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
+
 import com.cartographerapi.domain.ScheduledEvent;
 import com.cartographerapi.domain.game.Game;
 import com.cartographerapi.domain.game.GamesDynamoReader;
@@ -16,20 +17,37 @@ import com.cartographerapi.domain.playergames.PlayerGamesSqsReader;
 import java.util.List;
 import java.util.ArrayList;
 
+/**
+ * Check the new PlayerGames that could have Games not loaded in our cache.
+ * 
+ * @author GodlyPerfection
+ * 
+ */
 public class GamesAdder implements RequestHandler<ScheduledEvent, List<Game>> {
 	
 	private PlayerGamesQueueReader queueReader;
 	private GamesReader cacheReader;
 	private GamesReader sourceReader;
 	private GamesWriter cacheWriter;
-
+	
+	/**
+	 * Pulls a number of queue payloads and then for each it checks the cache to
+	 * see if the Game in the payload already exist. If not then it finds the
+	 * game from the HaloAPI and adds it to the cache.
+	 * 
+	 * @param input The Cloudwatch scheduled event that triggered this.
+	 * @param context The Lambda execution context.
+	 * @return The newly added Games.
+	 */
     @Override
     public List<Game> handleRequest(ScheduledEvent input, Context context) {
         context.getLogger().log("Input: " + input);
         List<Game> results = new ArrayList<Game>();
 
+        // Pull games from the queue to inspect
         List<PlayerGame> games = queueReader.getNumberOfPlayerGames(10);
         
+        // For each game, check the cache and if it isn't there find it and save it
         for (PlayerGame game : games) {
 			Game cachedGame = cacheReader.getGameByMatchId(game.getMatchId());
 			if (cachedGame != null) {

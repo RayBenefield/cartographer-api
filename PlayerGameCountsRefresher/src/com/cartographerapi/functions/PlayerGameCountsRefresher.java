@@ -2,6 +2,7 @@ package com.cartographerapi.functions;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
+
 import com.cartographerapi.domain.ScheduledEvent;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCounts;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCountsCapiWriter;
@@ -10,10 +11,10 @@ import com.cartographerapi.domain.playergamecounts.PlayerGameCountsUpdatedReader
 import com.cartographerapi.domain.playergamecounts.PlayerGameCountsWriter;
 
 import java.util.List;
+
 import org.joda.time.DateTimeZone;
 import org.joda.time.DateTime;
 
-// TODO Move into using SNS publishing to trigger a refresh.
 /**
  * Refreshes the PlayerGameCounts for all gamertags that have not been updated
  * in X amount of time.
@@ -21,11 +22,21 @@ import org.joda.time.DateTime;
  * @author GodlyPerfection
  * 
  */
+// TODO Move into using SNS publishing to trigger a refresh.
+// TODO check this against the rate limit.
 public class PlayerGameCountsRefresher implements RequestHandler<ScheduledEvent, List<PlayerGameCounts>> {
 
 	private PlayerGameCountsWriter cacheWriter;
 	private PlayerGameCountsUpdatedReader cacheReader;
 
+	/**
+	 * Find all cached PlayerGameCounts that are older than 24 hours and send
+	 * them in to get refreshed.
+	 * 
+	 * @param input The Cloudwatch scheduled event that triggered this.
+	 * @param context The Lambda execution context.
+	 * @return The updated PlayerGameCounts.
+	 */
     @Override
     public List<PlayerGameCounts> handleRequest(ScheduledEvent input, Context context) {
         context.getLogger().log("Input: " + input);

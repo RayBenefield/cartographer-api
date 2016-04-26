@@ -101,18 +101,4 @@ public class TestUtils {
             return dateTimeFormatter.parseDateTime(parser.getText());
         }
     }
-
-    private static class UpperCaseRecordsPropertyNamingStrategy
-            extends PropertyNamingStrategy.PropertyNamingStrategyBase {
-
-        private static final long serialVersionUID = 1L;
-
-        @Override
-        public String translate(String propertyName) {
-            if (propertyName.equals("records")) {
-                return "Records";
-            }
-            return propertyName;
-        }
-    }
 }

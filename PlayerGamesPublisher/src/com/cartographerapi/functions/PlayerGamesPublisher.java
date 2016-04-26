@@ -4,9 +4,11 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.DynamodbEvent;
 import com.amazonaws.services.lambda.runtime.events.DynamodbEvent.DynamodbStreamRecord;
+
 import com.cartographerapi.domain.playergames.PlayerGame;
 import com.cartographerapi.domain.playergames.PlayerGamesSnsWriter;
 import com.cartographerapi.domain.playergames.PlayerGamesWriter;
+
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.internal.InternalUtils;
@@ -15,15 +17,30 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 
+/**
+ * Publish all new PlayerGames to an SNS topic.
+ * 
+ * @author GodlyPerfection
+ * 
+ */
 public class PlayerGamesPublisher implements RequestHandler<DynamodbEvent, List<PlayerGame>> {
 
 	private PlayerGamesWriter newWriter;
 
+	/**
+	 * For every new PlayerGame added to DynamoDB publish that game to the
+	 * respective SNS topic.
+	 * 
+	 * @param input The Dynamo event that triggered this.
+	 * @param context The Lambda execution context.
+	 * @return The published PlayerGames.
+	 */
     @Override
     public List<PlayerGame> handleRequest(DynamodbEvent input, Context context) {
         context.getLogger().log("Input: " + input);
         List<PlayerGame> results = new ArrayList<PlayerGame>();
 
+        // For each Dynamo Record, publish it to the SNS topic
 		for (DynamodbStreamRecord record : input.getRecords()) {
 			Map<String, AttributeValue> newData = record.getDynamodb().getNewImage();
 			Map<String, AttributeValue> oldData = record.getDynamodb().getOldImage();
@@ -44,7 +61,7 @@ public class PlayerGamesPublisher implements RequestHandler<DynamodbEvent, List<
      */
     public PlayerGamesPublisher() {
     	this(
-			new PlayerGamesSnsWriter("arn:aws:sns:us-west-2:789201490085:capi-playergames-new")
+			new PlayerGamesSnsWriter("capiPlayerGamesNew")
 		);
     }
 

@@ -4,22 +4,42 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.DynamodbEvent;
 import com.amazonaws.services.lambda.runtime.events.DynamodbEvent.DynamodbStreamRecord;
+
 import com.cartographerapi.domain.playergamecounts.PlayerGameCounts;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCountsSnsWriter;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCountsWriter;
+
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.internal.InternalUtils;
+
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 
-public class PlayerGameCountsPublisher implements RequestHandler<DynamodbEvent, Boolean> {
+/**
+ * Publishes updates and new PlayerGameCounts to respective SNS topics.
+ * 
+ * @author GodlyPerfection
+ * 
+ */
+public class PlayerGameCountsPublisher implements RequestHandler<DynamodbEvent, List<PlayerGameCounts>> {
 
 	private PlayerGameCountsWriter newWriter;
 	private PlayerGameCountsWriter updatedWriter;
 
+	/**
+	 * Any new or updated DynamoDB entries are published to the respective SNS
+	 * topics.
+	 * 
+	 * @param input DyanmoDB event that triggered this.
+	 * @param context The Lambda execution context.
+	 * @return The newly added Games.
+	 */
     @Override
-    public Boolean handleRequest(DynamodbEvent input, Context context) {
+    public List<PlayerGameCounts> handleRequest(DynamodbEvent input, Context context) {
         context.getLogger().log("Input: " + input);
+        List<PlayerGameCounts> results = new ArrayList<PlayerGameCounts>();
 
 		for (DynamodbStreamRecord record : input.getRecords()) {
 			Map<String, AttributeValue> newData = record.getDynamodb().getNewImage();
@@ -32,6 +52,7 @@ public class PlayerGameCountsPublisher implements RequestHandler<DynamodbEvent, 
 			// This is new.
 			if (oldData == null) {
 				newWriter.savePlayerGameCounts(counts);
+				results.add(counts);
 				continue;
 			}
 
@@ -43,9 +64,10 @@ public class PlayerGameCountsPublisher implements RequestHandler<DynamodbEvent, 
 
 			// This is an update.
 			updatedWriter.savePlayerGameCounts(counts);
+			results.add(counts);
 		}
 		
-        return true;
+        return results;
     }
     
     /**
@@ -53,8 +75,8 @@ public class PlayerGameCountsPublisher implements RequestHandler<DynamodbEvent, 
      */
     public PlayerGameCountsPublisher() {
     	this(
-			new PlayerGameCountsSnsWriter("arn:aws:sns:us-west-2:789201490085:capi-playergamecounts-new"),
-			new PlayerGameCountsSnsWriter("arn:aws:sns:us-west-2:789201490085:capi-playergamecounts-updated")
+			new PlayerGameCountsSnsWriter("capiPlayerGameCountsNew"),
+			new PlayerGameCountsSnsWriter("capiPlayerGameCountsUpdated")
 		);
     }
 
