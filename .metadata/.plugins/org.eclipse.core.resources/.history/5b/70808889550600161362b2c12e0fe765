@@ -1,7 +1,0 @@
-package com.cartographerapi.domain;
-
-public class Game {
-
-	private String matchId;
-
-}

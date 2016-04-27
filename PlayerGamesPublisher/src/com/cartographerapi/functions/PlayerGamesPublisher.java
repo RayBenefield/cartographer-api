@@ -61,7 +61,7 @@ public class PlayerGamesPublisher implements RequestHandler<DynamodbEvent, List<
      */
     public PlayerGamesPublisher() {
     	this(
-			new PlayerGamesSnsWriter("capiPlayerGamesNew")
+			new PlayerGamesSnsWriter("snsCapiPlayerGamesNew")
 		);
     }
 

@@ -2,7 +2,10 @@
 <qualifiedTypeNameHistroy>
 <fullyQualifiedTypeName name="com.cartographerapi.domain.PlayerGamesWriter"/>
 <fullyQualifiedTypeName name="com.amazonaws.services.sqs.AmazonSQSClient"/>
-<fullyQualifiedTypeName name="java.util.List"/>
 <fullyQualifiedTypeName name="com.fasterxml.jackson.databind.JsonNode"/>
 <fullyQualifiedTypeName name="com.cartographerapi.domain.Game"/>
+<fullyQualifiedTypeName name="java.util.List"/>
+<fullyQualifiedTypeName name="com.cartographerapi.domain.playergamecounts.PlayerGameCounts"/>
+<fullyQualifiedTypeName name="com.fasterxml.jackson.databind.ObjectMapper"/>
+<fullyQualifiedTypeName name="com.amazonaws.util.StringUtils"/>
 </qualifiedTypeNameHistroy>

@@ -1,9 +1,2 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<typeInfoHistroy>
-<typeInfo handle="=CapiDomain/src&lt;com.cartographerapi.domain{PlayerGameCountsReader.java[PlayerGameCountsReader" modifiers="513" timestamp="1460745340000"/>
-<typeInfo handle="=CapiDomain/src&lt;com.cartographerapi.domain{PlayerGamesCheckpointReader.java[PlayerGamesCheckpointReader" modifiers="513" timestamp="1460996045000"/>
-<typeInfo handle="=CapiDomain/src&lt;com.cartographerapi.domain{PlayerGamesWriter.java[PlayerGamesWriter" modifiers="513" timestamp="1460744885000"/>
-<typeInfo handle="=CapiDomain/src&lt;com.cartographerapi.domain{PlayerGamesCheckpointWriter.java[PlayerGamesCheckpointWriter" modifiers="513" timestamp="1460996035000"/>
-<typeInfo handle="=CapiDomain/src&lt;com.cartographerapi.domain{PlayerGamesQueueReader.java[PlayerGamesQueueReader" modifiers="513" timestamp="1461278242000"/>
-<typeInfo handle="=CapiDomain/src&lt;com.cartographerapi.domain{GamesWriter.java[GamesWriter" modifiers="513" timestamp="1461362824000"/>
-</typeInfoHistroy>
+<typeInfoHistroy/>

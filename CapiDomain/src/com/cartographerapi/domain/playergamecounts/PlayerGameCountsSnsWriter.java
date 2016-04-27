@@ -50,7 +50,7 @@ public class PlayerGameCountsSnsWriter implements PlayerGameCountsWriter {
      * The lazy IOC constructor.
      */
 	public PlayerGameCountsSnsWriter(String topicArnKey) {
-		ObjectMapper mapper = new ObjectMapper();
+        mapper = new ObjectMapper();
 		JsonNode config = mapper.createObjectNode();
 		try {
 			config = mapper.readTree(getClass().getClassLoader().getResource("config.json"));
@@ -58,7 +58,6 @@ public class PlayerGameCountsSnsWriter implements PlayerGameCountsWriter {
 		}
 
 		this.topicArn = config.path(topicArnKey).asText();
-        mapper = new ObjectMapper();
         snsClient = new AmazonSNSClient();		                           
         snsClient.setRegion(Region.getRegion(Regions.US_WEST_2));
 	}

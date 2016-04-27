@@ -3,7 +3,7 @@ package com.cartographerapi.functions;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.SNSEvent;
-
+import com.amazonaws.util.StringUtils;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCounts;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCountsSnsWriter;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCountsWriter;
@@ -71,7 +71,7 @@ public class PlayerGamesAdder implements RequestHandler<SNSEvent, List<PlayerGam
 		PlayerGamesCheckpoint checkpoint = checkpointReader.getPlayerGamesCheckpointWithDefault(gamertag);
 		
 		// If there is a checkpoint then start there and load up to the games possible.
-		if (checkpoint.getLastMatch().equals("")) {
+		if (!StringUtils.isNullOrEmpty(checkpoint.getLastMatch())) {
 			gameReader.setLastMatch(checkpoint.getLastMatch());
 		}
 		gameReader.setTotal(counts.getTotalGames());
@@ -102,7 +102,7 @@ public class PlayerGamesAdder implements RequestHandler<SNSEvent, List<PlayerGam
     		new PlayerGamesDynamoWriter(),
     		new PlayerGamesCheckpointDynamoReader(),
     		new PlayerGamesCheckpointDynamoWriter(),
-			new PlayerGameCountsSnsWriter("capiPlayerGameCountsContinue")
+			new PlayerGameCountsSnsWriter("snsCapiPlayerGameCountsContinue")
 		);
     }
 

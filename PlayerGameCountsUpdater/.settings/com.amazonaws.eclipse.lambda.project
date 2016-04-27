@@ -1,5 +1,5 @@
 #Lambda Function Project Metadata
-#Sat Apr 09 08:07:27 PDT 2016
+#Wed Apr 27 07:05:13 PDT 2016
 lastDeploymentFunctionName=PlayerGameCountsUpdater
 lastDeploymentBucketName=cartographer-api-lambda-code
 lastDeploymentEndpoint=https\://lambda.us-west-2.amazonaws.com/

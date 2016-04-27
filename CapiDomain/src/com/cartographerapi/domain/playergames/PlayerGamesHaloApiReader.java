@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 
+import com.amazonaws.util.StringUtils;
 import com.cartographerapi.domain.Halo5ApiWrapper;
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -56,7 +57,7 @@ public class PlayerGamesHaloApiReader implements PlayerGamesReader {
 			// new games were added and we need to stop here to avoid missing
 			// games.
 			if (
-				lastMatch != null
+				!StringUtils.isNullOrEmpty(lastMatch)
 				&& !root.path("Results").path(lastResult - 1).path("Id").path("MatchId").asText().equals(lastMatch)
 			) {
 				return results;
@@ -74,7 +75,7 @@ public class PlayerGamesHaloApiReader implements PlayerGamesReader {
 			Collections.reverse(results);
 			
 			// Since the last match was just used for verification, we can remove it.
-			if (lastMatch != null) {
+			if (!StringUtils.isNullOrEmpty(lastMatch)) {
 				results.remove(0);
 			}
 		} catch (IOException exception) {

@@ -1,8 +1,9 @@
 {
-    "haloApiKey": "ae4df7c91357455ea30be2d7bdf15522",
-    "capiGamesNew": "arn:aws:sns:us-west-2:789201490085:capi-games-new",
-    "capiPlayerGameCountsNew": "arn:aws:sns:us-west-2:789201490085:capi-playergamecounts-new",
-    "capiPlayerGameCountsUpdated": "arn:aws:sns:us-west-2:789201490085:capi-playergamecounts-updated",
-    "capiPlayerGameCountsContinue": "arn:aws:sns:us-west-2:789201490085:capi-playergamescontinue",
-    "capiPlayerGamesNew": "arn:aws:sns:us-west-2:789201490085:capi-playergames-new"
+    "haloApiKey": "686a6626daa64937a660c0d3bf59b2dd",
+    "snsCapiGamesNew": "arn:aws:sns:us-west-2:789201490085:capi-games-new",
+    "snsCapiPlayerGameCountsNew": "arn:aws:sns:us-west-2:789201490085:capi-playergamecounts-new",
+    "snsCapiPlayerGameCountsUpdated": "arn:aws:sns:us-west-2:789201490085:capi-playergamecounts-updated",
+    "snsCapiPlayerGameCountsContinue": "arn:aws:sns:us-west-2:789201490085:capi-playergamescontinue",
+    "snsCapiPlayerGamesNew": "arn:aws:sns:us-west-2:789201490085:capi-playergames-new",
+    "sqsCapiPlayerGamesForGames": "https://sqs.us-west-2.amazonaws.com/789201490085/capi-playergamesforgames"
 }
