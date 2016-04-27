@@ -1,0 +1,49 @@
+package com.cartographerapi.domain.game;
+
+import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
+
+import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
+import com.amazonaws.services.sqs.model.DeleteMessageRequest;
+import com.amazonaws.services.sqs.model.Message;
+import com.amazonaws.services.sqs.AmazonSQSClient;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+
+import com.cartographerapi.domain.playergames.PlayerGame;
+
+/**
+ * Queue Reader repository for PlayerGames from an SQS Queue.
+ * 
+ * @see PlayerGamesQueueReader
+ * 
+ * @author GodlyPerfection
+ *
+ */
+public class GamesSqsReader implements GamesQueueReader {
+
+	private AmazonSQSClient client;
+	private String queueUrl;
+    private ObjectMapper mapper;
+    private Map<PlayerGame, Message> messageMap;
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<Game> getNumberOfPlayerGames(Integer count) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Game processedPlayerGame(PlayerGame game) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

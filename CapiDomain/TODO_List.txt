@@ -2,8 +2,6 @@
 
  - Create a user library of the bare minimum requirements for CAPI lambda functions
  - Explore the Context and check to see if there is a way to differentiate a test vs an actual execution
- - Fully document all classes
- - Re-organize the CAPI Domain Folder by Domain objects
  - Pull out the CAPI Wrapper into its own project
  - Pull out the Halo 5 Wrapper into its own project
  - Find a fix to the DynamoEvent test parsing

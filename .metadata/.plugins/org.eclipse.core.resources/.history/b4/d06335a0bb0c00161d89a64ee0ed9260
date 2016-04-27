@@ -1,0 +1,48 @@
+package com.cartographerapi.domain.game;
+
+import java.util.List;
+
+/**
+ * Writer repository for Games into an SQS queue.
+ * 
+ * @see GamesWriter
+ * 
+ * @author GodlyPerfection
+ *
+ */
+public class GamesSqsWriter implements GamesWriter {
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Game saveGame(Game game) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<Game> saveGames(List<Game> games) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+    /**
+     * The lazy IOC constructor.
+     */
+	public GamesSqsWriter(String queueUrlKey) {
+		mapper = new ObjectMapper();
+		JsonNode config = mapper.createObjectNode();
+		try {
+			config = mapper.readTree(getClass().getClassLoader().getResource("config.json"));
+		} catch (IOException exception) {
+		}
+
+		this.queueUrl = config.path(queueUrlKey).asText();
+		client = new AmazonSQSClient();
+	}
+
+}
