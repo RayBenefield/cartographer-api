@@ -1,0 +1,8 @@
+package com.cartographerapi.domain;
+
+public class DomainQueueFillRequest {
+	
+	private Class domainObject;
+	private String queueUrlKey;
+
+}

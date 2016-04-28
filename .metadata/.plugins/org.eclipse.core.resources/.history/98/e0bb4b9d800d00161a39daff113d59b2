@@ -1,0 +1,24 @@
+package com.cartographerapi.domain;
+
+public class DomainQueueFillRequest {
+	
+	private Class domainObject;
+	private String queueUrlKey;
+	
+	public String getQueueUrlKey() {
+		return queueUrlKey;
+	}
+	
+	public void setQueueUrlKey(String queueUrlKey) {
+		this.queueUrlKey = queueUrlKey;
+	}
+	
+	public Class getDomainObject() {
+		return domainObject;
+	}
+	
+	public void setDomainObject(Class domainObject) {
+		this.domainObject = domainObject;
+	}
+
+}

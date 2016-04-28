@@ -19,31 +19,33 @@ public class ParallelGameScan {
 
 	public static void main(String[] args) {
 		try {
-//			AmazonDynamoDBClient client = new AmazonDynamoDBClient();
-//			client.setRegion(Region.getRegion(Regions.US_WEST_2));
-//			DynamoDBMapper dbMapper = new DynamoDBMapper(client);
-//			
-//			DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
-//			List<Object> games = new ArrayList<Object>(dbMapper.parallelScan(Game.class, scanExpression, 3));
-//			
-//			GamesSqsWriter writer = new GamesSqsWriter("sqsTestScan");
-//			writer.saveGames(games);
+			AmazonDynamoDBClient client = new AmazonDynamoDBClient();
+			client.setRegion(Region.getRegion(Regions.US_WEST_2));
+			DynamoDBMapper dbMapper = new DynamoDBMapper(client);
+			
+			DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
+			List<Object> games = new ArrayList<Object>(dbMapper.parallelScan(Class.forName("com.cartographerapi.domain.game.Game"), scanExpression, 3));
+			
+			ObjectSqsWriter writer = new ObjectSqsWriter("sqsTestScan");
+			writer.saveObjects(games);
 
 			ObjectMapper mapper = new ObjectMapper();
-			GamesSqsReader reader = new GamesSqsReader("sqsTestScan");
-			List<Game> games = reader.getNumberOfGames(10);
+//			GamesSqsReader reader = new GamesSqsReader("sqsTestScan");
+//			List<Game> games = reader.getNumberOfGames(10);
 			
 			String prettyJson = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(games);
 			String json = mapper.writeValueAsString(games);
 
 //			System.out.println(prettyJson);
 			Integer i = 1;
-			for (Game aGame : games) {
-				System.out.println(i + ": " + aGame.getGameData());
-//				System.out.println(i + ": " + mapper.writeValueAsString(aGame));
+			for (Object aGame : games) {
+//				System.out.println(i + ": " + aGame.getGameData());
+				System.out.println(i + ": " + mapper.writeValueAsString(aGame));
 				i++;
 			}
 		} catch (IOException exception) {
+			System.out.println("oops");
+		} catch (ClassNotFoundException exception) {
 			System.out.println("oops");
 		}
 	}

@@ -1,0 +1,6 @@
+#Lambda Function Project Metadata
+#Thu Apr 28 14:31:27 PDT 2016
+lastDeploymentFunctionName=DomainQueueFiller
+lastDeploymentBucketName=cartographer-api-lambda-code
+lastDeploymentEndpoint=https\://lambda.us-west-2.amazonaws.com/
+lastInvokeInput={\n    "queueUrlKey"\: "sqsTestScan",\n    "domainObject"\: "com.cartographerapi.domain.game.Game"\n}

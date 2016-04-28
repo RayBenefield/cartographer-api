@@ -1,0 +1,4 @@
+{
+    "queueUrlKey": "sqsTestScan",
+    "domainObject": "com.cartographerapi.domain.game.Game"
+}
