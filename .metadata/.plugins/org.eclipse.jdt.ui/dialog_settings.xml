@@ -33,12 +33,12 @@
 	<section name="RenameInformationPopup">
 	</section>
 	<section name="ClasspathContainerSelectionPage">
-		<item value="6" key="index"/>
+		<item value="0" key="index"/>
 	</section>
 	<section name="quick_assist_proposal_size">
 	</section>
 	<section name="BuildPathsPropertyPage">
-		<item value="0" key="pageIndex"/>
+		<item value="1" key="pageIndex"/>
 	</section>
 	<section name="JavaSearchPage">
 		<item value="1" key="HISTORY_SIZE"/>

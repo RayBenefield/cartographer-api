@@ -6,11 +6,14 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+
+import com.cartographerapi.domain.ObjectSqsWriter;
 import com.cartographerapi.domain.game.Game;
 import com.cartographerapi.domain.game.GamesQueueReader;
 import com.cartographerapi.domain.game.GamesSqsReader;
-import com.cartographerapi.domain.game.GamesSqsWriter;
+
 import java.util.List;
+import java.util.ArrayList;
 
 public class ParallelGameScan {
 
@@ -20,9 +23,8 @@ public class ParallelGameScan {
 //			client.setRegion(Region.getRegion(Regions.US_WEST_2));
 //			DynamoDBMapper dbMapper = new DynamoDBMapper(client);
 //			
-//			Game game = dbMapper.load(Game.class, "1bbe2aa0-d0c1-4bf4-bcdd-754c8720b95b");
 //			DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
-//			List<Game> games = dbMapper.parallelScan(Game.class, scanExpression, 3);
+//			List<Object> games = new ArrayList<Object>(dbMapper.parallelScan(Game.class, scanExpression, 3));
 //			
 //			GamesSqsWriter writer = new GamesSqsWriter("sqsTestScan");
 //			writer.saveGames(games);
@@ -38,6 +40,7 @@ public class ParallelGameScan {
 			Integer i = 1;
 			for (Game aGame : games) {
 				System.out.println(i + ": " + aGame.getGameData());
+//				System.out.println(i + ": " + mapper.writeValueAsString(aGame));
 				i++;
 			}
 		} catch (IOException exception) {
