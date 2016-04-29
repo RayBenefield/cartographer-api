@@ -1,0 +1,5 @@
+#Lambda Function Project Metadata
+#Fri Apr 29 15:45:28 PDT 2016
+lastDeploymentFunctionName=SegmentScanner
+lastDeploymentBucketName=cartographer-api-lambda-code
+lastDeploymentEndpoint=https\://lambda.us-west-2.amazonaws.com/

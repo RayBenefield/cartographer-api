@@ -1,0 +1,12 @@
+package com.cartographerapi.domain;
+
+import java.util.Map;
+
+public class SegmentScannerRequest {
+	
+	private String domainObject;
+	private Integer segmentId;
+	private Integer totalSegments;
+	private Map lastEvaluatedKey;
+
+}

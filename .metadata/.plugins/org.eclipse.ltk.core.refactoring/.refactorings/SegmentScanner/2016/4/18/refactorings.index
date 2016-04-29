@@ -1,0 +1,4 @@
+1461970949422	Move compilation unit
+1461972073401	Rename local variable 'writer'
+1461972749237	Rename method 'testSegmentScanner'
+1461972764022	Rename type 'SegmentScannerTest'

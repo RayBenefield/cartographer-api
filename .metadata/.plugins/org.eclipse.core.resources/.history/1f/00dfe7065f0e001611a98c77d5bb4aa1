@@ -1,0 +1,35 @@
+package com.cartographerapi.domain;
+
+import java.util.List;
+import java.util.ArrayList;
+
+/**
+ * Reader repository for domain Objects from a DynamoDB table.
+ * 
+ * @see DomainObjectReader
+ * 
+ * @author GodlyPerfection
+ *
+ */
+public class DomainObjectDynamoReader implements DomainObjectReader {
+
+	private AmazonDynamoDBClient client;
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<Object> getAPageOfDomainObjects(SegmentScannerRequest objects) {
+		DynamoDBScanExpression scanExpression = new DynamoDBScanExpression()
+			.withSegment(request.getSegmentId())
+			.withTotalSegments(request.getTotalSegments());
+		
+		if (request.getLastEvaluatedKey() != null) {
+			scanExpression.withExclusiveStartKey(InternalUtils.fromSimpleMap(request.getLastEvaluatedKey()));
+		}
+
+		ScanResultPage page = dbMapper.scanPage(Class.forName(request.getDomainObject()), scanExpression);
+		List<Object> pageResults = new ArrayList<Object>(page.getResults());
+	}
+
+}

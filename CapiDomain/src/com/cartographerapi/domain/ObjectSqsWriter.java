@@ -53,6 +53,21 @@ public class ObjectSqsWriter implements ObjectWriter {
 		return objects;
 	}
 
+	/**
+	 * Set the target queue for writing.
+	 * 
+	 * @param queueUrl
+	 */
+	public void setQueueUrl(String queueUrlKey) {
+		JsonNode config = mapper.createObjectNode();
+		try {
+			config = mapper.readTree(getClass().getClassLoader().getResource("config.json"));
+		} catch (IOException exception) {
+		}
+
+		this.queueUrl = config.path(queueUrlKey).asText();
+	}
+
     /**
      * The lazy IOC constructor.
      */
@@ -65,6 +80,14 @@ public class ObjectSqsWriter implements ObjectWriter {
 		}
 
 		this.queueUrl = config.path(queueUrlKey).asText();
+		client = new AmazonSQSClient();
+		client.setRegion(Region.getRegion(Regions.US_WEST_2));
+	}
+
+    /**
+     * The lazy IOC constructor.
+     */
+	public ObjectSqsWriter() {
 		client = new AmazonSQSClient();
 		client.setRegion(Region.getRegion(Regions.US_WEST_2));
 	}

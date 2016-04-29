@@ -1,0 +1,16 @@
+package com.cartographerapi.functions;
+
+import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.RequestHandler;
+
+public class SegmentScanner implements RequestHandler<SegmentScannerRequest, List<Object>> {
+
+    @Override
+    public List<Object> handleRequest(SegmentScannerRequest input, Context context) {
+        context.getLogger().log("Input: " + input);
+
+        // TODO: implement your handler
+        return null;
+    }
+
+}
