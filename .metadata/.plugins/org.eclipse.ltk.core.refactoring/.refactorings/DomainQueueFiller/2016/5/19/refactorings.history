@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Rename local variable &apos;segment&apos; in &apos;com.cartographerapi.functions.DomainQueueFiller.handleRequest(...)&apos; to &apos;segmentId&apos;&#x0A;- Original project: &apos;DomainQueueFiller&apos;&#x0A;- Original element: &apos;com.cartographerapi.functions.DomainQueueFiller.handleRequest(DomainQueueFillRequest, Context).segment&apos;&#x0A;- Renamed element: &apos;segment&apos;&#x0A;- Update references to refactored element" description="Rename local variable &apos;segment&apos;" id="org.eclipse.jdt.ui.rename.local.variable" input="/src&lt;com.cartographerapi.functions{DomainQueueFiller.java[DomainQueueFiller~handleRequest~QDomainQueueFillRequest;~QContext;@segment!727!745!735!741!QInteger;!0!false" name="segmentId" references="true" stamp="1462112346676" version="1.0"/>
-</session>

@@ -1,5 +1,0 @@
-#Lambda Function Project Metadata
-#Fri Apr 29 16:38:28 PDT 2016
-lastDeploymentFunctionName=DomainQueueFiller
-lastDeploymentBucketName=cartographer-api-lambda-code
-lastDeploymentEndpoint=https\://lambda.us-west-2.amazonaws.com/

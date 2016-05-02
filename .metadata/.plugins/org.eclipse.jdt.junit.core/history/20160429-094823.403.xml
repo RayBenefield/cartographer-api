@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?><testrun name="DomainQueueFillerExecutionTest" project="DomainQueueFiller" tests="1" started="1" failures="0" errors="0" ignored="0">
-  <testsuite name="com.cartographerapi.functions.DomainQueueFillerExecutionTest" time="4.904">
-    <testcase name="executeDomainQueueFiller" classname="com.cartographerapi.functions.DomainQueueFillerExecutionTest" time="4.904"/>
-  </testsuite>
-</testrun>
