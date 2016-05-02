@@ -2,14 +2,11 @@ package com.cartographerapi.functions;
 
 import java.io.IOException;
 
-import java.util.List;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.amazonaws.services.lambda.runtime.Context;
-
-import com.cartographerapi.domain.SegmentScannerRequest;
+import com.amazonaws.services.lambda.runtime.events.SNSEvent;
 
 /**
  * Test the functionality of the SegmentScanner function from
@@ -20,14 +17,14 @@ import com.cartographerapi.domain.SegmentScannerRequest;
  */
 public class SegmentScannerExecutionTest {
 
-    private static SegmentScannerRequest input;
+    private static SNSEvent input;
 
     /**
      * Setup the input for the function.
      */
     @BeforeClass
     public static void createInput() throws IOException {
-        input = new SegmentScannerRequest(0, 2, "com.cartographerapi.domain.game.Game", "sqsTestScan");
+        input = TestUtils.parse("sns-event.json", SNSEvent.class);
     }
 
     /**
@@ -49,9 +46,8 @@ public class SegmentScannerExecutionTest {
         SegmentScanner handler = new SegmentScanner();
         Context ctx = createContext();
 
-        List<Object> output = handler.handleRequest(input, ctx);
+        Boolean output = handler.handleRequest(input, ctx);
 
-        // TODO: validate output here if needed.
         if (output != null) {
             System.out.println(output.toString());
         }
