@@ -1,9 +1,0 @@
-*** TODO List ***
-
- - Setup Unit Testing
- - Move the PlayerGameCountsUpdater behind SNS
- - Add CAPI Utilities to clean up messy Handler code
- 	 - Better logging that prints out pretty input objects in JSON
- 	 - Extract messages out of SNS Events
- 	 - Extract New, Update, Delete events out of a DynamoEvent
- - Find a better way to dependency inject values from config.json at the Handler level

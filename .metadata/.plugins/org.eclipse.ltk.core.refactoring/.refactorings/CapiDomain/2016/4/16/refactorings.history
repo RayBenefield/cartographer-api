@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Rename type &apos;com.cartographerapi.domain.PlayerGames&apos; to &apos;PlayerGame&apos;&#x0A;- Original project: &apos;CapiDomain&apos;&#x0A;- Original element: &apos;com.cartographerapi.domain.PlayerGames&apos;&#x0A;- Renamed element: &apos;com.cartographerapi.domain.PlayerGame&apos;&#x0A;- Update references to refactored element&#x0A;- Update textual occurrences in comments and strings" description="Rename type &apos;PlayerGames&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.type" input="/src&lt;com.cartographerapi.domain{PlayerGames.java[PlayerGames" matchStrategy="1" name="PlayerGame" qualified="false" references="true" similarDeclarations="false" stamp="1460589873980" textual="false" version="1.0"/>
-</session>

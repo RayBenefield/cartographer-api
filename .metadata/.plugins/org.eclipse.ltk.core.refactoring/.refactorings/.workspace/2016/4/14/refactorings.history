@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Delete resource &apos;Halo 5 API Wrapper&apos;" deleteContents="false" description="Delete resource &apos;Halo 5 API Wrapper&apos;" element1="/Halo 5 API Wrapper" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1459601920572"/>
-</session>
