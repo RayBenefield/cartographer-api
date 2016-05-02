@@ -1,4 +1,4 @@
-package com.cartographerapi.domain.playergames;
+package com.cartographerapi.domain.game;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -14,38 +14,39 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 
+import com.cartographerapi.domain.game.Game;
+
 /**
- * Queue Reader repository for PlayerGames from an SQS Queue.
+ * Queue Reader repository for Games from an SQS Queue.
  * 
- * @see PlayerGamesQueueReader
+ * @see GamesQueueReader
  * 
  * @author GodlyPerfection
  *
  */
-public class PlayerGamesSqsReader implements PlayerGamesQueueReader {
+public class GamesSqsReader implements GamesQueueReader {
 
 	private AmazonSQSClient client;
 	private String queueUrl;
     private ObjectMapper mapper;
-    private Map<PlayerGame, Message> messageMap;
+    private Map<Game, Message> messageMap;
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<PlayerGame> getNumberOfPlayerGames(Integer count) {
-		List<PlayerGame> results = new ArrayList<PlayerGame>();
+	public List<Game> getNumberOfGames(Integer count) {
+		List<Game> results = new ArrayList<Game>();
         ReceiveMessageRequest receiveMessageRequest = new ReceiveMessageRequest(queueUrl);
         receiveMessageRequest.setMaxNumberOfMessages(count);
         List<Message> messages = client.receiveMessage(receiveMessageRequest).getMessages();
         
-        // For each message map it to a PlayerGame for the message to be deleted after processing.
+        // For each message map it to a Game for the message to be deleted after processing.
         for (Message message : messages) {
 			try {
 				JsonNode msgNode = mapper.readTree(mapper.readTree(message.getBody()).path("Message").textValue());
-				PlayerGame game = new PlayerGame(
-					msgNode.path("gamertag").asText(),
-					msgNode.path("gameNumber").asInt(),
+				Game game = new Game(
+					msgNode.path("matchId").asText(),
 					msgNode.path("gameData")
 				);
 				messageMap.put(game, message);
@@ -60,7 +61,7 @@ public class PlayerGamesSqsReader implements PlayerGamesQueueReader {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public PlayerGame processedPlayerGame(PlayerGame game) {
+	public Game processedGame(Game game) {
 		Message message = messageMap.get(game);
 
 		client.deleteMessage(new DeleteMessageRequest()
@@ -73,7 +74,7 @@ public class PlayerGamesSqsReader implements PlayerGamesQueueReader {
     /**
      * The lazy IOC constructor.
      */
-	public PlayerGamesSqsReader(String queueUrlKey) {
+	public GamesSqsReader(String queueUrlKey) {
 		mapper = new ObjectMapper();
 		JsonNode config = mapper.createObjectNode();
 		try {
@@ -83,7 +84,7 @@ public class PlayerGamesSqsReader implements PlayerGamesQueueReader {
 
 		this.queueUrl = config.path(queueUrlKey).asText();
 		client = new AmazonSQSClient();
-		this.messageMap = new HashMap<PlayerGame, Message>();
+		this.messageMap = new HashMap<Game, Message>();
 	}
 
 }

@@ -5,5 +5,8 @@
     "snsCapiPlayerGameCountsUpdated": "arn:aws:sns:us-west-2:789201490085:capi-playergamecounts-updated",
     "snsCapiPlayerGameCountsContinue": "arn:aws:sns:us-west-2:789201490085:capi-playergamescontinue",
     "snsCapiPlayerGamesNew": "arn:aws:sns:us-west-2:789201490085:capi-playergames-new",
-    "sqsCapiPlayerGamesForGames": "https://sqs.us-west-2.amazonaws.com/789201490085/capi-playergamesforgames"
+    "sqsCapiPlayerGamesForGames": "https://sqs.us-west-2.amazonaws.com/789201490085/capi-playergamesforgames",
+    "sqsCapiGamesNew": "https://sqs.us-west-2.amazonaws.com/789201490085/capi-games-new",
+    "sqsTestScan": "https://sqs.us-west-2.amazonaws.com/789201490085/test-gamesForScan",
+    "snsSegmentScannerRequestContinue": "arn:aws:sns:us-west-2:789201490085:capi-segmentscannerrequest-continue"
 }

@@ -2,8 +2,10 @@ package com.cartographerapi.domain.playergames;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
+
 import java.util.List;
 
 /**
