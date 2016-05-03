@@ -4,6 +4,8 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.SNSEvent;
 import com.amazonaws.util.StringUtils;
+
+import com.cartographerapi.domain.CapiUtils;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCounts;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCountsSnsWriter;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCountsWriter;
@@ -17,14 +19,10 @@ import com.cartographerapi.domain.playergamescheckpoints.PlayerGamesCheckpointDy
 import com.cartographerapi.domain.playergamescheckpoints.PlayerGamesCheckpointReader;
 import com.cartographerapi.domain.playergamescheckpoints.PlayerGamesCheckpointWriter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.HashMap;
 
-import java.io.IOException;
 
 /**
  * Pull a batch of 24 games to be saved into our PlayerGames cache.
@@ -51,26 +49,23 @@ public class PlayerGamesAdder implements RequestHandler<SNSEvent, List<PlayerGam
 	 * @param context The Lambda execution context.
 	 * @return The newly added PlayerGames.
 	 */
-	@SuppressWarnings("unchecked")
     @Override
     public List<PlayerGame> handleRequest(SNSEvent input, Context context) {
-        context.getLogger().log("Input: " + input);
+		CapiUtils.logObject(context, input);
         List<PlayerGame> results = new ArrayList<PlayerGame>();
-        ObjectMapper mapper = new ObjectMapper();
         
+        // Parse the SNSEvent
+		Map<String, Object> countsMap = CapiUtils.getObjectFromSnsEvent(input);
+		if (countsMap == null) return results;
+
         // Figure out who this is for.
-		PlayerGameCounts counts;
-		try {
-			Map<String, Object> countsMap = mapper.readValue(input.getRecords().get(0).getSNS().getMessage(), HashMap.class);
-			counts = new PlayerGameCounts(countsMap);
-		} catch (IOException exception) {
-			return results;
-		}
-		
+		PlayerGameCounts counts = new PlayerGameCounts(countsMap);
 		String gamertag = counts.getGamertag();
-		PlayerGamesCheckpoint checkpoint = checkpointReader.getPlayerGamesCheckpointWithDefault(gamertag);
-		
+		CapiUtils.logObject(context, counts);
+
 		// If there is a checkpoint then start there and load up to the games possible.
+		PlayerGamesCheckpoint checkpoint = checkpointReader.getPlayerGamesCheckpointWithDefault(gamertag);
+		CapiUtils.logObject(context, checkpoint);
 		if (!StringUtils.isNullOrEmpty(checkpoint.getLastMatch())) {
 			gameReader.setLastMatch(checkpoint.getLastMatch());
 		}
