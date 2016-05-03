@@ -2,7 +2,7 @@ package com.cartographerapi.functions;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-
+import com.cartographerapi.domain.CapiUtils;
 import com.cartographerapi.domain.ScheduledEvent;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCounts;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCountsCapiWriter;
@@ -39,16 +39,17 @@ public class PlayerGameCountsRefresher implements RequestHandler<ScheduledEvent,
 	 */
     @Override
     public List<PlayerGameCounts> handleRequest(ScheduledEvent input, Context context) {
-        context.getLogger().log("Input: " + input);
+		CapiUtils.logObject(context, input, "ScheduledEvent Input");
         
 		String expireTime = new DateTime(input.getTime(), DateTimeZone.UTC).minusHours(24).toString();
-        List<PlayerGameCounts> result = cacheReader.getAllPlayerGameCountsNotUpdatedSince(expireTime);
+        List<PlayerGameCounts> results = cacheReader.getAllPlayerGameCountsNotUpdatedSince(expireTime);
         
-        for (PlayerGameCounts counts : result) {
+        for (PlayerGameCounts counts : results) {
         	cacheWriter.savePlayerGameCounts(counts);
         }
         
-        return result;
+		CapiUtils.logObject(context, results.size(), "# of updated PlayerGameCounts");
+        return results;
     }
     
     /**
