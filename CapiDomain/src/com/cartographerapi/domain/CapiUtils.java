@@ -28,10 +28,11 @@ public class CapiUtils {
 	}
 
 	/**
-	 * Pretty log an object with a Lambda context.
+	 * Pretty log an object with a Lambda context including an entry with a contextual string.
 	 * 
 	 * @param context The context the Lambda Function is run in.
 	 * @param object The object to be logged.
+	 * @param contextualString A descriptive string to be printed before the object.
 	 */
 	public static void logObject(Context context, Object object, String contextualString) {
 		try {

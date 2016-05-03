@@ -2,7 +2,7 @@ package com.cartographerapi.functions;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-
+import com.cartographerapi.domain.CapiUtils;
 import com.cartographerapi.domain.ScheduledEvent;
 import com.cartographerapi.domain.game.Game;
 import com.cartographerapi.domain.game.GamesDynamoReader;
@@ -41,7 +41,7 @@ public class GamesAdder implements RequestHandler<ScheduledEvent, List<Game>> {
 	 */
     @Override
     public List<Game> handleRequest(ScheduledEvent input, Context context) {
-        context.getLogger().log("Input: " + input);
+		CapiUtils.logObject(context, input, "ScheduledEvent Input");
         List<Game> results = new ArrayList<Game>();
 
         // Pull games from the queue to inspect
@@ -65,6 +65,7 @@ public class GamesAdder implements RequestHandler<ScheduledEvent, List<Game>> {
 			}
         }
 
+		CapiUtils.logObject(context, results.size(), "# of GamesAdded");
         return results;
     }
     

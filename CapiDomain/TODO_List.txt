@@ -34,3 +34,4 @@
  20) Circumvent SNSEvent and convert them into domain objects by adding a setRecords(List<SNSRecord>) to domain objects since Lambda parses input out in a particular way
  21) Default all Lambda functions to accept a list of Domain objects and package single domain objects into a List when calling (like API Gateway endpoints)
  22) Use Maven to build dependencies for the projects to include minimum AWS SDK dependencies
+ 23) Maximize Lambda Executions for certain functions... loop through batches of messages from an SQS queue before completing
