@@ -3,15 +3,13 @@ package com.cartographerapi.functions;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.DynamodbEvent;
-import com.amazonaws.services.lambda.runtime.events.DynamodbEvent.DynamodbStreamRecord;
 
+import com.cartographerapi.domain.CapiUtils;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCounts;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCountsSnsWriter;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCountsWriter;
 
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.document.Item;
-import com.amazonaws.services.dynamodbv2.document.internal.InternalUtils;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -38,35 +36,32 @@ public class PlayerGameCountsPublisher implements RequestHandler<DynamodbEvent, 
 	 */
     @Override
     public List<PlayerGameCounts> handleRequest(DynamodbEvent input, Context context) {
-        context.getLogger().log("Input: " + input);
+		CapiUtils.logObject(context, input, "DynamdbEvent Input");
         List<PlayerGameCounts> results = new ArrayList<PlayerGameCounts>();
+        
+        Map<String, List<Map<String, Item>>> itemRecords = CapiUtils.sortRecordsFromDynamoEvent(input);
 
-		for (DynamodbStreamRecord record : input.getRecords()) {
-			Map<String, AttributeValue> newData = record.getDynamodb().getNewImage();
-			if (newData == null) continue; // Ignore deletes for now;
+        // For each inserted record, publish to the new SNS topic.
+        for (Map<String, Item> insertedRecord : itemRecords.get("inserted")) {
+			PlayerGameCounts counts = new PlayerGameCounts(insertedRecord.get("new"));
+			newWriter.savePlayerGameCounts(counts);
+			results.add(counts);
+        }
 
-			Item newItem = Item.fromMap(InternalUtils.toSimpleMapValue(newData));
-			PlayerGameCounts counts = new PlayerGameCounts(newItem);
-			Map<String, AttributeValue> oldData = record.getDynamodb().getOldImage();
-
-			// This is new.
-			if (oldData == null) {
-				newWriter.savePlayerGameCounts(counts);
-				results.add(counts);
-				continue;
-			}
-
-			Item oldItem = Item.fromMap(InternalUtils.toSimpleMapValue(oldData));
-			PlayerGameCounts oldCounts = new PlayerGameCounts(oldItem);
+        // For each updated record, if it is an actual update then publish to the updated SNS topic.
+        for (Map<String, Item> updatedRecord : itemRecords.get("inserted")) {
+			PlayerGameCounts newCounts = new PlayerGameCounts(updatedRecord.get("new"));
+			PlayerGameCounts oldCounts = new PlayerGameCounts(updatedRecord.get("old"));
 
 			// Not really an update.
-			if (counts.getTotalGames().equals(oldCounts.getTotalGames())) continue;
+			if (newCounts.getTotalGames().equals(oldCounts.getTotalGames())) continue;
 
 			// This is an update.
-			updatedWriter.savePlayerGameCounts(counts);
-			results.add(counts);
-		}
-		
+			updatedWriter.savePlayerGameCounts(newCounts);
+			results.add(newCounts);
+        }
+
+		CapiUtils.logObject(context, results.size(), "# of PlayerGameCounts published");
         return results;
     }
     
