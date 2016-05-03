@@ -1,10 +1,18 @@
 package com.cartographerapi.domain;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.amazonaws.services.dynamodbv2.document.Item;
+import com.amazonaws.services.dynamodbv2.document.internal.InternalUtils;
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.lambda.runtime.Context;
 import java.io.IOException;
 import java.util.Map;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
+import com.amazonaws.services.lambda.runtime.events.DynamodbEvent;
+import com.amazonaws.services.lambda.runtime.events.DynamodbEvent.DynamodbStreamRecord;
 import com.amazonaws.services.lambda.runtime.events.SNSEvent;
 
 /**
@@ -56,6 +64,63 @@ public class CapiUtils {
 		} catch (IOException exception) {
 			return null;
 		}
+	}
+	
+	/**
+	 * Grab sorted out item records from a DynamoDB event.
+	 * 
+	 * @param event The event that has the item change records.
+	 * @return
+	 */
+	public static Map<String, List<Map<String, Item>>> sortRecordsFromDynamoEvent(DynamodbEvent event) {
+		Map<String, List<Map<String, Item>>> results = new HashMap<String, List<Map<String, Item>>>();
+		List<Map<String, Item>> insertedRecords = new ArrayList<Map<String, Item>>();
+		List<Map<String, Item>> updatedRecords = new ArrayList<Map<String, Item>>();
+		List<Map<String, Item>> deletedRecords = new ArrayList<Map<String, Item>>();
+
+		// For each Record, let's make a item record and add to the respective list.
+		for (DynamodbStreamRecord record : event.getRecords()) {
+			Map<String, AttributeValue> newData = record.getDynamodb().getNewImage();
+			Map<String, AttributeValue> oldData = record.getDynamodb().getOldImage();
+			
+			Item newItem = null;
+			Item oldItem = null;
+
+			// If the data isn't null then make it into an Item.
+			if (newData != null) {
+				newItem = Item.fromMap(InternalUtils.toSimpleMapValue(newData));
+			}
+			if (oldData != null) {
+				oldItem = Item.fromMap(InternalUtils.toSimpleMapValue(oldData));
+			}
+			
+			// Create the item record.
+			Map<String, Item> itemRecord = new HashMap<String, Item>();
+			itemRecord.put("new", newItem);
+			itemRecord.put("old", oldItem);
+			
+			// If there is no new data then this is a delete.
+			if (newData == null) {
+				deletedRecords.add(itemRecord);
+				continue;
+			}
+			
+			// If there is new data, but no old data, then this is an insert.
+			if (oldData == null) {
+				insertedRecords.add(itemRecord);
+				continue;
+			}
+			
+			// If there is new and old data then this is an update.
+			updatedRecords.add(itemRecord);
+		}
+		
+		// Consolidate the lists.
+		results.put("inserted", insertedRecords);
+		results.put("updated", updatedRecords);
+		results.put("deleted", deletedRecords);
+
+		return results;
 	}
 
 }
