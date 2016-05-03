@@ -2,7 +2,7 @@ package com.cartographerapi.functions;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-
+import com.cartographerapi.domain.CapiUtils;
 import com.cartographerapi.domain.ScheduledEvent;
 import com.cartographerapi.domain.mapgames.MapGame;
 import com.cartographerapi.domain.mapgames.MapGamesWriter;
@@ -35,12 +35,13 @@ public class MapGamesAdder implements RequestHandler<ScheduledEvent, List<MapGam
 	 */
     @Override
     public List<MapGame> handleRequest(ScheduledEvent input, Context context) {
-        context.getLogger().log("Input: " + input);
+		CapiUtils.logObject(context, input, "ScheduledEvent Input");
         List<MapGame> results = new ArrayList<MapGame>();
 
         // Pull games from the queue to inspect
         List<Game> games = queueReader.getNumberOfGames(10);
 
+        // Transform each game into a map game.
         for (Game game : games) {
 			MapGame foundMapGame = new MapGame(game);
 			cacheWriter.saveMapGame(foundMapGame);
@@ -48,6 +49,7 @@ public class MapGamesAdder implements RequestHandler<ScheduledEvent, List<MapGam
 			queueReader.processedGame(game);
         }
 
+		CapiUtils.logObject(context, results.size(), "# of MapGames Added");
         return results;
     }
     
