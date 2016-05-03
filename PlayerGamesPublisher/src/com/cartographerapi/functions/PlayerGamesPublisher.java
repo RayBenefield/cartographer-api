@@ -3,15 +3,13 @@ package com.cartographerapi.functions;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.DynamodbEvent;
-import com.amazonaws.services.lambda.runtime.events.DynamodbEvent.DynamodbStreamRecord;
 
+import com.cartographerapi.domain.CapiUtils;
 import com.cartographerapi.domain.playergames.PlayerGame;
 import com.cartographerapi.domain.playergames.PlayerGamesSnsWriter;
 import com.cartographerapi.domain.playergames.PlayerGamesWriter;
 
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.document.Item;
-import com.amazonaws.services.dynamodbv2.document.internal.InternalUtils;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -37,22 +35,19 @@ public class PlayerGamesPublisher implements RequestHandler<DynamodbEvent, List<
 	 */
     @Override
     public List<PlayerGame> handleRequest(DynamodbEvent input, Context context) {
-        context.getLogger().log("Input: " + input);
+		CapiUtils.logObject(context, input, "DynamodbEvent Input");
         List<PlayerGame> results = new ArrayList<PlayerGame>();
 
-        // For each Dynamo Record, publish it to the SNS topic
-		for (DynamodbStreamRecord record : input.getRecords()) {
-			Map<String, AttributeValue> newData = record.getDynamodb().getNewImage();
-			Map<String, AttributeValue> oldData = record.getDynamodb().getOldImage();
-			if (newData == null) continue; // Ignore deletes for now;
-			if (oldData != null) continue; // Ignore updates for now;
+        Map<String, List<Map<String, Item>>> itemRecords = CapiUtils.sortRecordsFromDynamoEvent(input);
 
-			Item newItem = Item.fromMap(InternalUtils.toSimpleMapValue(newData));
-			PlayerGame game = new PlayerGame(newItem);
+        // For each inserted record, publish to the new SNS topic.
+        for (Map<String, Item> insertedRecord : itemRecords.get("inserted")) {
+			PlayerGame game = new PlayerGame(insertedRecord.get("new"));
 			results.add(game);
-		}
+        }
 		newWriter.savePlayerGames(results);
 
+		CapiUtils.logObject(context, results.size(), "# of PlayerGames Published");
         return results;
     }
     
