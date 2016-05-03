@@ -2,7 +2,7 @@ package com.cartographerapi.functions;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-
+import com.cartographerapi.domain.CapiUtils;
 import com.cartographerapi.domain.Gamertag;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCounts;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCountsDynamoReader;
@@ -34,7 +34,7 @@ public class PlayerGameCountsUpdater implements RequestHandler<Gamertag, PlayerG
 	 */
     @Override
     public PlayerGameCounts handleRequest(Gamertag input, Context context) {
-        context.getLogger().log("Input: " + input.getGamertag());
+		CapiUtils.logObject(context, input, "Gamertag");
 
 		PlayerGameCounts counts = cacheReader.getPlayerGameCountsByGamertag(input.getGamertag());
 		
@@ -45,6 +45,7 @@ public class PlayerGameCountsUpdater implements RequestHandler<Gamertag, PlayerG
 		}
 
 		cacheWriter.savePlayerGameCounts(counts);
+		CapiUtils.logObject(context, counts, "The new PlayerGameCounts");
 		return counts;
     }
     
