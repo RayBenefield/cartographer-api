@@ -7,6 +7,7 @@ import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import java.util.List;
 import java.util.Scanner;
 
+import com.cartographerapi.domain.CapiUtils;
 import com.cartographerapi.domain.Gamertag;
 import com.cartographerapi.domain.playergames.PlayerGame;
 import com.cartographerapi.domain.playergames.PlayerGamesDynamoReader;
@@ -39,7 +40,7 @@ public class PlayerGamesGetter implements RequestStreamHandler, RequestHandler<G
     // TODO Accept JSON view names in order to determine what data to show.
     public List<PlayerGame> handleRequest(Gamertag input, Context context) {
 		List<PlayerGame> games = cacheReader.getPlayerGamesByGamertag(input.getGamertag());
-
+		CapiUtils.logObject(context, games.size(), "# of PlayerGames in the cache");
 		return games;
     }
 
