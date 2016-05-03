@@ -1,6 +1,7 @@
 package com.cartographerapi.functions;
 
 import com.cartographerapi.domain.DomainObjectReader;
+import com.cartographerapi.domain.CapiUtils;
 import com.cartographerapi.domain.DomainObjectDynamoReader;
 import com.cartographerapi.domain.ObjectSqsWriter;
 import com.cartographerapi.domain.ObjectSnsWriter;
@@ -14,13 +15,8 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.SNSEvent;
 
-import java.io.IOException;
-
 import java.util.Map;
-import java.util.HashMap;
 import java.util.List;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Responsible for scanning a single segment until near the end of timeout, then
@@ -34,7 +30,6 @@ public class SegmentScanner implements RequestHandler<SNSEvent, Boolean> {
 	private DomainObjectReader sourceReader;
 	private ObjectWriter continueWriter;
 	private ObjectSqsWriter queueWriter;
-	private ObjectMapper mapper;
 
 	/**
 	 * Grab pages of results from the segment starting from the lastEvaluatedKey
@@ -46,19 +41,13 @@ public class SegmentScanner implements RequestHandler<SNSEvent, Boolean> {
 	 * @return 
 	 */
     @Override
-    @SuppressWarnings("unchecked")
     public Boolean handleRequest(SNSEvent input, Context context) {
-        context.getLogger().log("Input: " + input);
+		CapiUtils.logObject(context, input, "SNSEvent Input");
         
         // Figure out what the request is
-		SegmentScannerRequest request;
-		try {
-			context.getLogger().log(mapper.writeValueAsString(input));
-			Map<String, Object> requestMap = mapper.readValue(input.getRecords().get(0).getSNS().getMessage(), HashMap.class);
-			request = new SegmentScannerRequest(requestMap);
-		} catch (IOException exception) {
-			return true;
-		}
+		Map<String, Object> requestMap = CapiUtils.getObjectFromSnsEvent(input);
+		SegmentScannerRequest request = new SegmentScannerRequest(requestMap);
+		CapiUtils.logObject(context, request, "SegmentScannerRequest");
 		
 		// Set the target queue from the request, and prepare the lastEvaluatedKey
 		queueWriter.setQueueUrl(request.getQueueUrlKey());
@@ -77,11 +66,12 @@ public class SegmentScanner implements RequestHandler<SNSEvent, Boolean> {
 			}
 
 			// Otherwise prepare for the next page
-			context.getLogger().log("LastEvalKey: " + lastEvaluatedKey);
+			CapiUtils.logObject(context, lastEvaluatedKey, "LastEvaluatedKey");
 			request.setLastEvaluatedKey(InternalUtils.toSimpleMapValue(lastEvaluatedKey));
 		}
 
 		// We've run out of time (< 30 seconds) so we need to clone this and continue
+		CapiUtils.logObject(context, request, "Continuing with a new SegmentScannerRequest");
 		continueWriter.saveObject(request);
         return false;
     }
@@ -91,7 +81,6 @@ public class SegmentScanner implements RequestHandler<SNSEvent, Boolean> {
      */
     public SegmentScanner() {
     	this(
-			new ObjectMapper(),
     		new DomainObjectDynamoReader(),
 			new ObjectSnsWriter("snsSegmentScannerRequestContinue"),
 			new ObjectSqsWriter()
@@ -101,8 +90,7 @@ public class SegmentScanner implements RequestHandler<SNSEvent, Boolean> {
     /**
      * The real constructor that supports dependency injection.
      */
-    public SegmentScanner(ObjectMapper mapper, DomainObjectReader sourceReader, ObjectWriter continueWriter, ObjectSqsWriter queueWriter) {
-    	this.mapper = mapper;
+    public SegmentScanner(DomainObjectReader sourceReader, ObjectWriter continueWriter, ObjectSqsWriter queueWriter) {
     	this.sourceReader = sourceReader;
     	this.continueWriter = continueWriter;
     	this.queueWriter = queueWriter;

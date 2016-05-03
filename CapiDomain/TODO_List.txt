@@ -36,3 +36,4 @@
  22) Use Maven to build dependencies for the projects to include minimum AWS SDK dependencies
  23) Maximize Lambda Executions for certain functions... loop through batches of messages from an SQS queue before completing
  24) Use Jackson to support Domain Object views for returning API results
+ 25) Update SegmentScanner to use an actual queue URL instead of a queue URL key to avoid having to upload it for every new queue
