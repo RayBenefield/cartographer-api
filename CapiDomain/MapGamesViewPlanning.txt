@@ -1,0 +1,18 @@
+ - Queue: capi-gamesformapgames
+ - Function: MapGamesAdder
+ 	 - Domain Object: MapGame
+ 	 - MapGamesWriter
+ 	 - MapGamesDynamoWriter
+ - Table: MapGames
+ 	 - Hash Key: MapId
+ 	 - Sort Key: MatchId
+ - API Endpoint: /map/{{mapId}}/game
+ - Function: MapGamesPublisher
+ 	 - MapGamesSnsWriter
+ - Topic: capi-mapgames-new
+ - Function: MapGamesGetter
+ 	 - MapGamesReader
+ 	 - MapGamesDynamoReader
+ - *** Stuff for Subscribers ***
+ 	 - MapGamesQueueReader
+ 	 - MapGamesSqsReader

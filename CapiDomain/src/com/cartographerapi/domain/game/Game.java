@@ -94,6 +94,7 @@ public class Game {
 	}
 
 	public Game() {
+		mapper = new ObjectMapper();
 	}
 
 }

@@ -8,5 +8,6 @@
     "sqsCapiPlayerGamesForGames": "https://sqs.us-west-2.amazonaws.com/789201490085/capi-playergamesforgames",
     "sqsCapiGamesNew": "https://sqs.us-west-2.amazonaws.com/789201490085/capi-games-new",
     "sqsTestScan": "https://sqs.us-west-2.amazonaws.com/789201490085/test-gamesForScan",
-    "snsSegmentScannerRequestContinue": "arn:aws:sns:us-west-2:789201490085:capi-segmentscannerrequest-continue"
+    "snsSegmentScannerRequestContinue": "arn:aws:sns:us-west-2:789201490085:capi-segmentscannerrequest-continue",
+    "sqsCapiGamesForMapGames": "https://sqs.us-west-2.amazonaws.com/789201490085/capi-gamesformapgames"
 }

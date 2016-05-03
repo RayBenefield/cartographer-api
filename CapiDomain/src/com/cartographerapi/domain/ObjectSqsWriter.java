@@ -64,7 +64,7 @@ public class ObjectSqsWriter implements ObjectWriter {
 				idIterator++;
 				
 				// When we hit 5 in the batch then package, send, and reset
-				if (idIterator >= 5) {
+				if (idIterator >= 3) {
 					request.withQueueUrl(queueUrl).withEntries(batch);
 					client.sendMessageBatch(request);
 					

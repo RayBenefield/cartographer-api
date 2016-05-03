@@ -15,7 +15,6 @@ import java.net.HttpURLConnection;
  * @author GodlyPerfection
  *
  */
-// TODO Add API Key from the config.json
 public class CapiWrapper {
 	
 	private final String URL_PLAYER_GAMES_COUNT = "%s/test/player/%s/game/count";

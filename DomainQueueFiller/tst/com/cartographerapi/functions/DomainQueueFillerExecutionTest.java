@@ -27,7 +27,7 @@ public class DomainQueueFillerExecutionTest {
      */
     @BeforeClass
     public static void createInput() throws IOException {
-        input = new DomainQueueFillRequest("com.cartographerapi.domain.game.Game", "sqsTestScan");
+        input = new DomainQueueFillRequest("com.cartographerapi.domain.game.Game", "sqsCapiGamesForMapGames");
     }
 
     /**

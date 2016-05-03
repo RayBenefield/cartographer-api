@@ -20,14 +20,17 @@
  	 - Basic ObjectMapper reading try/catch
  	 - Lazy IOC and Dependency Injection constructors
  	 - Dynamo Attribute/HashKey/RangeKey getters/setters
- 14) Add Value Objects to Dynamo Domain Objects with proper marshalling/unmarshalling for "always valid" domain objects
+ 14) Add Value Objects to Dynamo Domain Objects with proper marshaling/unmarshaling for "always valid" domain objects
  15) Implement Swagger, RAML, or API Blueprint for documentation generation and importing into API Gateway
  16) Script that automatically creates all SNS Topics, SQS Queues, API Endpoints, Dynamo Tables, and generates a local config.json
- 17) Setup parallel scanner to populate a queue with all entries in a Dynamo Table
- 18) Add Static CAPI Utilities to clean up messy Handler code
- 	 - Different Utils for both Test and Src code
+ 17) Add Static CAPI Utilities to clean up messy Handler code
+ 	 - Different Utils for both Test and Sr code
  	 - Better logging that prints out pretty input objects in JSON
  	 - Extract messages out of SNS Events
  	 - Extract New, Update, Delete events out of a DynamoEvent
  	 - ObjectMapper that converts string into a JsonNode or returns an empty JsonNode
- 19) Refactor ObjectWriters out of SnsWriters and redirect them to the generic objectWriters
+ 18) Refactor ObjectWriters out of SnsWriters and redirect them to the generic objectWriters
+ 19) Refactor out the Configuration logic into ConfigReaders so I can create a new configuration data source in Dynamo
+ 20) Circumvent SNSEvent and convert them into domain objects by adding a setRecords(List<SNSRecord>) to domain objects since Lambda parses input out in a particular way
+ 21) Default all Lambda functions to accept a list of Domain objects and package single domain objects into a List when calling (like API Gateway endpoints)
+ 22) Use Maven to build dependencies for the projects to include minimum AWS SDK dependencies
