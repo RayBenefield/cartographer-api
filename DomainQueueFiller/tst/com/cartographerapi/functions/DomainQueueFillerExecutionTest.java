@@ -1,7 +1,5 @@
 package com.cartographerapi.functions;
 
-import java.util.List;
-
 import java.io.IOException;
 
 import org.junit.BeforeClass;
@@ -49,12 +47,10 @@ public class DomainQueueFillerExecutionTest {
         DomainQueueFiller handler = new DomainQueueFiller();
         Context ctx = createContext();
 
-        List<Object> output = handler.handleRequest(input, ctx);
+        Boolean output = handler.handleRequest(input, ctx);
 
         if (output != null) {
-        	for (Object object : output) {
-				System.out.println(object.toString());
-        	}
+			System.out.println(output.toString());
         }
     }
 }

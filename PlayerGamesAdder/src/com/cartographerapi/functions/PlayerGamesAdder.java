@@ -51,7 +51,7 @@ public class PlayerGamesAdder implements RequestHandler<SNSEvent, List<PlayerGam
 	 */
     @Override
     public List<PlayerGame> handleRequest(SNSEvent input, Context context) {
-		CapiUtils.logObject(context, input);
+		CapiUtils.logObject(context, input, "SNSEvent Input");
         List<PlayerGame> results = new ArrayList<PlayerGame>();
         
         // Parse the SNSEvent
@@ -61,16 +61,17 @@ public class PlayerGamesAdder implements RequestHandler<SNSEvent, List<PlayerGam
         // Figure out who this is for.
 		PlayerGameCounts counts = new PlayerGameCounts(countsMap);
 		String gamertag = counts.getGamertag();
-		CapiUtils.logObject(context, counts);
+		CapiUtils.logObject(context, counts, "PlayerGameCounts from SNSEvent");
 
 		// If there is a checkpoint then start there and load up to the games possible.
 		PlayerGamesCheckpoint checkpoint = checkpointReader.getPlayerGamesCheckpointWithDefault(gamertag);
-		CapiUtils.logObject(context, checkpoint);
+		CapiUtils.logObject(context, checkpoint, "PlayerGamesCheckpoint for " + gamertag);
 		if (!StringUtils.isNullOrEmpty(checkpoint.getLastMatch())) {
 			gameReader.setLastMatch(checkpoint.getLastMatch());
 		}
 		gameReader.setTotal(counts.getTotalGames());
 		results = gameReader.getPlayerGamesByGamertag(gamertag, checkpoint.getTotalGamesLoaded(), 25);
+		CapiUtils.logObject(context, results.size(), "# of PlayerGames from the Halo API");
 
 		// If we found some results then save the found results and save the checkpoint.
 		if (results.size() > 0) {

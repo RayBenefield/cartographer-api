@@ -3,9 +3,7 @@ package com.cartographerapi.functions;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 
-import java.util.List;
-import java.util.ArrayList;
-
+import com.cartographerapi.domain.CapiUtils;
 import com.cartographerapi.domain.DomainQueueFillRequest;
 import com.cartographerapi.domain.ObjectSnsWriter;
 import com.cartographerapi.domain.SegmentScannerRequest;
@@ -17,7 +15,7 @@ import com.cartographerapi.domain.SegmentScannerRequest;
  * @author GodlyPerfection
  * 
  */
-public class DomainQueueFiller implements RequestHandler<DomainQueueFillRequest, List<Object>> {
+public class DomainQueueFiller implements RequestHandler<DomainQueueFillRequest, Boolean> {
 
 	/**
 	 * Figure out the number of segments to run in parallel and fire off the
@@ -28,11 +26,11 @@ public class DomainQueueFiller implements RequestHandler<DomainQueueFillRequest,
 	 * @return 
 	 */
     @Override
-    public List<Object> handleRequest(DomainQueueFillRequest input, Context context) {
-        context.getLogger().log("Input: " + input);
-        List<Object> results = new ArrayList<Object>();
+    public Boolean handleRequest(DomainQueueFillRequest input, Context context) {
+		CapiUtils.logObject(context, input, "DomainQueueFillRequest Input");
         
 		Integer totalSegments = 2;
+		CapiUtils.logObject(context, totalSegments, "# of Segments for Scan");
 		
 		// For each segment, build the request and trigger the scanner
 		for (Integer segmentId = 0; segmentId < totalSegments; segmentId++) {
@@ -41,7 +39,7 @@ public class DomainQueueFiller implements RequestHandler<DomainQueueFillRequest,
 			continueWriter.saveObject(scannerInput);
 		}
 
-        return results;
+        return true;
     }
 
 }
