@@ -3,7 +3,6 @@ package com.cartographerapi.domain;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.JsonNode;
 
 import com.amazonaws.services.sns.AmazonSNSClient;
 import com.amazonaws.services.sns.model.PublishRequest;
@@ -17,6 +16,7 @@ public class ObjectSnsWriter implements ObjectWriter {
 	
 	private String topicArn;
 	private AmazonSNSClient snsClient;
+	private ConfigReader configReader;
 	private ObjectMapper mapper;
 
 	@Override
@@ -43,14 +43,9 @@ public class ObjectSnsWriter implements ObjectWriter {
      * The lazy IOC constructor.
      */
 	public ObjectSnsWriter(String topicArnKey) {
-        mapper = new ObjectMapper();
-		JsonNode config = mapper.createObjectNode();
-		try {
-			config = mapper.readTree(getClass().getClassLoader().getResource("config.json"));
-		} catch (IOException exception) {
-		}
-
-		this.topicArn = config.path(topicArnKey).asText();
+		this.mapper = new ObjectMapper();
+		this.configReader = new ConfigDynamoReader();
+		this.topicArn = configReader.getValue(topicArnKey);
         snsClient = new AmazonSNSClient();		                           
         snsClient.setRegion(Region.getRegion(Regions.US_WEST_2));
 	}

@@ -1,16 +1,17 @@
 package com.cartographerapi.domain.game;
 
 import java.util.List;
-import java.io.IOException;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.JsonNode;
 
 import com.amazonaws.services.sns.AmazonSNSClient;
 import com.amazonaws.services.sns.model.PublishRequest;
+
+import com.cartographerapi.domain.ConfigDynamoReader;
+import com.cartographerapi.domain.ConfigReader;
 
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
@@ -27,6 +28,7 @@ public class GamesSnsWriter implements GamesWriter {
 	
 	private String topicArn;
 	private AmazonSNSClient snsClient;
+	private ConfigReader configReader;
 	private ObjectMapper mapper;
 
 	/**
@@ -64,14 +66,9 @@ public class GamesSnsWriter implements GamesWriter {
      * The lazy IOC constructor.
      */
 	public GamesSnsWriter(String topicArnKey) {
-		mapper = new ObjectMapper();
-		JsonNode config = mapper.createObjectNode();
-		try {
-			config = mapper.readTree(getClass().getClassLoader().getResource("config.json"));
-		} catch (IOException exception) {
-		}
-
-		this.topicArn = config.path(topicArnKey).asText();
+		this.mapper = new ObjectMapper();
+		this.configReader = new ConfigDynamoReader();
+		this.topicArn = configReader.getValue(topicArnKey);
         snsClient = new AmazonSNSClient();		                           
         snsClient.setRegion(Region.getRegion(Regions.US_WEST_2));
 	}

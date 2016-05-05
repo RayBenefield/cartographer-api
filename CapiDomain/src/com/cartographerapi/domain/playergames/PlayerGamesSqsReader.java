@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.ArrayList;
 
 import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
+import com.cartographerapi.domain.ConfigDynamoReader;
+import com.cartographerapi.domain.ConfigReader;
 import com.amazonaws.services.sqs.model.DeleteMessageRequest;
 import com.amazonaws.services.sqs.model.Message;
 import com.amazonaws.services.sqs.AmazonSQSClient;
@@ -25,6 +27,7 @@ import java.io.IOException;
 public class PlayerGamesSqsReader implements PlayerGamesQueueReader {
 
 	private AmazonSQSClient client;
+	private ConfigReader configReader;
 	private String queueUrl;
     private ObjectMapper mapper;
     private Map<PlayerGame, Message> messageMap;
@@ -74,14 +77,9 @@ public class PlayerGamesSqsReader implements PlayerGamesQueueReader {
      * The lazy IOC constructor.
      */
 	public PlayerGamesSqsReader(String queueUrlKey) {
-		mapper = new ObjectMapper();
-		JsonNode config = mapper.createObjectNode();
-		try {
-			config = mapper.readTree(getClass().getClassLoader().getResource("config.json"));
-		} catch (IOException exception) {
-		}
-
-		this.queueUrl = config.path(queueUrlKey).asText();
+		this.mapper = new ObjectMapper();
+		this.configReader = new ConfigDynamoReader();
+		this.queueUrl = configReader.getValue(queueUrlKey);
 		client = new AmazonSQSClient();
 		this.messageMap = new HashMap<PlayerGame, Message>();
 	}

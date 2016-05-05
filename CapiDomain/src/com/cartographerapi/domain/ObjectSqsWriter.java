@@ -11,7 +11,6 @@ import com.amazonaws.services.sqs.model.SendMessageBatchRequestEntry;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 
@@ -26,6 +25,7 @@ import java.io.IOException;
 public class ObjectSqsWriter implements ObjectWriter {
 
 	private AmazonSQSClient client;
+	private ConfigReader configReader;
 	private String queueUrl;
     private ObjectMapper mapper;
 
@@ -92,27 +92,15 @@ public class ObjectSqsWriter implements ObjectWriter {
 	 * @param queueUrl
 	 */
 	public void setQueueUrl(String queueUrlKey) {
-		JsonNode config = mapper.createObjectNode();
-		try {
-			config = mapper.readTree(getClass().getClassLoader().getResource("config.json"));
-		} catch (IOException exception) {
-		}
-
-		this.queueUrl = config.path(queueUrlKey).asText();
+		this.queueUrl = configReader.getValue(queueUrlKey);
 	}
 
     /**
      * The lazy IOC constructor.
      */
 	public ObjectSqsWriter(String queueUrlKey) {
-		mapper = new ObjectMapper();
-		JsonNode config = mapper.createObjectNode();
-		try {
-			config = mapper.readTree(getClass().getClassLoader().getResource("config.json"));
-		} catch (IOException exception) {
-		}
-
-		this.queueUrl = config.path(queueUrlKey).asText();
+		this.configReader = new ConfigDynamoReader();
+		this.queueUrl = configReader.getValue(queueUrlKey);
 		client = new AmazonSQSClient();
 		client.setRegion(Region.getRegion(Regions.US_WEST_2));
 	}
@@ -122,6 +110,7 @@ public class ObjectSqsWriter implements ObjectWriter {
      */
 	public ObjectSqsWriter() {
 		mapper = new ObjectMapper();
+		this.configReader = new ConfigDynamoReader();
 		client = new AmazonSQSClient();
 		client.setRegion(Region.getRegion(Regions.US_WEST_2));
 	}

@@ -6,8 +6,6 @@ import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * Simple wrapper to allow for querying the Halo API.
@@ -18,6 +16,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 public class Halo5ApiWrapper {
 
 	private String token;
+	private ConfigReader configReader;
 
 	private final String URL_CUSTOM_SERVICE_RECORD = "https://www.haloapi.com/stats/h5/servicerecords/custom?players=%s";
 	private final String URL_CUSTOM_GAMES = "https://www.haloapi.com/stats/h5/players/%s/matches?modes=custom&start=%s&count=%s";
@@ -109,14 +108,8 @@ public class Halo5ApiWrapper {
      * The lazy IOC constructor.
      */
 	public Halo5ApiWrapper() {
-		ObjectMapper mapper = new ObjectMapper();
-		JsonNode config = mapper.createObjectNode();
-		try {
-			config = mapper.readTree(getClass().getClassLoader().getResource("config.json"));
-		} catch (IOException exception) {
-		}
-
-		this.token = config.path("haloApiKey").asText();
+		this.configReader = new ConfigDynamoReader();
+		this.token = configReader.getValue("haloApiKey");
 	}
 
 }

@@ -14,6 +14,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 
+import com.cartographerapi.domain.ConfigDynamoReader;
+import com.cartographerapi.domain.ConfigReader;
 import com.cartographerapi.domain.game.Game;
 
 /**
@@ -27,6 +29,7 @@ import com.cartographerapi.domain.game.Game;
 public class GamesSqsReader implements GamesQueueReader {
 
 	private AmazonSQSClient client;
+	private ConfigReader configReader;
 	private String queueUrl;
     private ObjectMapper mapper;
     private Map<Game, Message> messageMap;
@@ -75,14 +78,9 @@ public class GamesSqsReader implements GamesQueueReader {
      * The lazy IOC constructor.
      */
 	public GamesSqsReader(String queueUrlKey) {
-		mapper = new ObjectMapper();
-		JsonNode config = mapper.createObjectNode();
-		try {
-			config = mapper.readTree(getClass().getClassLoader().getResource("config.json"));
-		} catch (IOException exception) {
-		}
-
-		this.queueUrl = config.path(queueUrlKey).asText();
+		this.mapper = new ObjectMapper();
+		this.configReader = new ConfigDynamoReader();
+		this.queueUrl = configReader.getValue(queueUrlKey);
 		client = new AmazonSQSClient();
 		this.messageMap = new HashMap<Game, Message>();
 	}

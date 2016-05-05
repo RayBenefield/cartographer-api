@@ -1,13 +1,12 @@
 package com.cartographerapi.domain;
 
 import java.net.URL;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.JsonNode;
-import java.io.IOException;
 import java.net.URLEncoder;
+import java.net.HttpURLConnection;
+
+import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 
 /**
  * Simple wrapper to allow for talking to CAPI.
@@ -20,17 +19,7 @@ public class CapiWrapper {
 	private final String URL_PLAYER_GAMES_COUNT = "%s/test/player/%s/game/count";
 	
 	private String host;
-	
-	public CapiWrapper() {
-		ObjectMapper mapper = new ObjectMapper();
-		JsonNode config = mapper.createObjectNode();
-		try {
-			config = mapper.readTree(getClass().getClassLoader().getResource("config.json"));
-		} catch (IOException exception) {
-		}
-
-		this.host = config.path("capiHost").asText();
-	}
+	private ConfigReader configReader;
 	
 	/**
 	 * Update the count of games.
@@ -91,5 +80,13 @@ public class CapiWrapper {
 		}
 		in.close();
 		return output.toString();
+	}
+	
+    /**
+     * The lazy IOC constructor.
+     */
+	public CapiWrapper() {
+		this.configReader = new ConfigDynamoReader();
+		this.host = configReader.getValue("capiHost");
 	}
 }
