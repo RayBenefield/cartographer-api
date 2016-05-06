@@ -53,6 +53,8 @@ public class PlayerGamesHaloApiReader implements PlayerGamesReader {
 			JsonNode root = mapper.readTree(gamesResult);
 			Integer lastResult = root.path("ResultCount").asInt();
 			
+			// TODO: We need the equivalent of this for the first call that has no "lastMatch"... if it is > 24 entries.
+
 			// If the very last match does not equal the expected lastMatch then
 			// new games were added and we need to stop here to avoid missing
 			// games.
