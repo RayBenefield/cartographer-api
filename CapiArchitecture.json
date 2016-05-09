@@ -164,6 +164,7 @@
         },
         "PlayerGameCountsPublisher": {
             "Type": "AWS::Lambda::Function",
+            "DependsOn": [ "CartographerApiLambdaRole" ],
             "Properties": {
                 "FunctionName": "PlayerGameCountsPublisher",
                 "Description": "Publish updates to the PlayerGameCounts.",
@@ -180,16 +181,17 @@
         },
         "PlayerGameCountsPublisherStream": {
             "Type" : "AWS::Lambda::EventSourceMapping",
-                "Properties" : {
-                    "Enabled" : true,
-                    "EventSourceArn" : {
-                        "Fn::GetAtt" : [ "PlayerGameCounts", "StreamArn" ]
-                    },
-                    "FunctionName" : {
-                        "Fn::GetAtt" : [ "PlayerGameCountsPublisher", "Arn" ]
-                    },
-                    "StartingPosition" : "LATEST"
-                }
+            "DependsOn": [ "PlayerGameCounts", "PlayerGameCountsPublisher" ],
+            "Properties" : {
+                "Enabled" : true,
+                "EventSourceArn" : {
+                    "Fn::GetAtt" : [ "PlayerGameCounts", "StreamArn" ]
+                },
+                "FunctionName" : {
+                    "Fn::GetAtt" : [ "PlayerGameCountsPublisher", "Arn" ]
+                },
+                "StartingPosition" : "LATEST"
+            }
         }
     }
 }
