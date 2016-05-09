@@ -101,6 +101,38 @@
                     }
                 ]
             }
+        },
+        "MapGames": {
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+                "ProvisionedThroughput": {
+                    "ReadCapacityUnits": 1,
+                    "WriteCapacityUnits": 1
+                },
+                "AttributeDefinitions": [
+                    {
+                        "AttributeName": "MapId",
+                        "AttributeType": "S"
+                    },
+                    {
+                        "AttributeName": "MatchId",
+                        "AttributeType": "S"
+                    }
+                ],
+                "KeySchema": [
+                    {
+                        "AttributeName": "MapId",
+                        "KeyType": "HASH"
+                    },
+                    {
+                        "AttributeName": "MatchId",
+                        "KeyType": "RANGE"
+                    }
+                ],
+                "StreamSpecification": {
+                    "StreamViewType": "NEW_AND_OLD_IMAGES"
+                }
+            }
         }
     }
 }
