@@ -49,7 +49,7 @@ public class PlayerGameCountsPublisher implements RequestHandler<DynamodbEvent, 
         }
 
         // For each updated record, if it is an actual update then publish to the updated SNS topic.
-        for (Map<String, Item> updatedRecord : itemRecords.get("inserted")) {
+        for (Map<String, Item> updatedRecord : itemRecords.get("updated")) {
 			PlayerGameCounts newCounts = new PlayerGameCounts(updatedRecord.get("new"));
 			PlayerGameCounts oldCounts = new PlayerGameCounts(updatedRecord.get("old"));
 

@@ -1,5 +1,6 @@
 *** Bonus TODO List ***
 
+ 1) Refactor out the handler business logic into Domain services that are called by the Handlers to make CAPI framework agnostic from Lambda.
  2) Explore the Context and check to see if there is a way to differentiate a test vs an actual execution
  3) Pull out the CAPI Wrapper into its own project
  4) Pull out the Halo 5 Wrapper into its own project
