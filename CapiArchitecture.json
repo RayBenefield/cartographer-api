@@ -192,6 +192,37 @@
                 },
                 "StartingPosition" : "LATEST"
             }
+        },
+        "PlayerGamesPublisher": {
+            "Type": "AWS::Lambda::Function",
+            "DependsOn": [ "CartographerApiLambdaRole" ],
+            "Properties": {
+                "FunctionName": "PlayerGamesPublisher",
+                "Description": "Publish new PlayerGames found.",
+                "Runtime": "java8",
+                "Handler": "com.cartographerapi.functions.PlayerGamesPublisher",
+                "Code": {
+                    "S3Bucket": "cartographer-api-lambda-code",
+                    "S3Key": "PlayerGamesPublisher-0.0.1-SNAPSHOT.jar"
+                },
+                "Role": { "Fn::GetAtt" : ["CartographerApiLambdaRole", "Arn"] },
+                "Timeout": "15",
+                "MemorySize": "512"
+            }
+        },
+        "PlayerGamesPublisherStream": {
+            "Type" : "AWS::Lambda::EventSourceMapping",
+            "DependsOn": [ "PlayerGames", "PlayerGamesPublisher" ],
+            "Properties" : {
+                "Enabled" : true,
+                "EventSourceArn" : {
+                    "Fn::GetAtt" : [ "PlayerGames", "StreamArn" ]
+                },
+                "FunctionName" : {
+                    "Fn::GetAtt" : [ "PlayerGamesPublisher", "Arn" ]
+                },
+                "StartingPosition" : "LATEST"
+            }
         }
     }
 }
