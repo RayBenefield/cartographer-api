@@ -133,6 +133,27 @@
                     "StreamViewType": "NEW_AND_OLD_IMAGES"
                 }
             }
+        },
+        "PlayerGamesCheckpoints": {
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+                "ProvisionedThroughput": {
+                    "ReadCapacityUnits": 1,
+                    "WriteCapacityUnits": 1
+                },
+                "AttributeDefinitions": [
+                    {
+                        "AttributeName": "Gamertag",
+                        "AttributeType": "S"
+                    }
+                ],
+                "KeySchema": [
+                    {
+                        "AttributeName": "Gamertag",
+                        "KeyType": "HASH"
+                    }
+                ]
+            }
         }
     }
 }
