@@ -24,6 +24,38 @@
                     "StreamViewType": "NEW_AND_OLD_IMAGES"
                 }
             }
+        },
+        "PlayerGames": {
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+                "ProvisionedThroughput": {
+                    "ReadCapacityUnits": 4,
+                    "WriteCapacityUnits": 4
+                },
+                "AttributeDefinitions": [
+                    {
+                        "AttributeName": "Gamertag",
+                        "AttributeType": "S"
+                    },
+                    {
+                        "AttributeName": "GameNumber",
+                        "AttributeType": "N"
+                    }
+                ],
+                "KeySchema": [
+                    {
+                        "AttributeName": "Gamertag",
+                        "KeyType": "HASH"
+                    },
+                    {
+                        "AttributeName": "GameNumber",
+                        "KeyType": "RANGE"
+                    }
+                ],
+                "StreamSpecification": {
+                    "StreamViewType": "NEW_AND_OLD_IMAGES"
+                }
+            }
         }
     }
 }
