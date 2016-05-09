@@ -56,6 +56,30 @@
                     "StreamViewType": "NEW_AND_OLD_IMAGES"
                 }
             }
+        },
+        "Games": {
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+                "ProvisionedThroughput": {
+                    "ReadCapacityUnits": 4,
+                    "WriteCapacityUnits": 4
+                },
+                "AttributeDefinitions": [
+                    {
+                        "AttributeName": "MatchId",
+                        "AttributeType": "S"
+                    }
+                ],
+                "KeySchema": [
+                    {
+                        "AttributeName": "MatchId",
+                        "KeyType": "HASH"
+                    }
+                ],
+                "StreamSpecification": {
+                    "StreamViewType": "NEW_AND_OLD_IMAGES"
+                }
+            }
         }
     }
 }
