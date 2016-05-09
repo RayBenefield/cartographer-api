@@ -84,28 +84,6 @@
                 }
             }
         },
-        "Config": {
-            "Type": "AWS::DynamoDB::Table",
-            "Properties": {
-                "TableName": "Config",
-                "ProvisionedThroughput": {
-                    "ReadCapacityUnits": 1,
-                    "WriteCapacityUnits": 1
-                },
-                "AttributeDefinitions": [
-                    {
-                        "AttributeName": "Key",
-                        "AttributeType": "S"
-                    }
-                ],
-                "KeySchema": [
-                    {
-                        "AttributeName": "Key",
-                        "KeyType": "HASH"
-                    }
-                ]
-            }
-        },
         "MapGames": {
             "Type": "AWS::DynamoDB::Table",
             "Properties": {
