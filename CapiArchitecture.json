@@ -174,23 +174,23 @@
                     "S3Bucket": "cartographer-api-lambda-code",
                     "S3Key": "PlayerGameCountsPublisher-0.0.1-SNAPSHOT.jar"
                 },
-                "Role": { "Fn::GetAtt" : ["CartographerApiLambdaRole", "Arn"] },
+                "Role": { "Fn::GetAtt": ["CartographerApiLambdaRole", "Arn"] },
                 "Timeout": 15,
                 "MemorySize": 512
             }
         },
         "PlayerGameCountsPublisherStream": {
-            "Type" : "AWS::Lambda::EventSourceMapping",
+            "Type": "AWS::Lambda::EventSourceMapping",
             "DependsOn": [ "PlayerGameCounts", "PlayerGameCountsPublisher" ],
-            "Properties" : {
-                "Enabled" : true,
-                "EventSourceArn" : {
-                    "Fn::GetAtt" : [ "PlayerGameCounts", "StreamArn" ]
+            "Properties": {
+                "Enabled": true,
+                "EventSourceArn": {
+                    "Fn::GetAtt": [ "PlayerGameCounts", "StreamArn" ]
                 },
-                "FunctionName" : {
-                    "Fn::GetAtt" : [ "PlayerGameCountsPublisher", "Arn" ]
+                "FunctionName": {
+                    "Fn::GetAtt": [ "PlayerGameCountsPublisher", "Arn" ]
                 },
-                "StartingPosition" : "LATEST"
+                "StartingPosition": "LATEST"
             }
         },
         "PlayerGamesPublisher": {
@@ -205,23 +205,23 @@
                     "S3Bucket": "cartographer-api-lambda-code",
                     "S3Key": "PlayerGamesPublisher-0.0.1-SNAPSHOT.jar"
                 },
-                "Role": { "Fn::GetAtt" : ["CartographerApiLambdaRole", "Arn"] },
+                "Role": { "Fn::GetAtt": ["CartographerApiLambdaRole", "Arn"] },
                 "Timeout": "15",
                 "MemorySize": "512"
             }
         },
         "PlayerGamesPublisherStream": {
-            "Type" : "AWS::Lambda::EventSourceMapping",
+            "Type": "AWS::Lambda::EventSourceMapping",
             "DependsOn": [ "PlayerGames", "PlayerGamesPublisher" ],
-            "Properties" : {
-                "Enabled" : true,
-                "EventSourceArn" : {
-                    "Fn::GetAtt" : [ "PlayerGames", "StreamArn" ]
+            "Properties": {
+                "Enabled": true,
+                "EventSourceArn": {
+                    "Fn::GetAtt": [ "PlayerGames", "StreamArn" ]
                 },
-                "FunctionName" : {
-                    "Fn::GetAtt" : [ "PlayerGamesPublisher", "Arn" ]
+                "FunctionName": {
+                    "Fn::GetAtt": [ "PlayerGamesPublisher", "Arn" ]
                 },
-                "StartingPosition" : "LATEST"
+                "StartingPosition": "LATEST"
             }
         },
         "GamesPublisher": {
@@ -236,77 +236,139 @@
                     "S3Bucket": "cartographer-api-lambda-code",
                     "S3Key": "GamesPublisher-0.0.1-SNAPSHOT.jar"
                 },
-                "Role": { "Fn::GetAtt" : ["CartographerApiLambdaRole", "Arn"] },
+                "Role": { "Fn::GetAtt": ["CartographerApiLambdaRole", "Arn"] },
                 "Timeout": "15",
                 "MemorySize": "512"
             }
         },
         "GamesPublisherStream": {
-            "Type" : "AWS::Lambda::EventSourceMapping",
+            "Type": "AWS::Lambda::EventSourceMapping",
             "DependsOn": [ "Games", "GamesPublisher" ],
-            "Properties" : {
-                "Enabled" : true,
-                "EventSourceArn" : {
-                    "Fn::GetAtt" : [ "Games", "StreamArn" ]
+            "Properties": {
+                "Enabled": true,
+                "EventSourceArn": {
+                    "Fn::GetAtt": [ "Games", "StreamArn" ]
                 },
-                "FunctionName" : {
-                    "Fn::GetAtt" : [ "GamesPublisher", "Arn" ]
+                "FunctionName": {
+                    "Fn::GetAtt": [ "GamesPublisher", "Arn" ]
                 },
-                "StartingPosition" : "LATEST"
-            }
-        },
-        "PlayerGameCountsNew": {
-            "Type" : "AWS::SNS::Topic",
-            "Properties" : {
-                "DisplayName" : "PlayerGameCountsNew",
-                "TopicName" : "Capi-PlayerGameCounts-New",
-                "Subscription" : [
-                ]
+                "StartingPosition": "LATEST"
             }
         },
         "GamesNew": {
-            "Type" : "AWS::SNS::Topic",
-            "Properties" : {
-                "DisplayName" : "GamesNew",
-                "TopicName" : "Capi-Games-New",
-                "Subscription" : [
-                ]
-            }
-        },
-        "PlayerGameCountsUpdated": {
-            "Type" : "AWS::SNS::Topic",
-            "Properties" : {
-                "DisplayName" : "PlayerGameCountsUpdated",
-                "TopicName" : "Capi-PlayerGameCounts-Updated",
-                "Subscription" : [
+            "Type": "AWS::SNS::Topic",
+            "Properties": {
+                "DisplayName": "GamesNew",
+                "TopicName": "Capi-Games-New",
+                "Subscription": [
                 ]
             }
         },
         "PlayerGamesNew": {
-            "Type" : "AWS::SNS::Topic",
-            "Properties" : {
-                "DisplayName" : "PlayerGamesNew",
-                "TopicName" : "Capi-PlayerGames-New",
-                "Subscription" : [
+            "Type": "AWS::SNS::Topic",
+            "Properties": {
+                "DisplayName": "PlayerGamesNew",
+                "TopicName": "Capi-PlayerGames-New",
+                "Subscription": [
                 ]
             }
         },
-        "PlayerGamesContinue": {
-            "Type" : "AWS::SNS::Topic",
-            "Properties" : {
-                "DisplayName" : "PlayerGamesContinue",
-                "TopicName" : "Capi-PlayerGames-Continue",
-                "Subscription" : [
+        "PlayerGameCountsNew": {
+            "Type": "AWS::SNS::Topic",
+            "DependsOn": [ "PlayerGamesAdder" ],
+            "Properties": {
+                "DisplayName": "PlayerGameCountsNew",
+                "TopicName": "Capi-PlayerGameCounts-New",
+                "Subscription": [
+                    {
+                        "Endpoint": { "Fn::GetAtt" : [ "PlayerGamesAdder", "Arn" ] },
+                        "Protocol": "lambda"
+                    }
+                ]
+            }
+        },
+        "PlayerGameCountsUpdated": {
+            "Type": "AWS::SNS::Topic",
+            "DependsOn": [ "PlayerGamesAdder" ],
+            "Properties": {
+                "DisplayName": "PlayerGameCountsUpdated",
+                "TopicName": "Capi-PlayerGameCounts-Updated",
+                "Subscription": [
+                    {
+                        "Endpoint": { "Fn::GetAtt" : [ "PlayerGamesAdder", "Arn" ] },
+                        "Protocol": "lambda"
+                    }
+                ]
+            }
+        },
+        "PlayerGameCountsContinue": {
+            "Type": "AWS::SNS::Topic",
+            "DependsOn": [ "PlayerGamesAdder" ],
+            "Properties": {
+                "DisplayName": "PlayerGameCountsContinue",
+                "TopicName": "Capi-PlayerGameCounts-Continue",
+                "Subscription": [
+                    {
+                        "Endpoint": { "Fn::GetAtt" : ["PlayerGamesAdder", "Arn"] },
+                        "Protocol": "lambda"
+                    }
                 ]
             }
         },
         "SegmentScannerRequestContinue": {
-            "Type" : "AWS::SNS::Topic",
-            "Properties" : {
-                "DisplayName" : "SegmentScannerRequestContinue",
-                "TopicName" : "Capi-SegmentScannerRequest-Continue",
-                "Subscription" : [
+            "Type": "AWS::SNS::Topic",
+            "Properties": {
+                "DisplayName": "SegmentScannerRequestContinue",
+                "TopicName": "Capi-SegmentScannerRequest-Continue",
+                "Subscription": [
                 ]
+            }
+        },
+        "PlayerGamesAdder": {
+            "Type": "AWS::Lambda::Function",
+            "DependsOn": [ "PlayerGames", "PlayerGamesCheckpoints" ],
+            "Properties": {
+                "FunctionName": "PlayerGamesAdder",
+                "Description": "Adds new PlayerGames to the system.",
+                "Runtime": "java8",
+                "Handler": "com.cartographerapi.functions.PlayerGamesAdder",
+                "Code": {
+                    "S3Bucket": "cartographer-api-lambda-code",
+                    "S3Key": "PlayerGamesAdder-0.0.1-SNAPSHOT.jar"
+                },
+                "Role": { "Fn::GetAtt": ["CartographerApiLambdaRole", "Arn"] },
+                "Timeout": "15",
+                "MemorySize": "512"
+            }
+        },
+        "PlayerGameCountsNewToPlayerGamesAdder": {
+            "Type": "AWS::Lambda::Permission",
+            "DependsOn": [ "PlayerGamesAdder", "PlayerGameCountsNew" ],
+            "Properties": {
+                "Action": "lambda:*",
+                "FunctionName": { "Fn::GetAtt": [ "PlayerGamesAdder", "Arn" ] },
+                "Principal": "sns.amazonaws.com",
+                "SourceArn": { "Ref": "PlayerGameCountsNew" }
+            }
+        },
+        "PlayerGameCountsUpdatedToPlayerGamesAdder": {
+            "Type": "AWS::Lambda::Permission",
+            "DependsOn": [ "PlayerGamesAdder", "PlayerGameCountsUpdated" ],
+            "Properties": {
+                "Action": "lambda:*",
+                "FunctionName": { "Fn::GetAtt": [ "PlayerGamesAdder", "Arn" ] },
+                "Principal": "sns.amazonaws.com",
+                "SourceArn": { "Ref": "PlayerGameCountsUpdated" }
+            }
+        },
+        "PlayerGameCountsContinueToPlayerGamesAdder": {
+            "Type": "AWS::Lambda::Permission",
+            "DependsOn": [ "PlayerGamesAdder", "PlayerGameCountsContinue" ],
+            "Properties": {
+                "Action": "lambda:*",
+                "FunctionName": { "Fn::GetAtt": [ "PlayerGamesAdder", "Arn" ] },
+                "Principal": "sns.amazonaws.com",
+                "SourceArn": { "Ref": "PlayerGameCountsContinue" }
             }
         }
     }
