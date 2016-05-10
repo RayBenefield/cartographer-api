@@ -257,15 +257,21 @@
         },
         "GamesNew": {
             "Type": "AWS::SNS::Topic",
+            "DependsOn": [ "GamesForMapGames" ],
             "Properties": {
                 "DisplayName": "GamesNew",
                 "TopicName": "Capi-Games-New",
                 "Subscription": [
+                    {
+                        "Endpoint": { "Fn::GetAtt": [ "GamesForMapGames", "Arn" ] },
+                        "Protocol": "sqs"
+                    }
                 ]
             }
         },
         "PlayerGamesNew": {
             "Type": "AWS::SNS::Topic",
+            "DependsOn": [ "PlayerGamesForGames" ],
             "Properties": {
                 "DisplayName": "PlayerGamesNew",
                 "TopicName": "Capi-PlayerGames-New",
@@ -412,6 +418,46 @@
                 },
                 "Role": { "Fn::GetAtt": ["CartographerApiLambdaRole", "Arn"] },
                 "Timeout": "30",
+                "MemorySize": "512"
+            }
+        },
+        "GamesForMapGames": {
+            "Type": "AWS::SQS::Queue",
+            "Properties": {
+                "QueueName": "Capi-GamesForMapGames"
+            }
+        },
+        "GamesForMapGamesPolicy": {
+            "Type" : "AWS::SQS::QueuePolicy",
+            "Properties" : {
+                "PolicyDocument" : {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": "*",
+                            "Action": "SQS:*",
+                            "Resource": { "Fn::GetAtt": [ "GamesForMapGames", "Arn" ] }
+                        }
+                    ]
+                },
+                "Queues" : [ { "Ref": "GamesForMapGames" } ]
+            }
+        },
+        "MapGamesAdder": {
+            "Type": "AWS::Lambda::Function",
+            "DependsOn": [ "GamesForMapGames" ],
+            "Properties": {
+                "FunctionName": "MapGamesAdder",
+                "Description": "Add map to game relationships to the cache.",
+                "Runtime": "java8",
+                "Handler": "com.cartographerapi.functions.MapGamesAdder",
+                "Code": {
+                    "S3Bucket": "cartographer-api-lambda-code",
+                    "S3Key": "MapGamesAdder-0.0.1-SNAPSHOT.jar"
+                },
+                "Role": { "Fn::GetAtt": ["CartographerApiLambdaRole", "Arn"] },
+                "Timeout": "15",
                 "MemorySize": "512"
             }
         }
