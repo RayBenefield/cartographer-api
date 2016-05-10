@@ -270,6 +270,10 @@
                 "DisplayName": "PlayerGamesNew",
                 "TopicName": "Capi-PlayerGames-New",
                 "Subscription": [
+                    {
+                        "Endpoint": { "Fn::GetAtt": [ "PlayerGamesForGames", "Arn" ] },
+                        "Protocol": "sqs"
+                    }
                 ]
             }
         },
@@ -369,6 +373,29 @@
                 "FunctionName": { "Fn::GetAtt": [ "PlayerGamesAdder", "Arn" ] },
                 "Principal": "sns.amazonaws.com",
                 "SourceArn": { "Ref": "PlayerGameCountsContinue" }
+            }
+        },
+        "PlayerGamesForGames": {
+            "Type": "AWS::SQS::Queue",
+            "Properties": {
+                "QueueName": "Capi-PlayerGamesForGames"
+            }
+        },
+        "PlayerGamesForGamesPolicy": {
+            "Type" : "AWS::SQS::QueuePolicy",
+            "Properties" : {
+                "PolicyDocument" : {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": "*",
+                            "Action": "SQS:*",
+                            "Resource": { "Fn::GetAtt": [ "PlayerGamesForGames", "Arn" ] }
+                        }
+                    ]
+                },
+                "Queues" : [ { "Ref": "PlayerGamesForGames" } ]
             }
         }
     }
