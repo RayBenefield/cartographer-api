@@ -254,6 +254,60 @@
                 },
                 "StartingPosition" : "LATEST"
             }
+        },
+        "PlayerGameCountsNew": {
+            "Type" : "AWS::SNS::Topic",
+            "Properties" : {
+                "DisplayName" : "PlayerGameCountsNew",
+                "TopicName" : "Capi-PlayerGameCounts-New",
+                "Subscription" : [
+                ]
+            }
+        },
+        "GamesNew": {
+            "Type" : "AWS::SNS::Topic",
+            "Properties" : {
+                "DisplayName" : "GamesNew",
+                "TopicName" : "Capi-Games-New",
+                "Subscription" : [
+                ]
+            }
+        },
+        "PlayerGameCountsUpdated": {
+            "Type" : "AWS::SNS::Topic",
+            "Properties" : {
+                "DisplayName" : "PlayerGameCountsUpdated",
+                "TopicName" : "Capi-PlayerGameCounts-Updated",
+                "Subscription" : [
+                ]
+            }
+        },
+        "PlayerGamesNew": {
+            "Type" : "AWS::SNS::Topic",
+            "Properties" : {
+                "DisplayName" : "PlayerGamesNew",
+                "TopicName" : "Capi-PlayerGames-New",
+                "Subscription" : [
+                ]
+            }
+        },
+        "PlayerGamesContinue": {
+            "Type" : "AWS::SNS::Topic",
+            "Properties" : {
+                "DisplayName" : "PlayerGamesContinue",
+                "TopicName" : "Capi-PlayerGames-Continue",
+                "Subscription" : [
+                ]
+            }
+        },
+        "SegmentScannerRequestContinue": {
+            "Type" : "AWS::SNS::Topic",
+            "Properties" : {
+                "DisplayName" : "SegmentScannerRequestContinue",
+                "TopicName" : "Capi-SegmentScannerRequest-Continue",
+                "Subscription" : [
+                ]
+            }
         }
     }
 }
