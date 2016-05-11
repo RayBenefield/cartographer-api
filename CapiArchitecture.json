@@ -460,6 +460,74 @@
                 "Timeout": "15",
                 "MemorySize": "512"
             }
+        },
+        "PlayerGameCountsRefresher": {
+            "Type": "AWS::Lambda::Function",
+            "DependsOn": [ "PlayerGameCounts" ],
+            "Properties": {
+                "FunctionName": "PlayerGameCountsRefresher",
+                "Description": "Refreshes the PlayerGameCounts cache.",
+                "Runtime": "java8",
+                "Handler": "com.cartographerapi.functions.PlayerGameCountsRefresher",
+                "Code": {
+                    "S3Bucket": "cartographer-api-lambda-code",
+                    "S3Key": "PlayerGameCountsRefresher-0.0.1-SNAPSHOT.jar"
+                },
+                "Role": { "Fn::GetAtt": ["CartographerApiLambdaRole", "Arn"] },
+                "Timeout": "60",
+                "MemorySize": "512"
+            }
+        },
+        "PlayerGameCountsUpdater": {
+            "Type": "AWS::Lambda::Function",
+            "DependsOn": [ "PlayerGameCounts" ],
+            "Properties": {
+                "FunctionName": "PlayerGameCountsUpdater",
+                "Description": "Update the count of games for a given player.",
+                "Runtime": "java8",
+                "Handler": "com.cartographerapi.functions.PlayerGameCountsUpdater",
+                "Code": {
+                    "S3Bucket": "cartographer-api-lambda-code",
+                    "S3Key": "PlayerGameCountsUpdater-0.0.1-SNAPSHOT.jar"
+                },
+                "Role": { "Fn::GetAtt": ["CartographerApiLambdaRole", "Arn"] },
+                "Timeout": "60",
+                "MemorySize": "512"
+            }
+        },
+        "PlayerGameCountsGetter": {
+            "Type": "AWS::Lambda::Function",
+            "DependsOn": [ "PlayerGameCounts" ],
+            "Properties": {
+                "FunctionName": "PlayerGameCountsGetter",
+                "Description": "Get the count of games for a player.",
+                "Runtime": "java8",
+                "Handler": "com.cartographerapi.functions.PlayerGameCountsGetter",
+                "Code": {
+                    "S3Bucket": "cartographer-api-lambda-code",
+                    "S3Key": "PlayerGameCountsGetter-0.0.1-SNAPSHOT.jar"
+                },
+                "Role": { "Fn::GetAtt": ["CartographerApiLambdaRole", "Arn"] },
+                "Timeout": "60",
+                "MemorySize": "512"
+            }
+        },
+        "PlayerGamesGetter": {
+            "Type": "AWS::Lambda::Function",
+            "DependsOn": [ "PlayerGames" ],
+            "Properties": {
+                "FunctionName": "PlayerGamesGetter",
+                "Description": "Gets a full list of PlayerGames for a given gamertag.",
+                "Runtime": "java8",
+                "Handler": "com.cartographerapi.functions.PlayerGamesGetter",
+                "Code": {
+                    "S3Bucket": "cartographer-api-lambda-code",
+                    "S3Key": "PlayerGamesGetter-0.0.1-SNAPSHOT.jar"
+                },
+                "Role": { "Fn::GetAtt": ["CartographerApiLambdaRole", "Arn"] },
+                "Timeout": "15",
+                "MemorySize": "512"
+            }
         }
     }
 }
