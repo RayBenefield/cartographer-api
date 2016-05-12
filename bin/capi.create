@@ -1,0 +1,47 @@
+#!/bin/sh
+
+# This gets the path of the executing script.
+SELF_PATH=$(cd -P -- "$(dirname -- "${0}")" && pwd -P) && SELF_PATH=${SELF_PATH}/$(basename -- "${0}")
+# If the path is a symlink (which is likely if it is in /usr/local/bin) this will get the actual filepath.
+REAL_FILE=$(readlink ${SELF_PATH})
+# If it isn't a symlink then let's stick with SELF_PATH
+if [[ -z $REAL_FILE ]]; then
+    REAL_FILE=${SELF_PATH}
+fi
+REAL_DIR=$(dirname ${REAL_FILE})
+
+source $REAL_DIR/colors.sh
+source $REAL_DIR/functions.sh
+
+echo
+
+# Provide help.
+getopts h help
+if [[ "${help}" = "h" ]]; then
+    PrintInfo "Description"
+    echo
+    PrintDescription "This script installs the ${BIBlue}CAPI${No_Color} architecture on AWS."
+    echo
+    PrintInfo "Usage"
+    echo
+    PrintCodeLine "capi.create [-h]"
+    echo
+    PrintInfo "Examples"
+    echo
+    PrintCodeLine "script.template"
+    echo
+    PrintBoldInfo "Required Environment Variables"
+    echo
+    PrintCodeLine "${BICyan}EXAMPLE_ENV_VARIABLE${Cyan}=<some-description-of-variable>"
+    echo
+
+    exit
+fi
+
+PrintInfo "Creating the Game stack..."
+echo
+aws cloudformation create-stack --stack-name Capi-Games --template-body file:////Users//GodlyPerfection//CAPI-Workspace//Games//Template.json --capabilities CAPABILITY_IAM
+
+PrintInfo "Creating the MapGame stack..."
+echo
+aws cloudformation create-stack --stack-name Capi-MapGames --template-body file:////Users//GodlyPerfection//CAPI-Workspace//MapGames//Template.json --capabilities CAPABILITY_IAM

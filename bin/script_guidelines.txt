@@ -1,0 +1,39 @@
+ - In order to improve reuse, keeping reusable bits in separate scripts can be beneficial. To include the source of other scripts one can do the following:
+
+```
+# This gets the path of the executing script.
+SELF_PATH=$(cd -P -- "$(dirname -- "$0")" && pwd -P) && SELF_PATH=$SELF_PATH/$(basename -- "$0")
+# If the path is a symlink (which is likely if it is in /usr/local/bin) this will get the actual filepath.
+REAL_FILE=$(readlink $SELF_PATH)
+# This will get the directory of the actual file.
+REAL_DIR=$(dirname $REAL_FILE)
+# It is important to use the REAL_DIR for including files as not all files will be sym linked.
+source $REAL_DIR/colors.sh
+```
+
+ - Shell scripts not intended to be run outside of its directory end in a `*.sh` extension.
+     - e.g. `install.sh` is not symlinked to be accessed globally
+ - Executable tool shell scripts intended to be added to the PATH are just named for what they do.
+     - e.g. `friends.jwt` is intended to be used as a tool globally so it is symlinked to the PATH
+ - The naming convention for tools are `<project>.<action>` allowing us to easily track down tools by project. Something more encompassing can be labeled as `social.<action>` or `general.<action>`.
+ - All variables should follow the format of ${<variable>}, this makes variables more obvious.
+ - Liberally use comments as many don't understand bash.
+ - Readable output is important for CLI tools and is helpful when run in IntelliJ as such certain conventions can be kept between scripts.
+     - The `colors.sh` is provided to keep coloring easy and standardized.
+         - Colors are kept Proper Cased.
+         - Modifiers can be prepended to colors; `I` for high Intensity (brighter), `B` for Bold, `BI` or `IB` for both. e.g. `IBRed` is Intense Bold Red.
+         - For background colors, colors can be prepended with `On_`. e.g. `On_Red` is On a Red background.
+     - Error messages will be displayed with an `[ERROR]` prefix on a red background with a red message following it.
+         - `${On_Red}[Error]${Red} » <error-message-goes-here>${No_Color}`
+     - Informational messages will be displayed in green. If it is important then bold it.
+         - `${Green}» <info-message-goes-here>${No_Color}`
+     - Warning messages will be displayed in bold yellow.
+         - `${BYellow}» <warning-message-goes-here>${No_Color}`
+     - Parameters that were entered will be displayed in intense bold blue.
+         - `${IBBlue}<parameter-goes-here>${No_Color}`
+     - Separators will be displayed with 50 `-`s and in purple. These are also no indented.
+         - `${Purple}--------------------------------------------------${No_Color}`
+     - Code will be indented from the previous level and in cyan. Notable portions of code like variables can be intense bold cyan.
+         - `${Cyan}<some-initial-code> ${BICyan}<notable-code-for-emphasis>${Cyan}=<some-additional-code>${No_Color}`
+     - Messages end up being cleaner when indented 4 spaces.
+     - Output intended to be copy and pasted should not be indented.
