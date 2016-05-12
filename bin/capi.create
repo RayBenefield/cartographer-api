@@ -38,10 +38,23 @@ if [[ "${help}" = "h" ]]; then
     exit
 fi
 
-PrintInfo "Creating the Game stack..."
+gameStackId=$(aws cloudformation create-stack --stack-name Capi-Games --template-body file:////Users//GodlyPerfection//CAPI-Workspace//Games//Template.json --capabilities CAPABILITY_IAM --query StackId)
+PrintInfo "Creating the ${BIBlue}Game${No_Color} stack with ID ${BIBlue}${gameStackId}${No_Color}..."
 echo
-aws cloudformation create-stack --stack-name Capi-Games --template-body file:////Users//GodlyPerfection//CAPI-Workspace//Games//Template.json --capabilities CAPABILITY_IAM
 
-PrintInfo "Creating the MapGame stack..."
+mapGameStackId=$(aws cloudformation create-stack --stack-name Capi-MapGames --template-body file:////Users//GodlyPerfection//CAPI-Workspace//MapGames//Template.json --capabilities CAPABILITY_IAM --query StackId)
+PrintInfo "Creating the ${BIBlue}MapGame${No_Color} stack with ID of ${BIBlue}${mapGameStackId}${No_Color}..."
 echo
-aws cloudformation create-stack --stack-name Capi-MapGames --template-body file:////Users//GodlyPerfection//CAPI-Workspace//MapGames//Template.json --capabilities CAPABILITY_IAM
+
+while true
+do
+	Statuses=$(aws cloudformation describe-stacks --query Stacks[*].StackStatus --output text)
+
+	if [[ ! ${Statuses[*]} =~ "CREATE_IN_PROGRESS" ]]; then
+		break
+	fi
+	sleep 1;
+done
+
+PrintBoldInfo "Finished creating CAPI!"
+echo

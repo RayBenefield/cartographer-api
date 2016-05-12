@@ -45,3 +45,16 @@ aws cloudformation delete-stack --stack-name Capi-Games
 PrintInfo "Deleting the MapGame stack..."
 echo
 aws cloudformation delete-stack --stack-name Capi-MapGames
+
+while true
+do
+	Statuses=$(aws cloudformation describe-stacks --query Stacks[*].StackStatus --output text)
+
+	if [[ ! ${Statuses[*]} =~ "DELETE_IN_PROGRESS" ]]; then
+		break
+	fi
+	sleep 1;
+done
+
+PrintBoldInfo "Finished deleting CAPI!"
+echo
