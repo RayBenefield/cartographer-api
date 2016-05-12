@@ -1,5 +1,12 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
+    "Parameters": {
+        "Stage" : {
+            "Type" : "String",
+            "Default" : "test",
+            "Description" : "The environment/stage for this stack."
+        }
+    },
     "Resources": {
         "PlayerGameCounts": {
             "Type": "AWS::DynamoDB::Table",
@@ -598,6 +605,43 @@
                     ] ]
                 }
             }
+        },
+        "CapiDeployment": {
+            "Type" : "AWS::ApiGateway::Deployment",
+            "Properties" : {
+                "Description" : "Deployment of CAPI.",
+                "RestApiId" : { "Ref": "CAPI" },
+                "StageName": { "Ref": "Stage" }
+            }
+        },
+        "CapiKey": {
+            "Type" : "AWS::ApiGateway::ApiKey",
+            "Properties" : {
+                "Description" : "API Key for CAPI",
+                "Enabled" : true,
+                "Name" : "Capi Key",
+                "StageKeys" : [
+                    {
+                        "RestApiId" : { "Ref": "CAPI" },
+                        "StageName" : { "Ref": "Stage" }
+                    }
+                ]
+            }
+        }
+    },
+    "Outputs": {
+        "ApiKey": {
+            "Description": "The API Key for CAPI.",
+            "Value": { "Ref": "CapiKey" }
+        },
+        "Url": {
+            "Description": "Url for CAPI.",
+            "Value": { "Fn::Join": [ "", [
+                "https://",
+                { "Ref": "CAPI" },
+                ".execute-api.us-west-2.amazonaws.com/",
+                { "Ref": "Stage" }
+            ] ] }
         }
     }
 }
