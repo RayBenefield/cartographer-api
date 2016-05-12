@@ -1,149 +1,22 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
     "Parameters": {
-        "Stage" : {
-            "Type" : "String",
-            "Default" : "test",
-            "Description" : "The environment/stage for this stack."
+        "Stage": {
+            "Type": "String",
+            "Default": "test",
+            "Description": "The environment/stage for this stack."
         }
     },
     "Resources": {
-        "PlayerGameCounts": {
-            "Type": "AWS::DynamoDB::Table",
+        "CAPI": {
+            "Type": "AWS::ApiGateway::RestApi",
             "Properties": {
-                "TableName": "PlayerGameCounts",
-                "ProvisionedThroughput": {
-                    "ReadCapacityUnits": 1,
-                    "WriteCapacityUnits": 1
-                },
-                "AttributeDefinitions": [
-                    {
-                        "AttributeName": "Gamertag",
-                        "AttributeType": "S"
-                    }
-                ],
-                "KeySchema": [
-                    {
-                        "AttributeName": "Gamertag",
-                        "KeyType": "HASH"
-                    }
-                ],
-                "StreamSpecification": {
-                    "StreamViewType": "NEW_AND_OLD_IMAGES"
+                "Name": "CAPI",
+                "Description": "Capi test",
+                "BodyS3Location": {
+                    "Bucket": "cartographer-api-lambda-code",
+                    "Key": "CapiSwagger.json"
                 }
-            }
-        },
-        "PlayerGames": {
-            "Type": "AWS::DynamoDB::Table",
-            "Properties": {
-                "TableName": "PlayerGames",
-                "ProvisionedThroughput": {
-                    "ReadCapacityUnits": 4,
-                    "WriteCapacityUnits": 4
-                },
-                "AttributeDefinitions": [
-                    {
-                        "AttributeName": "Gamertag",
-                        "AttributeType": "S"
-                    },
-                    {
-                        "AttributeName": "GameNumber",
-                        "AttributeType": "N"
-                    }
-                ],
-                "KeySchema": [
-                    {
-                        "AttributeName": "Gamertag",
-                        "KeyType": "HASH"
-                    },
-                    {
-                        "AttributeName": "GameNumber",
-                        "KeyType": "RANGE"
-                    }
-                ],
-                "StreamSpecification": {
-                    "StreamViewType": "NEW_AND_OLD_IMAGES"
-                }
-            }
-        },
-        "Games": {
-            "Type": "AWS::DynamoDB::Table",
-            "Properties": {
-                "TableName": "Games",
-                "ProvisionedThroughput": {
-                    "ReadCapacityUnits": 4,
-                    "WriteCapacityUnits": 4
-                },
-                "AttributeDefinitions": [
-                    {
-                        "AttributeName": "MatchId",
-                        "AttributeType": "S"
-                    }
-                ],
-                "KeySchema": [
-                    {
-                        "AttributeName": "MatchId",
-                        "KeyType": "HASH"
-                    }
-                ],
-                "StreamSpecification": {
-                    "StreamViewType": "NEW_AND_OLD_IMAGES"
-                }
-            }
-        },
-        "MapGames": {
-            "Type": "AWS::DynamoDB::Table",
-            "Properties": {
-                "TableName": "MapGames",
-                "ProvisionedThroughput": {
-                    "ReadCapacityUnits": 1,
-                    "WriteCapacityUnits": 1
-                },
-                "AttributeDefinitions": [
-                    {
-                        "AttributeName": "MapId",
-                        "AttributeType": "S"
-                    },
-                    {
-                        "AttributeName": "MatchId",
-                        "AttributeType": "S"
-                    }
-                ],
-                "KeySchema": [
-                    {
-                        "AttributeName": "MapId",
-                        "KeyType": "HASH"
-                    },
-                    {
-                        "AttributeName": "MatchId",
-                        "KeyType": "RANGE"
-                    }
-                ],
-                "StreamSpecification": {
-                    "StreamViewType": "NEW_AND_OLD_IMAGES"
-                }
-            }
-        },
-        "PlayerGamesCheckpoints": {
-            "Type": "AWS::DynamoDB::Table",
-            "Properties": {
-                "TableName": "PlayerGamesCheckpoints",
-                "ProvisionedThroughput": {
-                    "ReadCapacityUnits": 1,
-                    "WriteCapacityUnits": 1
-                },
-                "AttributeDefinitions": [
-                    {
-                        "AttributeName": "Gamertag",
-                        "AttributeType": "S"
-                    }
-                ],
-                "KeySchema": [
-                    {
-                        "AttributeName": "Gamertag",
-                        "KeyType": "HASH"
-                    }
-                ]
             }
         },
         "CartographerApiLambdaRole": {
@@ -169,6 +42,167 @@
                 ]
             }
         },
+        "CapiDeployment": {
+            "Type": "AWS::ApiGateway::Deployment",
+            "Properties": {
+                "Description": "Deployment of CAPI.",
+                "RestApiId": { "Ref": "CAPI" },
+                "StageName": { "Ref": "Stage" }
+            }
+        },
+        "CapiKey": {
+            "Type": "AWS::ApiGateway::ApiKey",
+            "Properties": {
+                "Description": "API Key for CAPI",
+                "Enabled": true,
+                "Name": "Capi Key",
+                "StageKeys": [
+                    {
+                        "RestApiId": { "Ref": "CAPI" },
+                        "StageName": { "Ref": "Stage" }
+                    }
+                ]
+            }
+        },
+        "SegmentScannerRequestContinue": {
+            "Type": "AWS::SNS::Topic",
+            "Properties": {
+                "DisplayName": "SegmentScannerRequestContinue",
+                "TopicName": "Capi-SegmentScannerRequest-Continue",
+                "Subscription": [
+                ]
+            }
+        },
+        "CapiToPlayerGameCountsGetter": {
+            "Type": "AWS::Lambda::Permission",
+            "DependsOn": [ "PlayerGameCountsGetter", "CAPI" ],
+            "Properties": {
+                "Action": "lambda:*",
+                "FunctionName": { "Fn::GetAtt": [ "PlayerGameCountsGetter", "Arn" ] },
+                "Principal": "apigateway.amazonaws.com",
+                "SourceArn": {
+                    "Fn::Join": [ ":", [
+                        "arn:aws:execute-api",
+                        { "Ref": "AWS::Region" },
+                        { "Ref": "AWS::AccountId" },
+                        { "Fn::Join": [ "", [
+                            { "Ref": "CAPI" },
+                            "/*/GET/player/*/game/count"
+                        ] ] }
+                    ] ]
+                }
+            }
+        },
+        "PlayerGameCountsGetter": {
+            "Type": "AWS::Lambda::Function",
+            "DependsOn": [ "PlayerGameCounts" ],
+            "Properties": {
+                "FunctionName": "PlayerGameCountsGetter",
+                "Description": "Get the count of games for a player.",
+                "Runtime": "java8",
+                "Handler": "com.cartographerapi.functions.PlayerGameCountsGetter",
+                "Code": {
+                    "S3Bucket": "cartographer-api-lambda-code",
+                    "S3Key": "PlayerGameCountsGetter-0.0.1-SNAPSHOT.jar"
+                },
+                "Role": { "Fn::GetAtt": ["CartographerApiLambdaRole", "Arn"] },
+                "Timeout": "60",
+                "MemorySize": "512"
+            }
+        },
+        "CapiToPlayerGameCountsUpdater": {
+            "Type": "AWS::Lambda::Permission",
+            "DependsOn": [ "PlayerGameCountsUpdater", "CAPI" ],
+            "Properties": {
+                "Action": "lambda:*",
+                "FunctionName": { "Fn::GetAtt": [ "PlayerGameCountsUpdater", "Arn" ] },
+                "Principal": "apigateway.amazonaws.com",
+                "SourceArn": {
+                    "Fn::Join": [ ":", [
+                        "arn:aws:execute-api",
+                        { "Ref": "AWS::Region" },
+                        { "Ref": "AWS::AccountId" },
+                        { "Fn::Join": [ "", [
+                            { "Ref": "CAPI" },
+                            "/*/POST/player/*/game/count"
+                        ] ] }
+                    ] ]
+                }
+            }
+        },
+        "PlayerGameCountsUpdater": {
+            "Type": "AWS::Lambda::Function",
+            "DependsOn": [ "PlayerGameCounts" ],
+            "Properties": {
+                "FunctionName": "PlayerGameCountsUpdater",
+                "Description": "Update the count of games for a given player.",
+                "Runtime": "java8",
+                "Handler": "com.cartographerapi.functions.PlayerGameCountsUpdater",
+                "Code": {
+                    "S3Bucket": "cartographer-api-lambda-code",
+                    "S3Key": "PlayerGameCountsUpdater-0.0.1-SNAPSHOT.jar"
+                },
+                "Role": { "Fn::GetAtt": ["CartographerApiLambdaRole", "Arn"] },
+                "Timeout": "60",
+                "MemorySize": "512"
+            }
+        },
+        "PlayerGameCountsRefresher": {
+            "Type": "AWS::Lambda::Function",
+            "DependsOn": [ "PlayerGameCounts" ],
+            "Properties": {
+                "FunctionName": "PlayerGameCountsRefresher",
+                "Description": "Refreshes the PlayerGameCounts cache.",
+                "Runtime": "java8",
+                "Handler": "com.cartographerapi.functions.PlayerGameCountsRefresher",
+                "Code": {
+                    "S3Bucket": "cartographer-api-lambda-code",
+                    "S3Key": "PlayerGameCountsRefresher-0.0.1-SNAPSHOT.jar"
+                },
+                "Role": { "Fn::GetAtt": ["CartographerApiLambdaRole", "Arn"] },
+                "Timeout": "60",
+                "MemorySize": "512"
+            }
+        },
+        "PlayerGameCounts": {
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+                "TableName": "PlayerGameCounts",
+                "ProvisionedThroughput": {
+                    "ReadCapacityUnits": 1,
+                    "WriteCapacityUnits": 1
+                },
+                "AttributeDefinitions": [
+                    {
+                        "AttributeName": "Gamertag",
+                        "AttributeType": "S"
+                    }
+                ],
+                "KeySchema": [
+                    {
+                        "AttributeName": "Gamertag",
+                        "KeyType": "HASH"
+                    }
+                ],
+                "StreamSpecification": {
+                    "StreamViewType": "NEW_AND_OLD_IMAGES"
+                }
+            }
+        },
+        "PlayerGameCountsPublisherStream": {
+            "Type": "AWS::Lambda::EventSourceMapping",
+            "DependsOn": [ "PlayerGameCounts", "PlayerGameCountsPublisher" ],
+            "Properties": {
+                "Enabled": true,
+                "EventSourceArn": {
+                    "Fn::GetAtt": [ "PlayerGameCounts", "StreamArn" ]
+                },
+                "FunctionName": {
+                    "Fn::GetAtt": [ "PlayerGameCountsPublisher", "Arn" ]
+                },
+                "StartingPosition": "LATEST"
+            }
+        },
         "PlayerGameCountsPublisher": {
             "Type": "AWS::Lambda::Function",
             "DependsOn": [ "CartographerApiLambdaRole" ],
@@ -186,110 +220,6 @@
                 "MemorySize": 512
             }
         },
-        "PlayerGameCountsPublisherStream": {
-            "Type": "AWS::Lambda::EventSourceMapping",
-            "DependsOn": [ "PlayerGameCounts", "PlayerGameCountsPublisher" ],
-            "Properties": {
-                "Enabled": true,
-                "EventSourceArn": {
-                    "Fn::GetAtt": [ "PlayerGameCounts", "StreamArn" ]
-                },
-                "FunctionName": {
-                    "Fn::GetAtt": [ "PlayerGameCountsPublisher", "Arn" ]
-                },
-                "StartingPosition": "LATEST"
-            }
-        },
-        "PlayerGamesPublisher": {
-            "Type": "AWS::Lambda::Function",
-            "DependsOn": [ "CartographerApiLambdaRole" ],
-            "Properties": {
-                "FunctionName": "PlayerGamesPublisher",
-                "Description": "Publish new PlayerGames found.",
-                "Runtime": "java8",
-                "Handler": "com.cartographerapi.functions.PlayerGamesPublisher",
-                "Code": {
-                    "S3Bucket": "cartographer-api-lambda-code",
-                    "S3Key": "PlayerGamesPublisher-0.0.1-SNAPSHOT.jar"
-                },
-                "Role": { "Fn::GetAtt": ["CartographerApiLambdaRole", "Arn"] },
-                "Timeout": "15",
-                "MemorySize": "512"
-            }
-        },
-        "PlayerGamesPublisherStream": {
-            "Type": "AWS::Lambda::EventSourceMapping",
-            "DependsOn": [ "PlayerGames", "PlayerGamesPublisher" ],
-            "Properties": {
-                "Enabled": true,
-                "EventSourceArn": {
-                    "Fn::GetAtt": [ "PlayerGames", "StreamArn" ]
-                },
-                "FunctionName": {
-                    "Fn::GetAtt": [ "PlayerGamesPublisher", "Arn" ]
-                },
-                "StartingPosition": "LATEST"
-            }
-        },
-        "GamesPublisher": {
-            "Type": "AWS::Lambda::Function",
-            "DependsOn": [ "CartographerApiLambdaRole" ],
-            "Properties": {
-                "FunctionName": "GamesPublisher",
-                "Description": "Publish new games found.",
-                "Runtime": "java8",
-                "Handler": "com.cartographerapi.functions.GamesPublisher",
-                "Code": {
-                    "S3Bucket": "cartographer-api-lambda-code",
-                    "S3Key": "GamesPublisher-0.0.1-SNAPSHOT.jar"
-                },
-                "Role": { "Fn::GetAtt": ["CartographerApiLambdaRole", "Arn"] },
-                "Timeout": "15",
-                "MemorySize": "512"
-            }
-        },
-        "GamesPublisherStream": {
-            "Type": "AWS::Lambda::EventSourceMapping",
-            "DependsOn": [ "Games", "GamesPublisher" ],
-            "Properties": {
-                "Enabled": true,
-                "EventSourceArn": {
-                    "Fn::GetAtt": [ "Games", "StreamArn" ]
-                },
-                "FunctionName": {
-                    "Fn::GetAtt": [ "GamesPublisher", "Arn" ]
-                },
-                "StartingPosition": "LATEST"
-            }
-        },
-        "GamesNew": {
-            "Type": "AWS::SNS::Topic",
-            "DependsOn": [ "GamesForMapGames" ],
-            "Properties": {
-                "DisplayName": "GamesNew",
-                "TopicName": "Capi-Games-New",
-                "Subscription": [
-                    {
-                        "Endpoint": { "Fn::GetAtt": [ "GamesForMapGames", "Arn" ] },
-                        "Protocol": "sqs"
-                    }
-                ]
-            }
-        },
-        "PlayerGamesNew": {
-            "Type": "AWS::SNS::Topic",
-            "DependsOn": [ "PlayerGamesForGames" ],
-            "Properties": {
-                "DisplayName": "PlayerGamesNew",
-                "TopicName": "Capi-PlayerGames-New",
-                "Subscription": [
-                    {
-                        "Endpoint": { "Fn::GetAtt": [ "PlayerGamesForGames", "Arn" ] },
-                        "Protocol": "sqs"
-                    }
-                ]
-            }
-        },
         "PlayerGameCountsNew": {
             "Type": "AWS::SNS::Topic",
             "DependsOn": [ "PlayerGamesAdder" ],
@@ -298,7 +228,7 @@
                 "TopicName": "Capi-PlayerGameCounts-New",
                 "Subscription": [
                     {
-                        "Endpoint": { "Fn::GetAtt" : [ "PlayerGamesAdder", "Arn" ] },
+                        "Endpoint": { "Fn::GetAtt": [ "PlayerGamesAdder", "Arn" ] },
                         "Protocol": "lambda"
                     }
                 ]
@@ -312,46 +242,42 @@
                 "TopicName": "Capi-PlayerGameCounts-Updated",
                 "Subscription": [
                     {
-                        "Endpoint": { "Fn::GetAtt" : [ "PlayerGamesAdder", "Arn" ] },
+                        "Endpoint": { "Fn::GetAtt": [ "PlayerGamesAdder", "Arn" ] },
                         "Protocol": "lambda"
                     }
                 ]
             }
         },
-        "PlayerGameCountsContinue": {
-            "Type": "AWS::SNS::Topic",
-            "DependsOn": [ "PlayerGamesAdder" ],
+        "CapiToPlayerGamesGetter": {
+            "Type": "AWS::Lambda::Permission",
             "Properties": {
-                "DisplayName": "PlayerGameCountsContinue",
-                "TopicName": "Capi-PlayerGameCounts-Continue",
-                "Subscription": [
-                    {
-                        "Endpoint": { "Fn::GetAtt" : ["PlayerGamesAdder", "Arn"] },
-                        "Protocol": "lambda"
-                    }
-                ]
+                "Action": "lambda:*",
+                "FunctionName": { "Fn::GetAtt": [ "PlayerGamesGetter", "Arn" ] },
+                "Principal": "apigateway.amazonaws.com",
+                "SourceArn": {
+                    "Fn::Join": [ ":", [
+                        "arn:aws:execute-api",
+                        { "Ref": "AWS::Region" },
+                        { "Ref": "AWS::AccountId" },
+                        { "Fn::Join": [ "", [
+                            { "Ref": "CAPI" },
+                            "/*/GET/player/*/game"
+                        ] ] }
+                    ] ]
+                }
             }
         },
-        "SegmentScannerRequestContinue": {
-            "Type": "AWS::SNS::Topic",
-            "Properties": {
-                "DisplayName": "SegmentScannerRequestContinue",
-                "TopicName": "Capi-SegmentScannerRequest-Continue",
-                "Subscription": [
-                ]
-            }
-        },
-        "PlayerGamesAdder": {
+        "PlayerGamesGetter": {
             "Type": "AWS::Lambda::Function",
-            "DependsOn": [ "PlayerGames", "PlayerGamesCheckpoints" ],
+            "DependsOn": [ "PlayerGames" ],
             "Properties": {
-                "FunctionName": "PlayerGamesAdder",
-                "Description": "Adds new PlayerGames to the system.",
+                "FunctionName": "PlayerGamesGetter",
+                "Description": "Gets a full list of PlayerGames for a given gamertag.",
                 "Runtime": "java8",
-                "Handler": "com.cartographerapi.functions.PlayerGamesAdder",
+                "Handler": "com.cartographerapi.functions.PlayerGamesGetter",
                 "Code": {
                     "S3Bucket": "cartographer-api-lambda-code",
-                    "S3Key": "PlayerGamesAdder-0.0.1-SNAPSHOT.jar"
+                    "S3Key": "PlayerGamesGetter-0.0.1-SNAPSHOT.jar"
                 },
                 "Role": { "Fn::GetAtt": ["CartographerApiLambdaRole", "Arn"] },
                 "Timeout": "15",
@@ -388,6 +314,137 @@
                 "SourceArn": { "Ref": "PlayerGameCountsContinue" }
             }
         },
+        "PlayerGamesAdder": {
+            "Type": "AWS::Lambda::Function",
+            "DependsOn": [ "PlayerGames", "PlayerGamesCheckpoints" ],
+            "Properties": {
+                "FunctionName": "PlayerGamesAdder",
+                "Description": "Adds new PlayerGames to the system.",
+                "Runtime": "java8",
+                "Handler": "com.cartographerapi.functions.PlayerGamesAdder",
+                "Code": {
+                    "S3Bucket": "cartographer-api-lambda-code",
+                    "S3Key": "PlayerGamesAdder-0.0.1-SNAPSHOT.jar"
+                },
+                "Role": { "Fn::GetAtt": ["CartographerApiLambdaRole", "Arn"] },
+                "Timeout": "15",
+                "MemorySize": "512"
+            }
+        },
+        "PlayerGameCountsContinue": {
+            "Type": "AWS::SNS::Topic",
+            "DependsOn": [ "PlayerGamesAdder" ],
+            "Properties": {
+                "DisplayName": "PlayerGameCountsContinue",
+                "TopicName": "Capi-PlayerGameCounts-Continue",
+                "Subscription": [
+                    {
+                        "Endpoint": { "Fn::GetAtt": ["PlayerGamesAdder", "Arn"] },
+                        "Protocol": "lambda"
+                    }
+                ]
+            }
+        },
+        "PlayerGamesCheckpoints": {
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+                "TableName": "PlayerGamesCheckpoints",
+                "ProvisionedThroughput": {
+                    "ReadCapacityUnits": 1,
+                    "WriteCapacityUnits": 1
+                },
+                "AttributeDefinitions": [
+                    {
+                        "AttributeName": "Gamertag",
+                        "AttributeType": "S"
+                    }
+                ],
+                "KeySchema": [
+                    {
+                        "AttributeName": "Gamertag",
+                        "KeyType": "HASH"
+                    }
+                ]
+            }
+        },
+        "PlayerGames": {
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+                "TableName": "PlayerGames",
+                "ProvisionedThroughput": {
+                    "ReadCapacityUnits": 4,
+                    "WriteCapacityUnits": 4
+                },
+                "AttributeDefinitions": [
+                    {
+                        "AttributeName": "Gamertag",
+                        "AttributeType": "S"
+                    },
+                    {
+                        "AttributeName": "GameNumber",
+                        "AttributeType": "N"
+                    }
+                ],
+                "KeySchema": [
+                    {
+                        "AttributeName": "Gamertag",
+                        "KeyType": "HASH"
+                    },
+                    {
+                        "AttributeName": "GameNumber",
+                        "KeyType": "RANGE"
+                    }
+                ],
+                "StreamSpecification": {
+                    "StreamViewType": "NEW_AND_OLD_IMAGES"
+                }
+            }
+        },
+        "PlayerGamesPublisherStream": {
+            "Type": "AWS::Lambda::EventSourceMapping",
+            "DependsOn": [ "PlayerGames", "PlayerGamesPublisher" ],
+            "Properties": {
+                "Enabled": true,
+                "EventSourceArn": {
+                    "Fn::GetAtt": [ "PlayerGames", "StreamArn" ]
+                },
+                "FunctionName": {
+                    "Fn::GetAtt": [ "PlayerGamesPublisher", "Arn" ]
+                },
+                "StartingPosition": "LATEST"
+            }
+        },
+        "PlayerGamesPublisher": {
+            "Type": "AWS::Lambda::Function",
+            "DependsOn": [ "CartographerApiLambdaRole" ],
+            "Properties": {
+                "FunctionName": "PlayerGamesPublisher",
+                "Description": "Publish new PlayerGames found.",
+                "Runtime": "java8",
+                "Handler": "com.cartographerapi.functions.PlayerGamesPublisher",
+                "Code": {
+                    "S3Bucket": "cartographer-api-lambda-code",
+                    "S3Key": "PlayerGamesPublisher-0.0.1-SNAPSHOT.jar"
+                },
+                "Role": { "Fn::GetAtt": ["CartographerApiLambdaRole", "Arn"] },
+                "Timeout": "15",
+                "MemorySize": "512"
+            }
+        },
+        "PlayerGamesNew": {
+            "Type": "AWS::SNS::Topic",
+            "DependsOn": [ "PlayerGamesForGames" ],
+            "Properties": {
+                "DisplayName": "PlayerGamesNew",
+                "TopicName": "Capi-PlayerGames-New",
+                "Subscription": [
+                    {
+                        "Endpoint": { "Fn::GetAtt": [ "PlayerGamesForGames", "Arn" ] },
+                        "Protocol": "sqs"
+                    }
+                ]
+            }
+        },
         "PlayerGamesForGames": {
             "Type": "AWS::SQS::Queue",
             "Properties": {
@@ -395,9 +452,9 @@
             }
         },
         "PlayerGamesForGamesPolicy": {
-            "Type" : "AWS::SQS::QueuePolicy",
-            "Properties" : {
-                "PolicyDocument" : {
+            "Type": "AWS::SQS::QueuePolicy",
+            "Properties": {
+                "PolicyDocument": {
                     "Version": "2012-10-17",
                     "Statement": [
                         {
@@ -408,7 +465,7 @@
                         }
                     ]
                 },
-                "Queues" : [ { "Ref": "PlayerGamesForGames" } ]
+                "Queues": [ { "Ref": "PlayerGamesForGames" } ]
             }
         },
         "GamesAdder": {
@@ -428,6 +485,76 @@
                 "MemorySize": "512"
             }
         },
+        "Games": {
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+                "TableName": "Games",
+                "ProvisionedThroughput": {
+                    "ReadCapacityUnits": 4,
+                    "WriteCapacityUnits": 4
+                },
+                "AttributeDefinitions": [
+                    {
+                        "AttributeName": "MatchId",
+                        "AttributeType": "S"
+                    }
+                ],
+                "KeySchema": [
+                    {
+                        "AttributeName": "MatchId",
+                        "KeyType": "HASH"
+                    }
+                ],
+                "StreamSpecification": {
+                    "StreamViewType": "NEW_AND_OLD_IMAGES"
+                }
+            }
+        },
+        "GamesPublisherStream": {
+            "Type": "AWS::Lambda::EventSourceMapping",
+            "DependsOn": [ "Games", "GamesPublisher" ],
+            "Properties": {
+                "Enabled": true,
+                "EventSourceArn": {
+                    "Fn::GetAtt": [ "Games", "StreamArn" ]
+                },
+                "FunctionName": {
+                    "Fn::GetAtt": [ "GamesPublisher", "Arn" ]
+                },
+                "StartingPosition": "LATEST"
+            }
+        },
+        "GamesPublisher": {
+            "Type": "AWS::Lambda::Function",
+            "DependsOn": [ "CartographerApiLambdaRole" ],
+            "Properties": {
+                "FunctionName": "GamesPublisher",
+                "Description": "Publish new games found.",
+                "Runtime": "java8",
+                "Handler": "com.cartographerapi.functions.GamesPublisher",
+                "Code": {
+                    "S3Bucket": "cartographer-api-lambda-code",
+                    "S3Key": "GamesPublisher-0.0.1-SNAPSHOT.jar"
+                },
+                "Role": { "Fn::GetAtt": ["CartographerApiLambdaRole", "Arn"] },
+                "Timeout": "15",
+                "MemorySize": "512"
+            }
+        },
+        "GamesNew": {
+            "Type": "AWS::SNS::Topic",
+            "DependsOn": [ "GamesForMapGames" ],
+            "Properties": {
+                "DisplayName": "GamesNew",
+                "TopicName": "Capi-Games-New",
+                "Subscription": [
+                    {
+                        "Endpoint": { "Fn::GetAtt": [ "GamesForMapGames", "Arn" ] },
+                        "Protocol": "sqs"
+                    }
+                ]
+            }
+        },
         "GamesForMapGames": {
             "Type": "AWS::SQS::Queue",
             "Properties": {
@@ -435,9 +562,9 @@
             }
         },
         "GamesForMapGamesPolicy": {
-            "Type" : "AWS::SQS::QueuePolicy",
-            "Properties" : {
-                "PolicyDocument" : {
+            "Type": "AWS::SQS::QueuePolicy",
+            "Properties": {
+                "PolicyDocument": {
                     "Version": "2012-10-17",
                     "Statement": [
                         {
@@ -448,7 +575,7 @@
                         }
                     ]
                 },
-                "Queues" : [ { "Ref": "GamesForMapGames" } ]
+                "Queues": [ { "Ref": "GamesForMapGames" } ]
             }
         },
         "MapGamesAdder": {
@@ -468,164 +595,37 @@
                 "MemorySize": "512"
             }
         },
-        "PlayerGameCountsRefresher": {
-            "Type": "AWS::Lambda::Function",
-            "DependsOn": [ "PlayerGameCounts" ],
+        "MapGames": {
+            "Type": "AWS::DynamoDB::Table",
             "Properties": {
-                "FunctionName": "PlayerGameCountsRefresher",
-                "Description": "Refreshes the PlayerGameCounts cache.",
-                "Runtime": "java8",
-                "Handler": "com.cartographerapi.functions.PlayerGameCountsRefresher",
-                "Code": {
-                    "S3Bucket": "cartographer-api-lambda-code",
-                    "S3Key": "PlayerGameCountsRefresher-0.0.1-SNAPSHOT.jar"
+                "TableName": "MapGames",
+                "ProvisionedThroughput": {
+                    "ReadCapacityUnits": 1,
+                    "WriteCapacityUnits": 1
                 },
-                "Role": { "Fn::GetAtt": ["CartographerApiLambdaRole", "Arn"] },
-                "Timeout": "60",
-                "MemorySize": "512"
-            }
-        },
-        "PlayerGameCountsUpdater": {
-            "Type": "AWS::Lambda::Function",
-            "DependsOn": [ "PlayerGameCounts" ],
-            "Properties": {
-                "FunctionName": "PlayerGameCountsUpdater",
-                "Description": "Update the count of games for a given player.",
-                "Runtime": "java8",
-                "Handler": "com.cartographerapi.functions.PlayerGameCountsUpdater",
-                "Code": {
-                    "S3Bucket": "cartographer-api-lambda-code",
-                    "S3Key": "PlayerGameCountsUpdater-0.0.1-SNAPSHOT.jar"
-                },
-                "Role": { "Fn::GetAtt": ["CartographerApiLambdaRole", "Arn"] },
-                "Timeout": "60",
-                "MemorySize": "512"
-            }
-        },
-        "PlayerGameCountsGetter": {
-            "Type": "AWS::Lambda::Function",
-            "DependsOn": [ "PlayerGameCounts" ],
-            "Properties": {
-                "FunctionName": "PlayerGameCountsGetter",
-                "Description": "Get the count of games for a player.",
-                "Runtime": "java8",
-                "Handler": "com.cartographerapi.functions.PlayerGameCountsGetter",
-                "Code": {
-                    "S3Bucket": "cartographer-api-lambda-code",
-                    "S3Key": "PlayerGameCountsGetter-0.0.1-SNAPSHOT.jar"
-                },
-                "Role": { "Fn::GetAtt": ["CartographerApiLambdaRole", "Arn"] },
-                "Timeout": "60",
-                "MemorySize": "512"
-            }
-        },
-        "PlayerGamesGetter": {
-            "Type": "AWS::Lambda::Function",
-            "DependsOn": [ "PlayerGames" ],
-            "Properties": {
-                "FunctionName": "PlayerGamesGetter",
-                "Description": "Gets a full list of PlayerGames for a given gamertag.",
-                "Runtime": "java8",
-                "Handler": "com.cartographerapi.functions.PlayerGamesGetter",
-                "Code": {
-                    "S3Bucket": "cartographer-api-lambda-code",
-                    "S3Key": "PlayerGamesGetter-0.0.1-SNAPSHOT.jar"
-                },
-                "Role": { "Fn::GetAtt": ["CartographerApiLambdaRole", "Arn"] },
-                "Timeout": "15",
-                "MemorySize": "512"
-            }
-        },
-        "CAPI": {
-            "Type" : "AWS::ApiGateway::RestApi",
-            "Properties" : {
-                "Name" : "CAPI",
-                "Description" : "Capi test",
-                "BodyS3Location" : {
-                    "Bucket" : "cartographer-api-lambda-code",
-                    "Key" : "CapiSwagger.json"
-                }
-            }
-        },
-        "CapiToPlayerGameCountsGetter": {
-            "Type": "AWS::Lambda::Permission",
-            "DependsOn": [ "PlayerGameCountsGetter", "CAPI" ],
-            "Properties": {
-                "Action": "lambda:*",
-                "FunctionName": { "Fn::GetAtt": [ "PlayerGameCountsGetter", "Arn" ] },
-                "Principal": "apigateway.amazonaws.com",
-                "SourceArn": {
-                    "Fn::Join": [ ":", [
-                        "arn:aws:execute-api",
-                        { "Ref" : "AWS::Region" },
-                        { "Ref" : "AWS::AccountId" },
-                        { "Fn::Join": [ "", [
-                            { "Ref": "CAPI" },
-                            "/*/GET/player/*/game/count"
-                        ] ] }
-                    ] ]
-                }
-            }
-        },
-        "CapiToPlayerGameCountsUpdater": {
-            "Type": "AWS::Lambda::Permission",
-            "DependsOn": [ "PlayerGameCountsUpdater", "CAPI" ],
-            "Properties": {
-                "Action": "lambda:*",
-                "FunctionName": { "Fn::GetAtt": [ "PlayerGameCountsUpdater", "Arn" ] },
-                "Principal": "apigateway.amazonaws.com",
-                "SourceArn": {
-                    "Fn::Join": [ ":", [
-                        "arn:aws:execute-api",
-                        { "Ref" : "AWS::Region" },
-                        { "Ref" : "AWS::AccountId" },
-                        { "Fn::Join": [ "", [
-                            { "Ref": "CAPI" },
-                            "/*/POST/player/*/game/count"
-                        ] ] }
-                    ] ]
-                }
-            }
-        },
-        "CapiToPlayerGamesGetter": {
-            "Type": "AWS::Lambda::Permission",
-            "Properties": {
-                "Action": "lambda:*",
-                "FunctionName": { "Fn::GetAtt": [ "PlayerGamesGetter", "Arn" ] },
-                "Principal": "apigateway.amazonaws.com",
-                "SourceArn": {
-                    "Fn::Join": [ ":", [
-                        "arn:aws:execute-api",
-                        { "Ref" : "AWS::Region" },
-                        { "Ref" : "AWS::AccountId" },
-                        { "Fn::Join": [ "", [
-                            { "Ref": "CAPI" },
-                            "/*/GET/player/*/game"
-                        ] ] }
-                    ] ]
-                }
-            }
-        },
-        "CapiDeployment": {
-            "Type" : "AWS::ApiGateway::Deployment",
-            "Properties" : {
-                "Description" : "Deployment of CAPI.",
-                "RestApiId" : { "Ref": "CAPI" },
-                "StageName": { "Ref": "Stage" }
-            }
-        },
-        "CapiKey": {
-            "Type" : "AWS::ApiGateway::ApiKey",
-            "Properties" : {
-                "Description" : "API Key for CAPI",
-                "Enabled" : true,
-                "Name" : "Capi Key",
-                "StageKeys" : [
+                "AttributeDefinitions": [
                     {
-                        "RestApiId" : { "Ref": "CAPI" },
-                        "StageName" : { "Ref": "Stage" }
+                        "AttributeName": "MapId",
+                        "AttributeType": "S"
+                    },
+                    {
+                        "AttributeName": "MatchId",
+                        "AttributeType": "S"
                     }
-                ]
+                ],
+                "KeySchema": [
+                    {
+                        "AttributeName": "MapId",
+                        "KeyType": "HASH"
+                    },
+                    {
+                        "AttributeName": "MatchId",
+                        "KeyType": "RANGE"
+                    }
+                ],
+                "StreamSpecification": {
+                    "StreamViewType": "NEW_AND_OLD_IMAGES"
+                }
             }
         }
     },
