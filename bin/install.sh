@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/local/bin/bash
 
 # This gets the path of the executing script.
 SELF_PATH=$(cd -P -- "$(dirname -- "${0}")" && pwd -P) && SELF_PATH=${SELF_PATH}/$(basename -- "${0}")
@@ -15,6 +15,11 @@ source $REAL_DIR/functions.sh
 
 # Start with a blank line.
 echo
+
+
+##################################################
+# Provide help documentation
+##################################################
 
 # Provide help.
 getopts h help
@@ -43,7 +48,7 @@ fi
 # Install all utility bash scripts.
 PrintInfo "Installing bash utility scripts to ${BGreen}/usr/local/bin${Green}."
 Indent
-findCommand="find \`pwd\` -type f \( -name \"capi.create\" -o -name \"capi.delete\" \)"
+findCommand="find \`pwd\` -type f \( -name \"capi.install\" -o -name \"capi.delete\" -o -name \"capi.bootstrap\" \)"
 files=$(eval ${findCommand})
 SymlinkFiles "${files}" "/usr/local/bin"
 Unindent

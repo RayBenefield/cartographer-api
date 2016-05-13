@@ -13,8 +13,6 @@ REAL_DIR=$(dirname ${REAL_FILE})
 source $REAL_DIR/colors.sh
 source $REAL_DIR/functions.sh
 
-echo
-
 
 ##################################################
 # Provide help documentation
@@ -25,62 +23,29 @@ getopts h help
 if [[ "${help}" = "h" ]]; then
     PrintInfo "Description"
     echo
-    PrintDescription "This script installs the ${BIBlue}CAPI${No_Color} architecture on AWS."
+    PrintDescription "Enter the script's ${BIBlue}description${No_Color} here."
     echo
     PrintInfo "Usage"
     echo
-    PrintCodeLine "capi.create [-h]"
+    PrintCodeLine "script.template [-h]"
     echo
     PrintInfo "Examples"
     echo
-    PrintCodeLine "capi.create"
+    PrintCodeLine "script.template"
+    echo
+    PrintBoldInfo "Required Environment Variables"
+    echo
+    PrintCodeLine "${BICyan}EXAMPLE_ENV_VARIABLE${Cyan}=<some-description-of-variable>"
     echo
 
     exit
 fi
 
-
-##################################################
-# Create each of the Domain Stacks
-##################################################
-
-##### TODO: Move Domain Stacks to JSON file and use JQ for parsing
-DomainStacks=( "Games" "MapGames" )
-for Stack in "${DomainStacks[@]}"
-do
-	PrintInfo "Creating the ${BIBlue}${Stack}${Green} stack..."
-	StackId=$( { aws cloudformation create-stack --stack-name Capi-${Stack} --template-body file:////Users//GodlyPerfection//CAPI-Workspace//${Stack}//Template.json --capabilities CAPABILITY_IAM --query StackId; } 2>&1 ) || PrintWarning "${StackId}"
-done
-echo
-
-
-##################################################
-# Wait for the Stacks to finish creating
-##################################################
-
-PrintSeparator
-printf '    » Waiting...  '
-while true
-do
-	Statuses=$(aws cloudformation describe-stacks --query Stacks[*].StackStatus --output text)
-
-	if [[ ! ${Statuses[*]} =~ "CREATE_IN_PROGRESS" ]]; then
-		break
-	fi
-
-	SpinProgress
-	sleep .5;
-done
-
-PrintBoldInfo "DONE!"
-PrintSeparator
-echo
-
-
 ##################################################
 # Generate a hashmap of the Output Values
 ##################################################
 
+DomainStacks=( "Games" "MapGames" )
 declare -A OutputMap
 for Stack in "${DomainStacks[@]}"
 do
@@ -134,13 +99,4 @@ do
 	Subscription=$(aws sns subscribe --topic-arn ${TopicArn} --protocol sqs --notification-endpoint ${QueueArn})
 done
 
-
-##################################################
-# Finished!
-##################################################
-
 Unindent
-echo
-PrintSeparator
-PrintBoldInfo "Finished creating CAPI!"
-echo

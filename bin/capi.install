@@ -1,0 +1,114 @@
+#!/usr/local/bin/bash
+
+# This gets the path of the executing script.
+SELF_PATH=$(cd -P -- "$(dirname -- "${0}")" && pwd -P) && SELF_PATH=${SELF_PATH}/$(basename -- "${0}")
+# If the path is a symlink (which is likely if it is in /usr/local/bin) this will get the actual filepath.
+REAL_FILE=$(readlink ${SELF_PATH})
+# If it isn't a symlink then let's stick with SELF_PATH
+if [[ -z $REAL_FILE ]]; then
+    REAL_FILE=${SELF_PATH}
+fi
+REAL_DIR=$(dirname ${REAL_FILE})
+
+source $REAL_DIR/colors.sh
+source $REAL_DIR/functions.sh
+
+# Start with a blank line.
+echo
+
+
+##################################################
+# Provide help documentation
+##################################################
+
+# Provide help.
+getopts h help
+if [[ "${help}" = "h" ]]; then
+    PrintInfo "Description"
+    echo
+    PrintDescription "This script installs the ${BIBlue}CAPI${No_Color} architecture on AWS."
+    echo
+    PrintInfo "Usage"
+    echo
+    PrintCodeLine "capi.create [-h]"
+    echo
+    PrintInfo "Examples"
+    echo
+    PrintCodeLine "capi.create"
+    echo
+
+    exit
+fi
+
+# Needs to accept a stage (test, prod, dev)
+# Needs to accept a Halo API Key
+# Needs to package all of the Lambda Functions
+# Needs to setup an s3 bucket for file uploads
+# Needs to upload the Swagger Template
+# Needs to upload all of the Lambda Functions
+# Needs Create/Update PlayerGameCounts the Stacks
+# Needs Create/Update PlayerGames the Stacks
+# Done! Create/Update Games the Stacks
+# Done! Create/Update MapGames the Stacks
+# Done! Subscribe all of the Queues to all of the Topics
+# Needs to setup a Configuration Table
+# Needs to output the the current API endpoint and API key
+
+PrintSeparator
+PrintBoldInfo "CAPI Architecture"
+PrintSeparator
+echo
+
+##################################################
+# Create each of the Domain Stacks
+##################################################
+
+##### TODO: Move Domain Stacks to JSON file and use JQ for parsing
+DomainStacks=( "Games" "MapGames" )
+for Stack in "${DomainStacks[@]}"
+do
+	PrintInfo "Updating the ${BIBlue}${Stack}${Green} stack..."
+	StackId=$( { aws cloudformation update-stack --stack-name Capi-${Stack} --template-body file:////Users//GodlyPerfection//CAPI-Workspace//${Stack}//Template.json --capabilities CAPABILITY_IAM --query StackId; } 2>&1 ) || PrintWarning "${StackId}"
+done
+echo
+
+
+##################################################
+# Wait for the Stacks to finish creating
+##################################################
+
+PrintSeparator
+printf '    » Waiting...  '
+while true
+do
+	Statuses=$(aws cloudformation describe-stacks --query Stacks[*].StackStatus --output text)
+
+	if [[ ! ${Statuses[*]} =~ "CREATE_IN_PROGRESS" ]]; then
+		break
+	fi
+
+	SpinProgress
+	sleep .5;
+done
+
+PrintBoldInfo "DONE!"
+PrintSeparator
+echo
+
+
+##################################################
+# Bootstrap the CAPI Architecture
+##################################################
+
+capi.bootstrap
+
+
+##################################################
+# Finished!
+##################################################
+
+echo
+PrintSeparator
+PrintBoldInfo "Finished creating CAPI!"
+PrintSeparator
+echo

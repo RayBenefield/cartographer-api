@@ -13,7 +13,13 @@ REAL_DIR=$(dirname ${REAL_FILE})
 source $REAL_DIR/colors.sh
 source $REAL_DIR/functions.sh
 
+# Start with a blank line.
 echo
+
+
+##################################################
+# Provide help documentation
+##################################################
 
 # Provide help.
 getopts h help
@@ -38,18 +44,19 @@ if [[ "${help}" = "h" ]]; then
     exit
 fi
 
-DomainStacks=( Games MapGames )
 
+##################################################
+# Delete the CAPI Architecture
+##################################################
+
+DomainStacks=( Games MapGames )
 for Stack in "${DomainStacks[@]}"
 do
 	StackId=$(aws cloudformation delete-stack --stack-name Capi-${Stack})
 	PrintInfo "Deleting the ${BIBlue}${Stack}${Green} stack..."
 done
-
 echo
 
-spin='/-\|'
-n=${#spin}
 PrintSeparator
 printf '    » Waiting...  '
 while true
@@ -59,7 +66,8 @@ do
 	if [[ ! ${Statuses[*]} =~ "DELETE_IN_PROGRESS" ]]; then
 		break
 	fi
-	printf "%s\b" "${spin:i++%n:1}"
+
+	SpinProgress
 	sleep .01;
 done
 

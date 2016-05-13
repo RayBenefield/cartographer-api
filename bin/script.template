@@ -13,7 +13,13 @@ REAL_DIR=$(dirname ${REAL_FILE})
 source $REAL_DIR/colors.sh
 source $REAL_DIR/functions.sh
 
+# Start with a blank line.
 echo
+
+
+##################################################
+# Provide help documentation
+##################################################
 
 # Provide help.
 getopts h help
