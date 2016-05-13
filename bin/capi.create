@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/local/bin/bash
 
 # This gets the path of the executing script.
 SELF_PATH=$(cd -P -- "$(dirname -- "${0}")" && pwd -P) && SELF_PATH=${SELF_PATH}/$(basename -- "${0}")
@@ -38,14 +38,20 @@ if [[ "${help}" = "h" ]]; then
     exit
 fi
 
-gameStackId=$(aws cloudformation create-stack --stack-name Capi-Games --template-body file:////Users//GodlyPerfection//CAPI-Workspace//Games//Template.json --capabilities CAPABILITY_IAM --query StackId)
-PrintInfo "Creating the ${BIBlue}Game${No_Color} stack with ID ${BIBlue}${gameStackId}${No_Color}..."
+DomainStacks=( Games MapGames )
+
+for Stack in "${DomainStacks[@]}"
+do
+	StackId=$(aws cloudformation create-stack --stack-name Capi-${Stack} --template-body file:////Users//GodlyPerfection//CAPI-Workspace//${Stack}//Template.json --capabilities CAPABILITY_IAM --query StackId)
+	PrintInfo "Creating the ${BIBlue}${Stack}${Green} stack with ID ${BIBlue}${StackId}${No_Color}..."
+done
+
 echo
 
-mapGameStackId=$(aws cloudformation create-stack --stack-name Capi-MapGames --template-body file:////Users//GodlyPerfection//CAPI-Workspace//MapGames//Template.json --capabilities CAPABILITY_IAM --query StackId)
-PrintInfo "Creating the ${BIBlue}MapGame${No_Color} stack with ID of ${BIBlue}${mapGameStackId}${No_Color}..."
-echo
-
+spin='/-\|'
+n=${#spin}
+PrintSeparator
+printf '    » Waiting...  '
 while true
 do
 	Statuses=$(aws cloudformation describe-stacks --query Stacks[*].StackStatus --output text)
@@ -53,8 +59,66 @@ do
 	if [[ ! ${Statuses[*]} =~ "CREATE_IN_PROGRESS" ]]; then
 		break
 	fi
-	sleep 1;
+	printf "%s\b" "${spin:i++%n:1}"
+	sleep .01;
 done
 
+PrintBoldInfo "DONE!"
+PrintSeparator
+echo
+
+declare -A OutputMap
+for Stack in "${DomainStacks[@]}"
+do
+	Outputs=$(aws cloudformation describe-stacks --stack-name Capi-${Stack} --query 'Stacks[0].Outputs[*].[OutputKey,OutputValue]' --output text)
+	while IFS=$'\t' read -r -a Output
+	do
+		OutputMap[${Output[0]}]=${Output[1]}
+	done <<< "${Outputs[@]}"
+done
+
+
+PrintInfo "Mapping Queues to Topics..."
+echo
+Indent
+
+# GamesForMapGames Queue -sub-> to Games-New Topic
+# QueueGames:TopicNewMapGames
+# GamesForGameEvents Queue -sub-> to Games-New Topic
+# QueueGames:TopicNewGameEvents
+# GamesForPlayers Queue -sub-> to Games-New Topic
+# Games:New-Players
+# PlayersForPlayerGameCounts Queue -sub-> to Players-New Topic
+# Players:New-PlayerGameCounts
+# PlayerGamesForGames Queue -sub-> to PlayerGames-New Topic
+# PlayerGames-New-Games
+# PlayerGameCountsForPlayerGames Queue -sub-> to PlayerGameCounts-New/Updated/Continue Topics
+# PlayerGames:New-PlayerGameCounts
+# PlayerGames:Updated-PlayerGameCounts
+# PlayerGames:Continue-PlayerGameCounts
+
+Mappings=( "QueueMapGames:TopicNewGames" )
+for Mapping in "${Mappings[@]}"
+do
+	# Split mapping into ${TargetDomain} `:` ${SourceTopic}
+	IFS=':' read -ra Map <<< "$Mapping"
+	QueueKey=${Map[0]}
+	TopicKey=${Map[1]}
+
+	# Get Queue/Topic ARN from Outputs with "Queue${TargetDomain}" key
+	QueueArn=${OutputMap[${QueueKey}]}
+	TopicArn=${OutputMap[${TopicKey}]}
+
+	PrintInfo "${BIBlue}${TopicArn}${Green} ----> ${BIBlue}${QueueArn}${No_Color}"
+
+	# Subscribe Queue to Topic
+done
+
+
+
+
+Unindent
+echo
+PrintSeparator
 PrintBoldInfo "Finished creating CAPI!"
 echo

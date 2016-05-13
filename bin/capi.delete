@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/local/bin/bash
 
 # This gets the path of the executing script.
 SELF_PATH=$(cd -P -- "$(dirname -- "${0}")" && pwd -P) && SELF_PATH=${SELF_PATH}/$(basename -- "${0}")
@@ -38,14 +38,20 @@ if [[ "${help}" = "h" ]]; then
     exit
 fi
 
-PrintInfo "Deleting the Game stack..."
-echo
-aws cloudformation delete-stack --stack-name Capi-Games
+DomainStacks=( Games MapGames )
 
-PrintInfo "Deleting the MapGame stack..."
-echo
-aws cloudformation delete-stack --stack-name Capi-MapGames
+for Stack in "${DomainStacks[@]}"
+do
+	StackId=$(aws cloudformation delete-stack --stack-name Capi-${Stack})
+	PrintInfo "Deleting the ${BIBlue}${Stack}${Green} stack..."
+done
 
+echo
+
+spin='/-\|'
+n=${#spin}
+PrintSeparator
+printf '    » Waiting...  '
 while true
 do
 	Statuses=$(aws cloudformation describe-stacks --query Stacks[*].StackStatus --output text)
@@ -53,8 +59,11 @@ do
 	if [[ ! ${Statuses[*]} =~ "DELETE_IN_PROGRESS" ]]; then
 		break
 	fi
-	sleep 1;
+	printf "%s\b" "${spin:i++%n:1}"
+	sleep .01;
 done
 
+PrintBoldInfo "DONE!"
+PrintSeparator
 PrintBoldInfo "Finished deleting CAPI!"
 echo

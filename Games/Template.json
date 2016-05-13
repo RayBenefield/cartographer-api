@@ -138,11 +138,11 @@
         }
     },
     "Outputs": {
-        "SourceQueue": {
+        "QueueGames": {
             "Description": "Queue Url that will subscribe to the relevant topics.",
             "Value": { "Fn::GetAtt": [ "PlayerGamesForGames", "Arn" ] }
         },
-        "EventTopics": {
+        "TopicNewGames": {
             "Description": "All event topics.",
             "Value": { "Ref": "GamesNew" }
         }

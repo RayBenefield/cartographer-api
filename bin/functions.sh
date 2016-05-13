@@ -72,7 +72,7 @@ function AddToClipboard()
     # Add the token to the clipboard. Uses printf instead of echo to avoid extra newlines.
     printf "${value}" | pbcopy
 
-    #echo "    ${BGreen}» Copied to clipboard.${No_Color}"
+    #echo -e "    ${BGreen}» Copied to clipboard.${No_Color}"
     PrintBoldInfo "Copied to clipboard."
     echo
 }
@@ -159,46 +159,46 @@ function Unindent()
 function PrintInfo()
 {
     info=${1}
-    echo "${indentation}${Green}» ${info}${No_Color}"
+    echo -e "${indentation}${Green}» ${info}${No_Color}"
 }
 
 function PrintBoldInfo()
 {
     info=${1}
-    echo "${indentation}${BGreen}» ${info}${No_Color}"
+    echo -e "${indentation}${BGreen}» ${info}${No_Color}"
 }
 
 function PrintCodeLine()
 {
     code=${1}
-    echo "${indentation}    ${Cyan}${code}${No_Color}"
+    echo -e "${indentation}    ${Cyan}${code}${No_Color}"
 }
 
 function PrintDescription()
 {
     description=${1}
-    echo "${indentation}    ${description}"
+    echo -e "${indentation}    ${description}"
 }
 
 function PrintWarning()
 {
     warning=${1}
-    echo "${indentation}${BYellow}» ${warning}${No_Color}"
+    echo -e "${indentation}${BYellow}» ${warning}${No_Color}"
 }
 
 function PrintSeparator()
 {
-    echo "${Purple}--------------------------------------------------${No_Color}"
+    echo -e "${Purple}--------------------------------------------------${No_Color}"
 }
 
 function PrintPasta()
 {
     pasta=${1}
-    echo "${pasta}"
+    echo -e "${pasta}"
 }
 
 function PrintError()
 {
     error=${1}
-    echo "${indentation}${Red}» ${White}${On_Red}[ERROR]${Red} ${error}${No_Color}"
+    echo -e "${indentation}${Red}» ${White}${On_Red}[ERROR]${Red} ${error}${No_Color}"
 }
