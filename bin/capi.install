@@ -47,10 +47,11 @@ fi
 # Needs to upload the Swagger Template
 # Needs to upload all of the Lambda Functions
 # Needs Create/Update PlayerGameCounts the Stacks
-# Needs Create/Update PlayerGames the Stacks
-# Done! Create/Update Games the Stacks
-# Done! Create/Update MapGames the Stacks
-# Done! Subscribe all of the Queues to all of the Topics
+# DONE! Create/Update PlayerGames the Stacks
+# DONE! Create/Update Games the Stacks
+# DONE! Create/Update MapGames the Stacks
+# DONE! Subscribe all of the Queues to all of the Topics
+# Needs Create/Update the CAPI API
 # Needs to setup a Configuration Table
 # Needs to output the the current API endpoint and API key
 
@@ -60,15 +61,20 @@ PrintSeparator
 echo
 
 ##################################################
-# Create each of the Domain Stacks
+# Create/Update each of the Domain Stacks
 ##################################################
 
 ##### TODO: Move Domain Stacks to JSON file and use JQ for parsing
-DomainStacks=( "Games" "MapGames" )
+DomainStacks=( "Games" "MapGames" "PlayerGames" )
 for Stack in "${DomainStacks[@]}"
 do
-	PrintInfo "Updating the ${BIBlue}${Stack}${Green} stack..."
-	StackId=$( { aws cloudformation update-stack --stack-name Capi-${Stack} --template-body file:////Users//GodlyPerfection//CAPI-Workspace//${Stack}//Template.json --capabilities CAPABILITY_IAM --query StackId; } 2>&1 ) || PrintWarning "${StackId}"
+	if aws cloudformation describe-stacks --stack-name Capi-${Stack} > /dev/null 2>&1; then
+		PrintInfo "Updating the ${BIBlue}${Stack}${Green} stack..."
+		StackId=$( { aws cloudformation update-stack --stack-name Capi-${Stack} --template-body file:////Users//GodlyPerfection//CAPI-Workspace//${Stack}//Template.json --capabilities CAPABILITY_IAM --query StackId; } 2>&1 ) || PrintWarning "${StackId}"
+	else
+		PrintInfo "Creating the ${BIBlue}${Stack}${Green} stack..."
+		StackId=$( { aws cloudformation create-stack --stack-name Capi-${Stack} --template-body file:////Users//GodlyPerfection//CAPI-Workspace//${Stack}//Template.json --capabilities CAPABILITY_IAM --query StackId; } 2>&1 ) || PrintWarning "${StackId}"
+	fi
 done
 echo
 

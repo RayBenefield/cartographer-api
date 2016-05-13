@@ -45,7 +45,7 @@ fi
 # Generate a hashmap of the Output Values
 ##################################################
 
-DomainStacks=( "Games" "MapGames" )
+DomainStacks=( "Games" "MapGames" "PlayerGames" )
 declare -A OutputMap
 for Stack in "${DomainStacks[@]}"
 do
@@ -81,7 +81,7 @@ echo
 Indent
 
 ##### TODO: Move Mappings to JSON file and use JQ for parsing
-Mappings=( "TopicNewGames:QueueGamesForMapGames" )
+Mappings=( "TopicNewGames:QueueGamesForMapGames" "TopicNewPlayerGames:QueuePlayerGamesForGames" )
 for Mapping in "${Mappings[@]}"
 do
 	# Split mapping into ${SourceTopic} `:` ${TargetQueue}
