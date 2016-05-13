@@ -46,7 +46,7 @@ fi
 # Needs to setup an s3 bucket for file uploads
 # Needs to upload the Swagger Template
 # Needs to upload all of the Lambda Functions
-# Needs Create/Update PlayerGameCounts the Stacks
+# DONE! Create/Update PlayerGameCounts the Stacks
 # DONE! Create/Update PlayerGames the Stacks
 # DONE! Create/Update Games the Stacks
 # DONE! Create/Update MapGames the Stacks
@@ -65,7 +65,7 @@ echo
 ##################################################
 
 ##### TODO: Move Domain Stacks to JSON file and use JQ for parsing
-DomainStacks=( "Games" "MapGames" "PlayerGames" )
+DomainStacks=( "Games" "MapGames" "PlayerGames" "PlayerGameCounts" )
 for Stack in "${DomainStacks[@]}"
 do
 	if aws cloudformation describe-stacks --stack-name Capi-${Stack} > /dev/null 2>&1; then
