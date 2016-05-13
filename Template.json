@@ -5,6 +5,18 @@
             "Type": "String",
             "Default": "test",
             "Description": "The environment/stage for this stack."
+        },
+        "PlayerGameCountsGetterArn": {
+            "Type": "String",
+            "Description": "Arn for the PlayerGameCountsGetter Function."
+        },
+        "PlayerGameCountsUpdaterArn": {
+            "Type": "String",
+            "Description": "Arn for the PlayerGameCountsUpdater Function."
+        },
+        "PlayerGamesGetterArn": {
+            "Type": "String",
+            "Description": "Arn for the PlayerGamesGetter Function."
         }
     },
     "Resources": {
@@ -21,6 +33,7 @@
         },
         "CapiDeployment": {
             "Type": "AWS::ApiGateway::Deployment",
+            "DependsOn": [ "CAPI" ],
             "Properties": {
                 "Description": "Deployment of CAPI.",
                 "RestApiId": { "Ref": "CAPI" },
@@ -29,6 +42,7 @@
         },
         "CapiKey": {
             "Type": "AWS::ApiGateway::ApiKey",
+            "DependsOn": [ "CapiDeployment" ],
             "Properties": {
                 "Description": "API Key for CAPI",
                 "Enabled": true,
@@ -43,10 +57,10 @@
         },
         "CapiToPlayerGameCountsGetter": {
             "Type": "AWS::Lambda::Permission",
-            "DependsOn": [ "PlayerGameCountsGetter", "CAPI" ],
+            "DependsOn": [ "CAPI" ],
             "Properties": {
                 "Action": "lambda:*",
-                "FunctionName": { "Fn::GetAtt": [ "PlayerGameCountsGetter", "Arn" ] },
+                "FunctionName": { "Ref": "PlayerGameCountsGetterArn" },
                 "Principal": "apigateway.amazonaws.com",
                 "SourceArn": {
                     "Fn::Join": [ ":", [
@@ -63,10 +77,10 @@
         },
         "CapiToPlayerGameCountsUpdater": {
             "Type": "AWS::Lambda::Permission",
-            "DependsOn": [ "PlayerGameCountsUpdater", "CAPI" ],
+            "DependsOn": [ "CAPI" ],
             "Properties": {
                 "Action": "lambda:*",
-                "FunctionName": { "Fn::GetAtt": [ "PlayerGameCountsUpdater", "Arn" ] },
+                "FunctionName": { "Ref": "PlayerGameCountsUpdaterArn" },
                 "Principal": "apigateway.amazonaws.com",
                 "SourceArn": {
                     "Fn::Join": [ ":", [
@@ -85,7 +99,7 @@
             "Type": "AWS::Lambda::Permission",
             "Properties": {
                 "Action": "lambda:*",
-                "FunctionName": { "Fn::GetAtt": [ "PlayerGamesGetter", "Arn" ] },
+                "FunctionName": { "Ref": "PlayerGamesGetterArn" },
                 "Principal": "apigateway.amazonaws.com",
                 "SourceArn": {
                     "Fn::Join": [ ":", [
@@ -147,7 +161,7 @@
                 "TopicName": "Capi-SegmentScannerRequest-Continue",
                 "Subscription": [
                     {
-                        "Endpoint": { "Ref": "SegmentScanner" },
+                        "Endpoint": { "Fn::GetAtt": [ "SegmentScanner", "Arn" ] },
                         "Protocol": "lambda"
                     }
                 ]

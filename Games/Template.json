@@ -145,6 +145,10 @@
         "TopicNewGames": {
             "Description": "All event topics.",
             "Value": { "Ref": "GamesNew" }
+        },
+        "GamesAdderArn": {
+            "Description": "The Arn for the GamesAdder.",
+            "Value": { "Fn::GetAtt": [ "GamesAdder", "Arn" ] }
         }
     }
 }

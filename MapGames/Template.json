@@ -109,6 +109,10 @@
         "QueueGamesForMapGames": {
             "Description": "Queue Url that will subscribe to the relevant topics.",
             "Value": { "Fn::GetAtt": [ "GamesForMapGames", "Arn" ] }
+        },
+        "MapGamesAdderArn": {
+            "Description": "The Arn for the MapGamesAdder.",
+            "Value": { "Fn::GetAtt": [ "MapGamesAdder", "Arn" ] }
         }
     }
 }

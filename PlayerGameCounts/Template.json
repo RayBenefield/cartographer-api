@@ -165,6 +165,18 @@
         "TopicUpdatedPlayerGameCounts": {
             "Description": "Updated PlayerGameCounts in the system.",
             "Value": { "Ref": "PlayerGameCountsUpdated" }
+        },
+        "PlayerGameCountsGetterArn": {
+            "Description": "The Arn for the PlayerGameCountsGetter.",
+            "Value": { "Fn::GetAtt": [ "PlayerGameCountsGetter", "Arn" ] }
+        },
+        "PlayerGameCountsUpdaterArn": {
+            "Description": "The Arn for the PlayerGameCountsUpdater.",
+            "Value": { "Fn::GetAtt": [ "PlayerGameCountsUpdater", "Arn" ] }
+        },
+        "PlayerGameCountsRefresherArn": {
+            "Description": "The Arn for the PlayerGameCountsRefresher.",
+            "Value": { "Fn::GetAtt": [ "PlayerGameCountsRefresher", "Arn" ] }
         }
     }
 }

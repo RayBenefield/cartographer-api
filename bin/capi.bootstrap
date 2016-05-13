@@ -100,3 +100,61 @@ do
 done
 
 Unindent
+PrintSeparator
+echo
+
+
+##################################################
+# Create the CAPI Core
+##################################################
+
+if aws cloudformation describe-stacks --stack-name Capi-Core > /dev/null 2>&1; then
+	PrintInfo "Updating the ${BIBlue}Capi-Core${Green} stack..."
+	StackId=$( { \
+		aws cloudformation update-stack \
+		--stack-name Capi-Core \
+		--template-body file:////Users//GodlyPerfection//CAPI-Workspace//Template.json \
+		--capabilities CAPABILITY_IAM \
+		--query StackId \
+		--parameters \
+			ParameterKey=PlayerGameCountsGetterArn, ParameterValue=${OutputMap[PlayerGameCountsGetterArn]} \
+			ParameterKey=PlayerGameCountsUpdaterArn, ParameterValue=${OutputMap[PlayerGameCountsUpdaterArn]} \ 
+			ParameterKey=PlayerGamesGetterArn, ParameterValue=${OutputMap[PlayerGamesGetterArn]}; \
+	} 2>&1 ) || PrintWarning "${StackId}"
+else
+	PrintInfo "Creating the ${BIBlue}Capi-Core${Green} stack..."
+	StackId=$( { \
+		aws cloudformation create-stack \
+		--stack-name Capi-Core \
+		--template-body file:////Users//GodlyPerfection//CAPI-Workspace//Template.json \
+		--capabilities CAPABILITY_IAM \
+		--query StackId \
+		--parameters \
+			ParameterKey=PlayerGameCountsGetterArn,ParameterValue=${OutputMap[PlayerGameCountsGetterArn]} \
+			ParameterKey=PlayerGameCountsUpdaterArn,ParameterValue=${OutputMap[PlayerGameCountsUpdaterArn]} \
+			ParameterKey=PlayerGamesGetterArn,ParameterValue=${OutputMap[PlayerGamesGetterArn]}; \ 
+	} 2>&1 ) || PrintWarning "${StackId}"
+fi
+
+
+##################################################
+# Wait for the Core to finish creating
+##################################################
+
+PrintSeparator
+printf '    » Waiting...  '
+while true
+do
+	Statuses=$(aws cloudformation describe-stacks --query Stacks[*].StackStatus --output text)
+
+	if [[ ! ${Statuses[*]} =~ "CREATE_IN_PROGRESS" ]]; then
+		break
+	fi
+
+	SpinProgress
+	sleep .5;
+done
+
+PrintBoldInfo "DONE!"
+PrintSeparator
+echo

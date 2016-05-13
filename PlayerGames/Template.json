@@ -54,6 +54,24 @@
                 "QueueName": "Capi-PlayerGameCountsForPlayerGames"
             }
         },
+        "PlayerGameCountsForPlayerGamesPolicy": {
+            "Type" : "AWS::SQS::QueuePolicy",
+            "DependsOn": [ "PlayerGameCountsForPlayerGames" ],
+            "Properties" : {
+                "PolicyDocument" : {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": "*",
+                            "Action": "SQS:*",
+                            "Resource": { "Fn::GetAtt": [ "PlayerGameCountsForPlayerGames", "Arn" ] }
+                        }
+                    ]
+                },
+                "Queues" : [ { "Ref": "PlayerGameCountsForPlayerGames" } ]
+            }
+        },
         "PlayerGamesAdder": {
             "Type": "AWS::Lambda::Function",
             "DependsOn": [ "PlayerGames", "PlayerGamesCheckpoints" ],
@@ -189,6 +207,14 @@
         "TopicNewPlayerGames": {
             "Description": "New PlayerGames added to the system.",
             "Value": { "Ref": "PlayerGamesNew" }
+        },
+        "PlayerGamesGetterArn": {
+            "Description": "The Arn for the PlayerGamesGetter.",
+            "Value": { "Fn::GetAtt": [ "PlayerGamesGetter", "Arn" ] }
+        },
+        "PlayerGamesAdderArn": {
+            "Description": "The Arn for the PlayerGamesAdder.",
+            "Value": { "Fn::GetAtt": [ "PlayerGamesAdder", "Arn" ] }
         }
     }
 }
