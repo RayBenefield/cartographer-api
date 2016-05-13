@@ -106,7 +106,7 @@
         }
     },
     "Outputs": {
-        "QueueMapGames": {
+        "QueueGamesForMapGames": {
             "Description": "Queue Url that will subscribe to the relevant topics.",
             "Value": { "Fn::GetAtt": [ "GamesForMapGames", "Arn" ] }
         }

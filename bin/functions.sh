@@ -1,4 +1,6 @@
 indentation="    "
+spin='/-\|'
+spincount=${#spin}
 
 # Checks if the current directory is part of a .git repository
 function VerifyGitDirectory()
@@ -145,6 +147,18 @@ function ReadInput()
     read -p $'\e[31m    Foobar\e[0m: ' foo
 }
 
+function ErrorExit
+{
+	PrintError "$1" 1>&2
+	echo
+	exit 1
+}
+
+function SpinProgress
+{
+	printf "%s\b" "${spin:i++%spincount:1}"
+}
+
 #################### Formatting Functions ####################
 function Indent()
 {
@@ -183,7 +197,8 @@ function PrintDescription()
 function PrintWarning()
 {
     warning=${1}
-    echo -e "${indentation}${BYellow}» ${warning}${No_Color}"
+    echo -e "${indentation}${BYellow}» ${warning}${No_Color}" | tr -d '\n'
+    echo
 }
 
 function PrintSeparator()

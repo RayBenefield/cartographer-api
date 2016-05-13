@@ -15,6 +15,11 @@ source $REAL_DIR/functions.sh
 
 echo
 
+
+##################################################
+# Provide help documentation
+##################################################
+
 # Provide help.
 getopts h help
 if [[ "${help}" = "h" ]]; then
@@ -28,28 +33,31 @@ if [[ "${help}" = "h" ]]; then
     echo
     PrintInfo "Examples"
     echo
-    PrintCodeLine "script.template"
-    echo
-    PrintBoldInfo "Required Environment Variables"
-    echo
-    PrintCodeLine "${BICyan}EXAMPLE_ENV_VARIABLE${Cyan}=<some-description-of-variable>"
+    PrintCodeLine "capi.create"
     echo
 
     exit
 fi
 
-DomainStacks=( Games MapGames )
 
+##################################################
+# Create each of the Domain Stacks
+##################################################
+
+##### TODO: Move Domain Stacks to JSON file and use JQ for parsing
+DomainStacks=( "Games" "MapGames" )
 for Stack in "${DomainStacks[@]}"
 do
-	StackId=$(aws cloudformation create-stack --stack-name Capi-${Stack} --template-body file:////Users//GodlyPerfection//CAPI-Workspace//${Stack}//Template.json --capabilities CAPABILITY_IAM --query StackId)
-	PrintInfo "Creating the ${BIBlue}${Stack}${Green} stack with ID ${BIBlue}${StackId}${No_Color}..."
+	PrintInfo "Creating the ${BIBlue}${Stack}${Green} stack..."
+	StackId=$( { aws cloudformation create-stack --stack-name Capi-${Stack} --template-body file:////Users//GodlyPerfection//CAPI-Workspace//${Stack}//Template.json --capabilities CAPABILITY_IAM --query StackId; } 2>&1 ) || PrintWarning "${StackId}"
 done
-
 echo
 
-spin='/-\|'
-n=${#spin}
+
+##################################################
+# Wait for the Stacks to finish creating
+##################################################
+
 PrintSeparator
 printf '    » Waiting...  '
 while true
@@ -59,13 +67,19 @@ do
 	if [[ ! ${Statuses[*]} =~ "CREATE_IN_PROGRESS" ]]; then
 		break
 	fi
-	printf "%s\b" "${spin:i++%n:1}"
-	sleep .01;
+
+	SpinProgress
+	sleep .5;
 done
 
 PrintBoldInfo "DONE!"
 PrintSeparator
 echo
+
+
+##################################################
+# Generate a hashmap of the Output Values
+##################################################
 
 declare -A OutputMap
 for Stack in "${DomainStacks[@]}"
@@ -78,9 +92,9 @@ do
 done
 
 
-PrintInfo "Mapping Queues to Topics..."
-echo
-Indent
+##################################################
+# Generate a hashmap of the Output Values
+##################################################
 
 # GamesForMapGames Queue -sub-> to Games-New Topic
 # QueueGames:TopicNewMapGames
@@ -97,25 +111,33 @@ Indent
 # PlayerGames:Updated-PlayerGameCounts
 # PlayerGames:Continue-PlayerGameCounts
 
-Mappings=( "QueueMapGames:TopicNewGames" )
+PrintInfo "Mapping Queues to Topics..."
+echo
+Indent
+
+##### TODO: Move Mappings to JSON file and use JQ for parsing
+Mappings=( "TopicNewGames:QueueGamesForMapGames" )
 for Mapping in "${Mappings[@]}"
 do
-	# Split mapping into ${TargetDomain} `:` ${SourceTopic}
+	# Split mapping into ${SourceTopic} `:` ${TargetQueue}
 	IFS=':' read -ra Map <<< "$Mapping"
-	QueueKey=${Map[0]}
-	TopicKey=${Map[1]}
+	TopicKey=${Map[0]}
+	QueueKey=${Map[1]}
 
 	# Get Queue/Topic ARN from Outputs with "Queue${TargetDomain}" key
 	QueueArn=${OutputMap[${QueueKey}]}
 	TopicArn=${OutputMap[${TopicKey}]}
 
-	PrintInfo "${BIBlue}${TopicArn}${Green} ----> ${BIBlue}${QueueArn}${No_Color}"
+	PrintInfo "${BIBlue}${TopicKey}${Green} ----> ${BIBlue}${QueueKey}${No_Color}"
 
-	# Subscribe Queue to Topic
+	# Subscribe SQS Queue to SNS Topic with the AWS CLI
+	Subscription=$(aws sns subscribe --topic-arn ${TopicArn} --protocol sqs --notification-endpoint ${QueueArn})
 done
 
 
-
+##################################################
+# Finished!
+##################################################
 
 Unindent
 echo

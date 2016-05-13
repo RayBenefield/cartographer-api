@@ -138,7 +138,7 @@
         }
     },
     "Outputs": {
-        "QueueGames": {
+        "QueuePlayerGamesForGames": {
             "Description": "Queue Url that will subscribe to the relevant topics.",
             "Value": { "Fn::GetAtt": [ "PlayerGamesForGames", "Arn" ] }
         },
