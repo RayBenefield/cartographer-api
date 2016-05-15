@@ -4,13 +4,16 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.cartographerapi.domain.CapiUtils;
 import com.cartographerapi.domain.ScheduledEvent;
+import com.cartographerapi.domain.ObjectWriter;
+import com.cartographerapi.domain.ObjectSqsWriter;
+import com.cartographerapi.domain.players.Player;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCounts;
-import com.cartographerapi.domain.playergamecounts.PlayerGameCountsCapiWriter;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCountsDynamoReader;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCountsUpdatedReader;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCountsWriter;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import org.joda.time.DateTimeZone;
 import org.joda.time.DateTime;
@@ -22,11 +25,10 @@ import org.joda.time.DateTime;
  * @author GodlyPerfection
  * 
  */
-// TODO Move into using SNS publishing to trigger a refresh.
 // TODO check this against the rate limit.
 public class PlayerGameCountsRefresher implements RequestHandler<ScheduledEvent, List<PlayerGameCounts>> {
 
-	private PlayerGameCountsWriter cacheWriter;
+	private ObjectWriter updatePlayerCountsWriter;
 	private PlayerGameCountsUpdatedReader cacheReader;
 
 	/**
@@ -42,11 +44,16 @@ public class PlayerGameCountsRefresher implements RequestHandler<ScheduledEvent,
 		CapiUtils.logObject(context, input, "ScheduledEvent Input");
         
 		String expireTime = new DateTime(input.getTime(), DateTimeZone.UTC).minusHours(24).toString();
+		CapiUtils.logObject(context, expireTime, "Expire Time");
         List<PlayerGameCounts> results = cacheReader.getAllPlayerGameCountsNotUpdatedSince(expireTime);
+		CapiUtils.logObject(context, results, "PlayerGameCounts that have expired");
         
+        List<Player> players = new ArrayList<Player>();
         for (PlayerGameCounts counts : results) {
-        	cacheWriter.savePlayerGameCounts(counts);
+        	players.add(new Player(counts.getGamertag()));
         }
+
+        updatePlayerCountsWriter.saveObjects(new ArrayList<Object>(players));
         
 		CapiUtils.logObject(context, results.size(), "# of updated PlayerGameCounts");
         return results;
@@ -56,14 +63,14 @@ public class PlayerGameCountsRefresher implements RequestHandler<ScheduledEvent,
      * The lazy IOC constructor for Lambda to instantiate.
      */
     public PlayerGameCountsRefresher() {
-    	this(new PlayerGameCountsCapiWriter(), new PlayerGameCountsDynamoReader());
+    	this(new ObjectSqsWriter("sqsCapiPlayersForPlayerGameCounts"), new PlayerGameCountsDynamoReader());
     }
 
     /**
      * The real constructor that supports dependency injection.
      */
-    public PlayerGameCountsRefresher(PlayerGameCountsWriter cacheWriter, PlayerGameCountsUpdatedReader cacheReader) {
-    	this.cacheWriter = cacheWriter;
+    public PlayerGameCountsRefresher(ObjectWriter updatePlayerCountsWriter, PlayerGameCountsUpdatedReader cacheReader) {
+    	this.updatePlayerCountsWriter = updatePlayerCountsWriter;
     	this.cacheReader = cacheReader;
     }
 
