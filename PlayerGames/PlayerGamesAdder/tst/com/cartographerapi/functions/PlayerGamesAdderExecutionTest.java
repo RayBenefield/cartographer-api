@@ -5,7 +5,7 @@ import java.util.List;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import com.amazonaws.services.lambda.runtime.Context;
-import com.amazonaws.services.lambda.runtime.events.SNSEvent;
+import com.cartographerapi.domain.ScheduledEvent;
 import com.cartographerapi.domain.playergames.PlayerGame;
 
 /**
@@ -16,14 +16,14 @@ import com.cartographerapi.domain.playergames.PlayerGame;
  */
 public class PlayerGamesAdderExecutionTest {
 
-    private static SNSEvent input;
+    private static ScheduledEvent input;
 
     /**
      * Setup the input for the function.
      */
     @BeforeClass
     public static void createInput() throws IOException {
-        input = TestUtils.parse("sns-event.json", SNSEvent.class);
+        input = new ScheduledEvent();
     }
 
     /**

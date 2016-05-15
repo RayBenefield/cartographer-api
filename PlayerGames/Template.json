@@ -197,6 +197,15 @@
                 "Subscription": [
                 ]
             }
+        },
+        "PlayersTotalGamesUpdated": {
+            "Type": "AWS::SNS::Topic",
+            "Properties": {
+                "DisplayName": "PlayersTotalGamesUpdated",
+                "TopicName": "Capi-PlayerTotalGamesUpdated",
+                "Subscription": [
+                ]
+            }
         }
     },
     "Outputs": {
@@ -207,6 +216,10 @@
         "TopicNewPlayerGames": {
             "Description": "New PlayerGames added to the system.",
             "Value": { "Ref": "PlayerGamesNew" }
+        },
+        "TopicPlayersTotalGamesUpdated": {
+            "Description": "A Player's TotalGames has been updated.",
+            "Value": { "Ref": "PlayersTotalGamesUpdated" }
         },
         "PlayerGamesGetterArn": {
             "Description": "The Arn for the PlayerGamesGetter.",

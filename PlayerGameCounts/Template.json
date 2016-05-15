@@ -48,6 +48,30 @@
                 "MemorySize": "512"
             }
         },
+        "PlayersForPlayerGameCounts": {
+            "Type": "AWS::SQS::Queue",
+            "Properties": {
+                "QueueName": "Capi-PlayersForPlayerGameCounts"
+            }
+        },
+        "PlayersForPlayerGameCountsPolicy": {
+            "Type" : "AWS::SQS::QueuePolicy",
+            "DependsOn": [ "PlayersForPlayerGameCounts" ],
+            "Properties" : {
+                "PolicyDocument" : {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": "*",
+                            "Action": "SQS:*",
+                            "Resource": { "Fn::GetAtt": [ "PlayersForPlayerGameCounts", "Arn" ] }
+                        }
+                    ]
+                },
+                "Queues" : [ { "Ref": "PlayersForPlayerGameCounts" } ]
+            }
+        },
         "PlayerGameCountsUpdater": {
             "Type": "AWS::Lambda::Function",
             "DependsOn": [ "PlayerGameCounts" ],
@@ -158,6 +182,10 @@
         }
     },
     "Outputs": {
+        "QueuePlayersForPlayerGameCounts": {
+            "Description": "Players that need to get PlayerGameCounts for.",
+            "Value": { "Fn::GetAtt": [ "PlayersForPlayerGameCounts", "Arn" ] }
+        },
         "TopicNewPlayerGameCounts": {
             "Description": "New PlayerGameCounts added to the system.",
             "Value": { "Ref": "PlayerGameCountsNew" }

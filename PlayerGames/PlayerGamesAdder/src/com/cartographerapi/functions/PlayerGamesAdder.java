@@ -2,12 +2,22 @@ package com.cartographerapi.functions;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.amazonaws.services.lambda.runtime.events.SNSEvent;
 import com.amazonaws.util.StringUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.cartographerapi.domain.CapiUtils;
+import com.cartographerapi.domain.Gamertag;
+import com.cartographerapi.domain.ObjectSnsWriter;
+import com.cartographerapi.domain.ObjectWriter;
+import com.cartographerapi.domain.ScheduledEvent;
+import com.cartographerapi.domain.UnexpectedLastMatchException;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCounts;
+import com.cartographerapi.domain.playergamecounts.PlayerGameCountsQueueReader;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCountsSnsWriter;
+import com.cartographerapi.domain.playergamecounts.PlayerGameCountsSqsReader;
+import com.cartographerapi.domain.playergamecounts.PlayerGameCountsWriter;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCountsWriter;
 import com.cartographerapi.domain.playergames.PlayerGame;
 import com.cartographerapi.domain.playergames.PlayerGamesDynamoWriter;
@@ -19,72 +29,78 @@ import com.cartographerapi.domain.playergamescheckpoints.PlayerGamesCheckpointDy
 import com.cartographerapi.domain.playergamescheckpoints.PlayerGamesCheckpointReader;
 import com.cartographerapi.domain.playergamescheckpoints.PlayerGamesCheckpointWriter;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-
-
 /**
  * Pull a batch of 24 games to be saved into our PlayerGames cache.
  * 
  * @author GodlyPerfection
  * 
  */
-public class PlayerGamesAdder implements RequestHandler<SNSEvent, List<PlayerGame>> {
-	
-	private PlayerGamesHaloApiReader gameReader;
-	private PlayerGamesWriter gameWriter;
-	private PlayerGamesCheckpointReader checkpointReader;
-	private PlayerGamesCheckpointWriter checkpointWriter;
-	private PlayerGameCountsWriter continueWriter;
+public class PlayerGamesAdder implements RequestHandler<ScheduledEvent, List<PlayerGame>> {
+    
+    private PlayerGameCountsQueueReader queueReader;
+    private PlayerGamesHaloApiReader gameReader;
+    private PlayerGamesWriter gameWriter;
+    private PlayerGamesCheckpointReader checkpointReader;
+    private PlayerGamesCheckpointWriter checkpointWriter;
+    private PlayerGameCountsWriter continueWriter;
+    private ObjectWriter updatedTotalGamesWriter;
 
-	/**
-	 * Pull a batch of PlayerGames from the Halo API starting from a
-	 * PlayerGamesCheckpoint if one exists. If games are found then save them
-	 * and update the checkpoint. If we did not find the full batch of games
-	 * (results were maxed at 24), then we have more games to pull so published
-	 * to an SNS topic to trigger another batch pull.
-	 * 
-	 * @param input The SNS event that triggered this.
-	 * @param context The Lambda execution context.
-	 * @return The newly added PlayerGames.
-	 */
+    /**
+     * Pull a batch of PlayerGames from the Halo API starting from a
+     * PlayerGamesCheckpoint if one exists. If games are found then save them
+     * and update the checkpoint. If we did not find the full batch of games
+     * (results were maxed at 24), then we have more games to pull so published
+     * to an SNS topic to trigger another batch pull.
+     * 
+     * @param input The SNS event that triggered this.
+     * @param context The Lambda execution context.
+     * @return The newly added PlayerGames.
+     */
     @Override
-    public List<PlayerGame> handleRequest(SNSEvent input, Context context) {
-		CapiUtils.logObject(context, input, "SNSEvent Input");
+    public List<PlayerGame> handleRequest(ScheduledEvent input, Context context) {
+        CapiUtils.logObject(context, input, "ScheduledEvent Input");
         List<PlayerGame> results = new ArrayList<PlayerGame>();
-        
-        // Parse the SNSEvent
-		Map<String, Object> countsMap = CapiUtils.getObjectFromSnsEvent(input);
-		if (countsMap == null) return results;
+
+        // Pull games from the queue to inspect
+        List<PlayerGameCounts> queuedCounts = queueReader.getNumberOfPlayerGameCounts(1);
+
+        if (queuedCounts.size() <= 0) {
+            return results;
+        }
 
         // Figure out who this is for.
-		PlayerGameCounts counts = new PlayerGameCounts(countsMap);
-		String gamertag = counts.getGamertag();
-		CapiUtils.logObject(context, counts, "PlayerGameCounts from SNSEvent");
+        PlayerGameCounts counts = queuedCounts.get(0);
+        String gamertag = counts.getGamertag();
+        CapiUtils.logObject(context, counts, "PlayerGameCounts from SNSEvent");
 
-		// If there is a checkpoint then start there and load up to the games possible.
-		PlayerGamesCheckpoint checkpoint = checkpointReader.getPlayerGamesCheckpointWithDefault(gamertag);
-		CapiUtils.logObject(context, checkpoint, "PlayerGamesCheckpoint for " + gamertag);
-		if (!StringUtils.isNullOrEmpty(checkpoint.getLastMatch())) {
-			gameReader.setLastMatch(checkpoint.getLastMatch());
-		}
-		gameReader.setTotal(counts.getTotalGames());
-		results = gameReader.getPlayerGamesByGamertag(gamertag, checkpoint.getTotalGamesLoaded(), 25);
-		CapiUtils.logObject(context, results.size(), "# of PlayerGames from the Halo API");
+        // If there is a checkpoint then start there and load up to the games possible.
+        PlayerGamesCheckpoint checkpoint = checkpointReader.getPlayerGamesCheckpointWithDefault(gamertag);
+        CapiUtils.logObject(context, checkpoint, "PlayerGamesCheckpoint for " + gamertag);
+        if (!StringUtils.isNullOrEmpty(checkpoint.getLastMatch())) {
+            gameReader.setLastMatch(checkpoint.getLastMatch());
+        }
+        gameReader.setTotal(counts.getTotalGames());
 
-		// If we found some results then save the found results and save the checkpoint.
-		if (results.size() > 0) {
-			gameWriter.savePlayerGames(results);
-			checkpoint.setLastMatch(results.get(results.size() - 1).getMatchId());
-			checkpoint.setTotalGamesLoaded(checkpoint.getTotalGamesLoaded() + results.size());
-			checkpointWriter.savePlayerGamesCheckpoint(checkpoint);
-		}
+        results = gameReader.getPlayerGamesByGamertag(gamertag, checkpoint.getTotalGamesLoaded(), 25);
 
-		// If we found the max number of games possible, then we need to continue.
-		if (results.size() == 24) {
-			continueWriter.savePlayerGameCounts(counts);
-		}
+        if (results == null) {
+            updatedTotalGamesWriter.saveObject(new Gamertag(gamertag));
+            queueReader.processedPlayerGameCounts(counts);
+            return new ArrayList<PlayerGame>();
+        }
+        CapiUtils.logObject(context, results.size(), "# of PlayerGames from the Halo API");
+
+        // If we found some results then save the found results and save the checkpoint.
+        if (results.size() > 0) {
+            gameWriter.savePlayerGames(results);
+            checkpoint.setLastMatch(results.get(results.size() - 1).getMatchId());
+            checkpoint.setTotalGamesLoaded(checkpoint.getTotalGamesLoaded() + results.size());
+            checkpointWriter.savePlayerGamesCheckpoint(checkpoint);
+
+            if (checkpoint.getTotalGamesLoaded().equals(counts.getTotalGames())) {
+                queueReader.processedPlayerGameCounts(counts);
+            }
+        }
         
         return results;
     }
@@ -93,30 +109,36 @@ public class PlayerGamesAdder implements RequestHandler<SNSEvent, List<PlayerGam
      * The lazy IOC constructor for Lambda to instantiate.
      */
     public PlayerGamesAdder() {
-    	this(
-    		new PlayerGamesHaloApiReader(),
-    		new PlayerGamesDynamoWriter(),
-    		new PlayerGamesCheckpointDynamoReader(),
-    		new PlayerGamesCheckpointDynamoWriter(),
-			new PlayerGameCountsSnsWriter("snsCapiPlayerGameCountsContinue")
-		);
+        this(
+            new PlayerGameCountsSqsReader("sqsCapiPlayerGameCountsForPlayerGames"),
+            new PlayerGamesHaloApiReader(),
+            new PlayerGamesDynamoWriter(),
+            new PlayerGamesCheckpointDynamoReader(),
+            new PlayerGamesCheckpointDynamoWriter(),
+            new PlayerGameCountsSnsWriter("snsCapiPlayerGameCountsContinue"),
+            new ObjectSnsWriter("snsCapiPlayerUpdatedTotalGames")
+        );
     }
 
     /**
      * The real constructor that supports dependency injection.
      */
     public PlayerGamesAdder(
-    	PlayerGamesHaloApiReader gameReader,
-    	PlayerGamesWriter gameWriter,
-    	PlayerGamesCheckpointReader checkpointReader,
-    	PlayerGamesCheckpointWriter checkpointWriter,
-    	PlayerGameCountsWriter continueWriter
-	) {
-    	this.gameReader = gameReader;
-    	this.gameWriter = gameWriter;
-    	this.checkpointReader = checkpointReader;
-    	this.checkpointWriter = checkpointWriter;
-    	this.continueWriter = continueWriter;
+        PlayerGameCountsQueueReader queueReader,
+        PlayerGamesHaloApiReader gameReader,
+        PlayerGamesWriter gameWriter,
+        PlayerGamesCheckpointReader checkpointReader,
+        PlayerGamesCheckpointWriter checkpointWriter,
+        PlayerGameCountsWriter continueWriter,
+        ObjectWriter updatedTotalGamesWriter
+    ) {
+        this.queueReader = queueReader;
+        this.gameReader = gameReader;
+        this.gameWriter = gameWriter;
+        this.checkpointReader = checkpointReader;
+        this.checkpointWriter = checkpointWriter;
+        this.continueWriter = continueWriter;
+        this.updatedTotalGamesWriter = updatedTotalGamesWriter;
     }
 
 }

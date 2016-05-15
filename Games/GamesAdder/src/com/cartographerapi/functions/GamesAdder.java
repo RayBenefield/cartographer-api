@@ -24,24 +24,24 @@ import java.util.ArrayList;
  * 
  */
 public class GamesAdder implements RequestHandler<ScheduledEvent, List<Game>> {
-	
-	private PlayerGamesQueueReader queueReader;
-	private GamesReader cacheReader;
-	private GamesReader sourceReader;
-	private GamesWriter cacheWriter;
-	
-	/**
-	 * Pulls a number of queue payloads and then for each it checks the cache to
-	 * see if the Game in the payload already exist. If not then it finds the
-	 * game from the HaloAPI and adds it to the cache.
-	 * 
-	 * @param input The Cloudwatch scheduled event that triggered this.
-	 * @param context The Lambda execution context.
-	 * @return The newly added Games.
-	 */
+    
+    private PlayerGamesQueueReader queueReader;
+    private GamesReader cacheReader;
+    private GamesReader sourceReader;
+    private GamesWriter cacheWriter;
+    
+    /**
+     * Pulls a number of queue payloads and then for each it checks the cache to
+     * see if the Game in the payload already exist. If not then it finds the
+     * game from the HaloAPI and adds it to the cache.
+     * 
+     * @param input The Cloudwatch scheduled event that triggered this.
+     * @param context The Lambda execution context.
+     * @return The newly added Games.
+     */
     @Override
     public List<Game> handleRequest(ScheduledEvent input, Context context) {
-		CapiUtils.logObject(context, input, "ScheduledEvent Input");
+        CapiUtils.logObject(context, input, "ScheduledEvent Input");
         List<Game> results = new ArrayList<Game>();
 
         // Pull games from the queue to inspect
@@ -49,23 +49,23 @@ public class GamesAdder implements RequestHandler<ScheduledEvent, List<Game>> {
         
         // For each game, check the cache and if it isn't there find it and save it
         for (PlayerGame game : games) {
-			Game cachedGame = cacheReader.getGameByMatchId(game.getMatchId());
-			if (cachedGame != null) {
-				queueReader.processedPlayerGame(game);
-				continue;
-			}
+            Game cachedGame = cacheReader.getGameByMatchId(game.getMatchId());
+            if (cachedGame != null) {
+                queueReader.processedPlayerGame(game);
+                continue;
+            }
 
-			Game foundGame = null;
-			foundGame = sourceReader.getGameByMatchId(game.getMatchId());
-			
-			if (foundGame != null) {
-				cacheWriter.saveGame(foundGame);
-				queueReader.processedPlayerGame(game);
-				results.add(foundGame);
-			}
+            Game foundGame = null;
+            foundGame = sourceReader.getGameByMatchId(game.getMatchId());
+            
+            if (foundGame != null) {
+                cacheWriter.saveGame(foundGame);
+                queueReader.processedPlayerGame(game);
+                results.add(foundGame);
+            }
         }
 
-		CapiUtils.logObject(context, results.size(), "# of GamesAdded");
+        CapiUtils.logObject(context, results.size(), "# of GamesAdded");
         return results;
     }
     
@@ -73,22 +73,22 @@ public class GamesAdder implements RequestHandler<ScheduledEvent, List<Game>> {
      * The lazy IOC constructor for Lambda to instantiate.
      */
     public GamesAdder() {
-    	this(
-    		new GamesDynamoReader(),
-    		new GamesHaloApiReader(),
-    		new GamesDynamoWriter(),
-    		new PlayerGamesSqsReader("sqsCapiPlayerGamesForGames")
-		);
+        this(
+            new GamesDynamoReader(),
+            new GamesHaloApiReader(),
+            new GamesDynamoWriter(),
+            new PlayerGamesSqsReader("sqsCapiPlayerGamesForGames")
+        );
     }
 
     /**
      * The real constructor that supports dependency injection.
      */
     public GamesAdder(GamesReader cacheReader, GamesReader sourceReader, GamesWriter cacheWriter, PlayerGamesQueueReader queueReader) {
-    	this.cacheReader = cacheReader;
-    	this.sourceReader = sourceReader;
-    	this.cacheWriter = cacheWriter;
-    	this.queueReader = queueReader;
+        this.cacheReader = cacheReader;
+        this.sourceReader = sourceReader;
+        this.cacheWriter = cacheWriter;
+        this.queueReader = queueReader;
     }
 
 }
