@@ -1,8 +1,8 @@
-package com.cartographerapi.domain;
+package com.cartographerapi.domain.players;
 
 /**
- * Represents an Xbox Live (XBL) Gamertag, a single user's XBL identity.
- * Gamertag is not case-sensitive for uniqueness, but presentation of the
+ * Represents an Xbox Live (XBL) Player, a single user's XBL identity.
+ * A Gamertag is not case-sensitive for uniqueness, but presentation of the
  * Gamertag is case sensitive.
  * 
  * For example `godlyperfection` is unique and others can't use
@@ -16,7 +16,7 @@ package com.cartographerapi.domain;
  * @author GodlyPerfection
  *
  */
-public class Gamertag {
+public class Player {
 
 	private String gamertag;
 
@@ -28,10 +28,10 @@ public class Gamertag {
 		this.gamertag = gamertag.toLowerCase();
 	}
 
-	public Gamertag(String gamertag) {
+	public Player(String gamertag) {
 		this.gamertag = gamertag.toLowerCase();
 	}
 
-	public Gamertag() {
+	public Player() {
 	}
 }

@@ -4,7 +4,7 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 
 import com.cartographerapi.domain.CapiUtils;
-import com.cartographerapi.domain.Gamertag;
+import com.cartographerapi.domain.players.Player;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCounts;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCountsDynamoReader;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCountsReader;
@@ -16,7 +16,7 @@ import com.cartographerapi.domain.playergamecounts.PlayerGameCountsReader;
  * @author GodlyPerfection
  * 
  */
-public class PlayerGameCountsGetter implements RequestHandler<Gamertag, PlayerGameCounts> {
+public class PlayerGameCountsGetter implements RequestHandler<Player, PlayerGameCounts> {
 
 	private PlayerGameCountsReader cacheReader;
 	
@@ -24,12 +24,12 @@ public class PlayerGameCountsGetter implements RequestHandler<Gamertag, PlayerGa
 	 * Checks the cache to see if PlayerGameCounts already exist. If it doesn't
 	 * exist then it calls the updater to try to add it to the cache.
 	 * 
-	 * @param gamertag The Gamertag given as input to the Lambda function.
+	 * @param gamertag The Player given as input to the Lambda function.
 	 * @param context The Lambda execution context.
-	 * @return The cached PlayerGameCounts for a Gamertag.
+	 * @return The cached PlayerGameCounts for a Player.
 	 */
     @Override
-    public PlayerGameCounts handleRequest(Gamertag input, Context context) {
+    public PlayerGameCounts handleRequest(Player input, Context context) {
 		PlayerGameCounts counts = cacheReader.getPlayerGameCountsByGamertag(input.getGamertag());
 		CapiUtils.logObject(context, counts, "PlayerGameCounts for " + counts.getGamertag());
 		return counts;

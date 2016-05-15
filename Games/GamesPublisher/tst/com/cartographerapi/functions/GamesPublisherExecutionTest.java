@@ -10,6 +10,8 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.events.DynamodbEvent;
 
 import com.cartographerapi.domain.game.Game;
+import com.cartographerapi.domain.ExecutionTests;
+import org.junit.experimental.categories.Category;
 
 /**
  * Test the execution of the GamesPublisher.
@@ -17,6 +19,7 @@ import com.cartographerapi.domain.game.Game;
  * @author GodlyPerfection
  * 
  */
+@Category(ExecutionTests.class)
 public class GamesPublisherExecutionTest {
 
     private static DynamodbEvent input;

@@ -8,11 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.cartographerapi.domain.CapiUtils;
-import com.cartographerapi.domain.Gamertag;
+import com.cartographerapi.domain.players.Player;
 import com.cartographerapi.domain.ObjectSnsWriter;
 import com.cartographerapi.domain.ObjectWriter;
 import com.cartographerapi.domain.ScheduledEvent;
-import com.cartographerapi.domain.UnexpectedLastMatchException;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCounts;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCountsQueueReader;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCountsSnsWriter;
@@ -84,7 +83,7 @@ public class PlayerGamesAdder implements RequestHandler<ScheduledEvent, List<Pla
         results = gameReader.getPlayerGamesByGamertag(gamertag, checkpoint.getTotalGamesLoaded(), 25);
 
         if (results == null) {
-            updatedTotalGamesWriter.saveObject(new Gamertag(gamertag));
+            updatedTotalGamesWriter.saveObject(new Player(gamertag));
             queueReader.processedPlayerGameCounts(counts);
             return new ArrayList<PlayerGame>();
         }

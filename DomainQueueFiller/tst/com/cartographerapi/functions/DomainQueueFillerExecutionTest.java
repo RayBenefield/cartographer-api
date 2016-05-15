@@ -8,6 +8,8 @@ import org.junit.Test;
 import com.amazonaws.services.lambda.runtime.Context;
 
 import com.cartographerapi.domain.DomainQueueFillRequest;
+import com.cartographerapi.domain.ExecutionTests;
+import org.junit.experimental.categories.Category;
 
 /**
  * Test the functionality of the DomainQueueFiller function from
@@ -16,6 +18,7 @@ import com.cartographerapi.domain.DomainQueueFillRequest;
  * @author GodlyPerfection
  * 
  */
+@Category(ExecutionTests.class)
 public class DomainQueueFillerExecutionTest {
 
     private static DomainQueueFillRequest input;

@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.cartographerapi.domain.CapiUtils;
-import com.cartographerapi.domain.Gamertag;
+import com.cartographerapi.domain.players.Player;
 import com.cartographerapi.domain.playergames.PlayerGame;
 import com.cartographerapi.domain.playergames.PlayerGamesDynamoReader;
 import com.cartographerapi.domain.playergames.PlayerGamesReader;
@@ -25,20 +25,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @author GodlyPerfection
  * 
  */
-public class PlayerGamesGetter implements RequestStreamHandler, RequestHandler<Gamertag, List<PlayerGame>> {
+public class PlayerGamesGetter implements RequestStreamHandler, RequestHandler<Player, List<PlayerGame>> {
 
 	private PlayerGamesReader cacheReader;
 
 	/**
 	 * Get the PlayerGames that currently exist in the cache.
 	 * 
-	 * @param input The Gamertag sent in to execute the Lambda.
+	 * @param input The Player sent in to execute the Lambda.
 	 * @param context The Lambda execution context.
 	 * @return The PlayerGames in the cache.
 	 */
     @Override
     // TODO Accept JSON view names in order to determine what data to show.
-    public List<PlayerGame> handleRequest(Gamertag input, Context context) {
+    public List<PlayerGame> handleRequest(Player input, Context context) {
 		List<PlayerGame> games = cacheReader.getPlayerGamesByGamertag(input.getGamertag());
 		CapiUtils.logObject(context, games.size(), "# of PlayerGames in the cache");
 		return games;
@@ -56,7 +56,7 @@ public class PlayerGamesGetter implements RequestStreamHandler, RequestHandler<G
     public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context) throws IOException {
     	ObjectMapper mapper = new ObjectMapper();
 
-        Gamertag req = mapper.readValue(convertStreamToString(inputStream), Gamertag.class);
+        Player req = mapper.readValue(convertStreamToString(inputStream), Player.class);
 		List<PlayerGame> games = cacheReader.getPlayerGamesByGamertag(req.getGamertag());
         outputStream.write(mapper.writeValueAsString(games).getBytes(java.nio.charset.Charset.forName("UTF-8")));
     }

@@ -7,10 +7,12 @@ import org.junit.Test;
 
 import com.amazonaws.services.lambda.runtime.Context;
 
-import com.cartographerapi.domain.Gamertag;
+import com.cartographerapi.domain.players.Player;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCounts;
 
 import com.cartographerapi.functions.PlayerGameCountsUpdater;
+import com.cartographerapi.domain.ExecutionTests;
+import org.junit.experimental.categories.Category;
 
 /**
  * Test the execution of the PlayerGameCountsUpdater.
@@ -18,16 +20,17 @@ import com.cartographerapi.functions.PlayerGameCountsUpdater;
  * @author GodlyPerfection
  * 
  */
+@Category(ExecutionTests.class)
 public class PlayerGameCountsUpdaterExecutionTest {
 
-    private static Gamertag input;
+    private static Player input;
 
     /**
      * Setup the input for the function.
      */
     @BeforeClass
     public static void createInput() throws IOException {
-        input = new Gamertag("MythicFritz");
+        input = new Player("MythicFritz");
     }
 
     /**

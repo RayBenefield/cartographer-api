@@ -3,7 +3,7 @@ package com.cartographerapi.functions;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.cartographerapi.domain.CapiUtils;
-import com.cartographerapi.domain.Gamertag;
+import com.cartographerapi.domain.players.Player;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCounts;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCountsDynamoReader;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCountsDynamoWriter;
@@ -12,12 +12,12 @@ import com.cartographerapi.domain.playergamecounts.PlayerGameCountsReader;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCountsWriter;
 
 /**
- * Refreshes the PlayerGameCounts for a given Gamertag.
+ * Refreshes the PlayerGameCounts for a given Player.
  * 
  * @author GodlyPerfection
  * 
  */
-public class PlayerGameCountsUpdater implements RequestHandler<Gamertag, PlayerGameCounts> {
+public class PlayerGameCountsUpdater implements RequestHandler<Player, PlayerGameCounts> {
 
 	private PlayerGameCountsReader cacheReader;
 	private PlayerGameCountsWriter cacheWriter;
@@ -25,16 +25,16 @@ public class PlayerGameCountsUpdater implements RequestHandler<Gamertag, PlayerG
 	
 	/**
 	 * Checks the cache to see if PlayerGameCounts already exist. Then uses that
-	 * (if exists) to update the current game counts for a Gamertag. Then saves
+	 * (if exists) to update the current game counts for a Player. Then saves
 	 * the refresh in the cache.
 	 * 
-	 * @param gamertag The Gamertag given as input to the Lambda function.
+	 * @param input The Player given as input to the Lambda function.
 	 * @param context The Lambda execution context.
-	 * @return The newly refreshed PlayerGameCounts for a Gamertag.
+	 * @return The newly refreshed PlayerGameCounts for a Player.
 	 */
     @Override
-    public PlayerGameCounts handleRequest(Gamertag input, Context context) {
-		CapiUtils.logObject(context, input, "Gamertag");
+    public PlayerGameCounts handleRequest(Player input, Context context) {
+		CapiUtils.logObject(context, input, "Player");
 
 		PlayerGameCounts counts = cacheReader.getPlayerGameCountsByGamertag(input.getGamertag());
 		

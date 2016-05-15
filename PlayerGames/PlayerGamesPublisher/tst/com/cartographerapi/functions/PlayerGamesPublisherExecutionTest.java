@@ -11,6 +11,8 @@ import com.amazonaws.services.lambda.runtime.events.DynamodbEvent;
 import com.cartographerapi.domain.playergames.PlayerGame;
 
 import java.util.List;
+import com.cartographerapi.domain.ExecutionTests;
+import org.junit.experimental.categories.Category;
 
 /**
  * Test the execution of the PlayerGamesPublisher.
@@ -18,6 +20,7 @@ import java.util.List;
  * @author GodlyPerfection
  * 
  */
+@Category(ExecutionTests.class)
 public class PlayerGamesPublisherExecutionTest {
 
     private static DynamodbEvent input;

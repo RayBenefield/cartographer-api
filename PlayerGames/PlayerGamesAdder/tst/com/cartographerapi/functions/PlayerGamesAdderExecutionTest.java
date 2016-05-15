@@ -1,12 +1,17 @@
 package com.cartographerapi.functions;
 
+import com.amazonaws.services.lambda.runtime.Context;
+
 import java.io.IOException;
 import java.util.List;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import com.amazonaws.services.lambda.runtime.Context;
+
+import com.cartographerapi.domain.ExecutionTests;
 import com.cartographerapi.domain.ScheduledEvent;
 import com.cartographerapi.domain.playergames.PlayerGame;
+
+import org.junit.experimental.categories.Category;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 /**
  * Test the execution of the PlayerGamesAdder.
@@ -14,6 +19,7 @@ import com.cartographerapi.domain.playergames.PlayerGame;
  * @author GodlyPerfection
  * 
  */
+@Category(ExecutionTests.class)
 public class PlayerGamesAdderExecutionTest {
 
     private static ScheduledEvent input;

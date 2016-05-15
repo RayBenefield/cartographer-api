@@ -9,6 +9,8 @@ import org.junit.Test;
 import com.cartographerapi.domain.ScheduledEvent;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCounts;
 import com.amazonaws.services.lambda.runtime.Context;
+import com.cartographerapi.domain.ExecutionTests;
+import org.junit.experimental.categories.Category;
 
 /**
  * Test the execution of the PlayerGameCountsRefresher.
@@ -16,6 +18,7 @@ import com.amazonaws.services.lambda.runtime.Context;
  * @author GodlyPerfection
  * 
  */
+@Category(ExecutionTests.class)
 public class PlayerGameCountsRefresherExecutionTest {
 
     private static ScheduledEvent input;

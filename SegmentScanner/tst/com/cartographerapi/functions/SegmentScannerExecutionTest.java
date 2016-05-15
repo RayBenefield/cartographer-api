@@ -7,6 +7,8 @@ import org.junit.Test;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.events.SNSEvent;
+import com.cartographerapi.domain.ExecutionTests;
+import org.junit.experimental.categories.Category;
 
 /**
  * Test the functionality of the SegmentScanner function from
@@ -15,6 +17,7 @@ import com.amazonaws.services.lambda.runtime.events.SNSEvent;
  * @author GodlyPerfection
  * 
  */
+@Category(ExecutionTests.class)
 public class SegmentScannerExecutionTest {
 
     private static SNSEvent input;

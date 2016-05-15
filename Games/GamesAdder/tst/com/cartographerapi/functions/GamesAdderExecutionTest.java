@@ -10,6 +10,8 @@ import com.amazonaws.services.lambda.runtime.Context;
 
 import com.cartographerapi.domain.ScheduledEvent;
 import com.cartographerapi.domain.game.Game;
+import com.cartographerapi.domain.ExecutionTests;
+import org.junit.experimental.categories.Category;
 
 /**
  * Test the execution of the GamesAdder.
@@ -17,6 +19,7 @@ import com.cartographerapi.domain.game.Game;
  * @author GodlyPerfection
  * 
  */
+@Category(ExecutionTests.class)
 public class GamesAdderExecutionTest {
 
     private static ScheduledEvent input;
