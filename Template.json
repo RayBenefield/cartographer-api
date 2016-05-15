@@ -75,26 +75,6 @@
                 }
             }
         },
-        "CapiToPlayerGameCountsUpdater": {
-            "Type": "AWS::Lambda::Permission",
-            "DependsOn": [ "CAPI" ],
-            "Properties": {
-                "Action": "lambda:*",
-                "FunctionName": { "Ref": "PlayerGameCountsUpdaterArn" },
-                "Principal": "apigateway.amazonaws.com",
-                "SourceArn": {
-                    "Fn::Join": [ ":", [
-                        "arn:aws:execute-api",
-                        { "Ref": "AWS::Region" },
-                        { "Ref": "AWS::AccountId" },
-                        { "Fn::Join": [ "", [
-                            { "Ref": "CAPI" },
-                            "/*/POST/player/*/game/count"
-                        ] ] }
-                    ] ]
-                }
-            }
-        },
         "CapiToPlayerGamesGetter": {
             "Type": "AWS::Lambda::Permission",
             "Properties": {

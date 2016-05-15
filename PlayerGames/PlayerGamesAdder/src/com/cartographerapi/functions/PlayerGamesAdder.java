@@ -74,30 +74,34 @@ public class PlayerGamesAdder implements RequestHandler<ScheduledEvent, List<Pla
 
         // If there is a checkpoint then start there and load up to the games possible.
         PlayerGamesCheckpoint checkpoint = checkpointReader.getPlayerGamesCheckpointWithDefault(gamertag);
-        CapiUtils.logObject(context, checkpoint, "PlayerGamesCheckpoint for " + gamertag);
-        if (!StringUtils.isNullOrEmpty(checkpoint.getLastMatch())) {
-            gameReader.setLastMatch(checkpoint.getLastMatch());
-        }
-        gameReader.setTotal(counts.getTotalGames());
 
-        results = gameReader.getPlayerGamesByGamertag(gamertag, checkpoint.getTotalGamesLoaded(), 25);
+		while (context.getRemainingTimeInMillis() > 30000) {
+            CapiUtils.logObject(context, checkpoint, "PlayerGamesCheckpoint for " + gamertag);
+            if (!StringUtils.isNullOrEmpty(checkpoint.getLastMatch())) {
+                gameReader.setLastMatch(checkpoint.getLastMatch());
+            }
+            gameReader.setTotal(counts.getTotalGames());
 
-        if (results == null) {
-            updatedTotalGamesWriter.saveObject(new Player(gamertag));
-            queueReader.processedPlayerGameCounts(counts);
-            return new ArrayList<PlayerGame>();
-        }
-        CapiUtils.logObject(context, results.size(), "# of PlayerGames from the Halo API");
+            results = gameReader.getPlayerGamesByGamertag(gamertag, checkpoint.getTotalGamesLoaded(), 25);
 
-        // If we found some results then save the found results and save the checkpoint.
-        if (results.size() > 0) {
-            gameWriter.savePlayerGames(results);
-            checkpoint.setLastMatch(results.get(results.size() - 1).getMatchId());
-            checkpoint.setTotalGamesLoaded(checkpoint.getTotalGamesLoaded() + results.size());
-            checkpointWriter.savePlayerGamesCheckpoint(checkpoint);
-
-            if (checkpoint.getTotalGamesLoaded().equals(counts.getTotalGames())) {
+            if (results == null) {
+                updatedTotalGamesWriter.saveObject(new Player(gamertag));
                 queueReader.processedPlayerGameCounts(counts);
+                return new ArrayList<PlayerGame>();
+            }
+            CapiUtils.logObject(context, results.size(), "# of PlayerGames from the Halo API");
+
+            // If we found some results then save the found results and save the checkpoint.
+            if (results.size() > 0) {
+                gameWriter.savePlayerGames(results);
+                checkpoint.setLastMatch(results.get(results.size() - 1).getMatchId());
+                checkpoint.setTotalGamesLoaded(checkpoint.getTotalGamesLoaded() + results.size());
+                checkpointWriter.savePlayerGamesCheckpoint(checkpoint);
+
+                if (checkpoint.getTotalGamesLoaded().equals(counts.getTotalGames())) {
+                    queueReader.processedPlayerGameCounts(counts);
+                    break;
+                }
             }
         }
         

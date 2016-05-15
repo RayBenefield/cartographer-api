@@ -44,24 +44,30 @@ public class GamesAdder implements RequestHandler<ScheduledEvent, List<Game>> {
         CapiUtils.logObject(context, input, "ScheduledEvent Input");
         List<Game> results = new ArrayList<Game>();
 
-        // Pull games from the queue to inspect
-        List<PlayerGame> games = queueReader.getNumberOfPlayerGames(10);
-        
-        // For each game, check the cache and if it isn't there find it and save it
-        for (PlayerGame game : games) {
-            Game cachedGame = cacheReader.getGameByMatchId(game.getMatchId());
-            if (cachedGame != null) {
-                queueReader.processedPlayerGame(game);
-                continue;
-            }
+        while (context.getRemainingTimeInMillis() > 30000) {
+            // Pull games from the queue to inspect
+            List<PlayerGame> games = queueReader.getNumberOfPlayerGames(10);
 
-            Game foundGame = null;
-            foundGame = sourceReader.getGameByMatchId(game.getMatchId());
+            if (games.size() <= 0) {
+                break;
+            }
             
-            if (foundGame != null) {
-                cacheWriter.saveGame(foundGame);
-                queueReader.processedPlayerGame(game);
-                results.add(foundGame);
+            // For each game, check the cache and if it isn't there find it and save it
+            for (PlayerGame game : games) {
+                Game cachedGame = cacheReader.getGameByMatchId(game.getMatchId());
+                if (cachedGame != null) {
+                    queueReader.processedPlayerGame(game);
+                    continue;
+                }
+
+                Game foundGame = null;
+                foundGame = sourceReader.getGameByMatchId(game.getMatchId());
+                
+                if (foundGame != null) {
+                    cacheWriter.saveGame(foundGame);
+                    queueReader.processedPlayerGame(game);
+                    results.add(foundGame);
+                }
             }
         }
 

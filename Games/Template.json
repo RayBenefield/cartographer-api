@@ -67,7 +67,7 @@
                     "S3Key": "GamesAdder-0.0.1-SNAPSHOT.jar"
                 },
                 "Role": { "Fn::GetAtt": ["CartographerApiLambdaRole", "Arn"] },
-                "Timeout": "30",
+                "Timeout": "300",
                 "MemorySize": "512"
             }
         },
@@ -77,7 +77,7 @@
                 "TableName": "Games",
                 "ProvisionedThroughput": {
                     "ReadCapacityUnits": 4,
-                    "WriteCapacityUnits": 4
+                    "WriteCapacityUnits": 10
                 },
                 "AttributeDefinitions": [
                     {

@@ -105,6 +105,50 @@ echo
 
 
 ##################################################
+# Tie Cloudwatch Scheduled Events to Lambdas
+##################################################
+
+PrintInfo "Setting Cloudwatch Scheduled Events..."
+echo
+Indent
+
+##### TODO: Move Mappings to JSON file and use JQ for parsing
+Mappings=( "PlayerGamesAdderArn:1 minute" "GamesAdderArn:1 minute" "MapGamesAdderArn:1 minute" "PlayerGameCountsUpdaterArn:1 minute" "PlayerGameCountsRefresherArn:1 hour" )
+Iterator=0
+for Mapping in "${Mappings[@]}"
+do
+	# Split mapping into ${SourceTopic} `:` ${TargetQueue}
+	IFS=':' read -ra Map <<< "$Mapping"
+	FunctionKey=${Map[0]}
+	Rate=${Map[1]}
+
+	# Get Queue/Topic ARN from Outputs with "Queue${TargetDomain}" key
+	FunctionArn=${OutputMap[${FunctionKey}]}
+
+	PrintInfo "${BIBlue}${Rate}${Green} ----> ${BIBlue}${FunctionKey}${No_Color}"
+
+	# Create the rule (ScheduledEvent)
+	RuleArn=$(aws events put-rule --schedule-expression "rate(${Rate})" --name ${FunctionKey} --output text)
+	# Add permission for event to exceute the function
+	Permission=$(aws lambda add-permission \
+		--statement-id ${Iterator} \
+		--function-name ${FunctionArn} \
+		--action 'lambda:InvokeFunction' \
+		--principal events.amazonaws.com \
+		--source-arn ${RuleArn}
+	)
+	# Tie the rule to the function
+	Subsciption=$(aws events put-targets --rule ${FunctionKey} --targets Id=${Iterator},Arn=${FunctionArn})
+
+	Iterator++
+done
+
+Unindent
+PrintSeparator
+echo
+
+
+##################################################
 # Create the CAPI Core
 ##################################################
 

@@ -52,7 +52,7 @@ fi
 # DONE! Create/Update MapGames the Stacks
 # DONE! Subscribe all of the Queues to all of the Topics
 # Needs to create Cloudwatch Events and added them to the Lambdas
-# Needs Create/Update the CAPI API
+# DONE! Create/Update the CAPI API
 # Needs to setup a Configuration Table
 # Needs to output the the current API endpoint and API key
 
