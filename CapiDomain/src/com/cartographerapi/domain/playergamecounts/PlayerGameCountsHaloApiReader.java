@@ -15,73 +15,78 @@ import java.io.IOException;
  */
 public class PlayerGameCountsHaloApiReader implements PlayerGameCountsReader {
 
-	private Halo5ApiWrapper api;
-	private ObjectMapper mapper;
+    private Halo5ApiWrapper api;
+    private ObjectMapper mapper;
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public PlayerGameCounts getPlayerGameCountsByGamertag(String gamertag) {
-		Integer completedGames = 0;
-		Integer totalGames = 0;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public PlayerGameCounts getPlayerGameCountsByGamertag(String gamertag) {
+        Integer completedGames = 0;
+        Integer totalGames = 0;
 
-		try {
-			JsonNode root;
-			String totalResult = api.serviceRecord(gamertag);
-			root = mapper.readTree(totalResult);
-			completedGames = root.path("Results").path(0).path("Result").path("CustomStats").path("TotalGamesCompleted").asInt();
-			totalGames = completedGames;
+        try {
+            JsonNode root;
+            String totalResult = api.serviceRecord(gamertag);
+            root = mapper.readTree(totalResult);
 
-			Integer lastGames = 25;
-			while (lastGames == 25) {
-				String lastResult = api.customGames(gamertag, totalGames);
-				root = mapper.readTree(lastResult);
-				lastGames = root.path("ResultCount").asInt();
-				totalGames += lastGames;
-			}
-		} catch (IOException exception) {
-			return new PlayerGameCounts(gamertag);
-		}
+            if (root.path("Results").isMissingNode()) {
+                return null;
+            }
 
-		return new PlayerGameCounts(gamertag, completedGames, totalGames);
-	}
+            completedGames = root.path("Results").path(0).path("Result").path("CustomStats").path("TotalGamesCompleted").asInt();
+            totalGames = completedGames;
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public PlayerGameCounts getPlayerGameCountsByPlayerGameCounts(PlayerGameCounts counts) {
-		Integer completedGames = counts.getGamesCompleted();
-		Integer totalGames = counts.getTotalGames();
+            Integer lastGames = 25;
+            while (lastGames == 25) {
+                String lastResult = api.customGames(gamertag, totalGames);
+                root = mapper.readTree(lastResult);
+                lastGames = root.path("ResultCount").asInt();
+                totalGames += lastGames;
+            }
+        } catch (IOException exception) {
+            return null;
+        }
 
-		try {
-			JsonNode root;
-			String totalResult = api.serviceRecord(counts.getGamertag());
-			root = mapper.readTree(totalResult);
-			completedGames = root.path("Results").path(0).path("Result").path("CustomStats").path("TotalGamesCompleted").asInt();
-			totalGames = counts.getTotalGames();
+        return new PlayerGameCounts(gamertag, completedGames, totalGames);
+    }
 
-			Integer lastGames = 25;
-			while (lastGames == 25) {
-				String lastResult = api.customGames(counts.getGamertag(), totalGames);
-				root = mapper.readTree(lastResult);
-				lastGames = root.path("ResultCount").asInt();
-				totalGames += lastGames;
-			}
-		} catch (IOException exception) {
-			return counts;
-		}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public PlayerGameCounts getPlayerGameCountsByPlayerGameCounts(PlayerGameCounts counts) {
+        Integer completedGames = counts.getGamesCompleted();
+        Integer totalGames = counts.getTotalGames();
 
-		return new PlayerGameCounts(counts.getGamertag(), completedGames, totalGames);
-	}
-	
+        try {
+            JsonNode root;
+            String totalResult = api.serviceRecord(counts.getGamertag());
+            root = mapper.readTree(totalResult);
+            completedGames = root.path("Results").path(0).path("Result").path("CustomStats").path("TotalGamesCompleted").asInt();
+            totalGames = counts.getTotalGames();
+
+            Integer lastGames = 25;
+            while (lastGames == 25) {
+                String lastResult = api.customGames(counts.getGamertag(), totalGames);
+                root = mapper.readTree(lastResult);
+                lastGames = root.path("ResultCount").asInt();
+                totalGames += lastGames;
+            }
+        } catch (IOException exception) {
+            return counts;
+        }
+
+        return new PlayerGameCounts(counts.getGamertag(), completedGames, totalGames);
+    }
+    
     /**
      * The lazy IOC constructor.
      */
-	public PlayerGameCountsHaloApiReader() {
-		this.api = new Halo5ApiWrapper();
-		this.mapper = new ObjectMapper();
-	}
+    public PlayerGameCountsHaloApiReader() {
+        this.api = new Halo5ApiWrapper();
+        this.mapper = new ObjectMapper();
+    }
 
 }

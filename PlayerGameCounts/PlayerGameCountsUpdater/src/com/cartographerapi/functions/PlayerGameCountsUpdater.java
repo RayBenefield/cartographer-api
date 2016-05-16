@@ -60,9 +60,12 @@ public class PlayerGameCountsUpdater implements RequestHandler<ScheduledEvent, P
             counts = sourceReader.getPlayerGameCountsByPlayerGameCounts(counts);
         }
 
-        cacheWriter.savePlayerGameCounts(counts);
-        queueReader.processedPlayer(player);
-        CapiUtils.logObject(context, counts, "The new PlayerGameCounts");
+        if (counts != null) {
+            cacheWriter.savePlayerGameCounts(counts);
+            queueReader.processedPlayer(player);
+            CapiUtils.logObject(context, counts, "The new PlayerGameCounts");
+        }
+
         return counts;
     }
     
