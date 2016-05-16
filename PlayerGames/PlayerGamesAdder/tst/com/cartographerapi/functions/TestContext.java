@@ -20,7 +20,7 @@ public class TestContext implements Context {
     private String logStreamName = "EXAMPLE";
     private LambdaLogger logger = new TestLogger();
     private int memoryLimitInMB = 128;
-    private int remainingTimeInMillis = 15000;
+    private int remainingTimeInMillis = 300000;
 
     @Override
     public String getAwsRequestId() {

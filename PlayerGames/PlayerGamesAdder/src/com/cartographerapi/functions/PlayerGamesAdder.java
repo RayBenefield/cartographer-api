@@ -74,17 +74,19 @@ public class PlayerGamesAdder implements RequestHandler<ScheduledEvent, List<Pla
 
         // If there is a checkpoint then start there and load up to the games possible.
         PlayerGamesCheckpoint checkpoint = checkpointReader.getPlayerGamesCheckpointWithDefault(gamertag);
+        gameReader.setTotal(counts.getTotalGames());
 
-		while (context.getRemainingTimeInMillis() > 30000) {
+        while (context.getRemainingTimeInMillis() > 30000) {
+            CapiUtils.logObject(context, context.getRemainingTimeInMillis(), "Remaining milliseconds");
             CapiUtils.logObject(context, checkpoint, "PlayerGamesCheckpoint for " + gamertag);
             if (!StringUtils.isNullOrEmpty(checkpoint.getLastMatch())) {
                 gameReader.setLastMatch(checkpoint.getLastMatch());
             }
-            gameReader.setTotal(counts.getTotalGames());
 
             results = gameReader.getPlayerGamesByGamertag(gamertag, checkpoint.getTotalGamesLoaded(), 25);
 
             if (results == null) {
+                CapiUtils.logObject(context, results, "Results have come back null.");
                 updatedTotalGamesWriter.saveObject(new Player(gamertag));
                 queueReader.processedPlayerGameCounts(counts);
                 return new ArrayList<PlayerGame>();

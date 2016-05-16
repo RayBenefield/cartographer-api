@@ -54,7 +54,7 @@ public class PlayerGamesHaloApiReader implements PlayerGamesReader {
             JsonNode root = mapper.readTree(gamesResult);
 
             if (root.path("ResultCount").isMissingNode()) {
-                return results;
+                return new ArrayList<PlayerGame>();
             }
 
             Integer resultCount = root.path("ResultCount").asInt();
@@ -85,7 +85,7 @@ public class PlayerGamesHaloApiReader implements PlayerGamesReader {
                 results.add(newGame);
                 numberOfGame--;
             }
-            
+
             // Since the matches are returned by most recent first, not
             // chronologically we want to reverse the collection.
             Collections.reverse(results);
@@ -95,7 +95,7 @@ public class PlayerGamesHaloApiReader implements PlayerGamesReader {
                 results.remove(0);
             }
         } catch (IOException exception) {
-            return null;
+            return new ArrayList<PlayerGame>();
         }
         return results;
     }
