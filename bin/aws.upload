@@ -26,11 +26,11 @@ getopts h help
 if [[ "${help}" = "h" ]]; then
     PrintInfo "Description"
     echo
-    PrintDescription "This script installs the ${BIBlue}CAPI${No_Color} architecture on AWS."
+    PrintDescription "Enter the script's ${BIBlue}description${No_Color} here."
     echo
     PrintInfo "Usage"
     echo
-    PrintCodeLine "capi.create [-h]"
+    PrintCodeLine "script.template [-h]"
     echo
     PrintInfo "Examples"
     echo
@@ -44,41 +44,26 @@ if [[ "${help}" = "h" ]]; then
     exit
 fi
 
-PrintSeparator
-PrintBoldInfo "CAPI Architecture [${BIBlue}Removal${No_Color}]"
-PrintSeparator
-echo
+Directory=$(find . -name "${1}.java" | sed "s/src\/.*//")
 
-##################################################
-# Delete the CAPI Architecture
-##################################################
+if [ -d "${Directory}" ]; then
+	cd ${Directory}
 
-StackId=$(aws cloudformation delete-stack --stack-name Capi-Core)
-PrintInfo "Deleting the ${BIBlue}Capi-Core${Green} stack..."
+	PrintInfo "Packaging ${BIBlue}${1}${Green} Function..."
+	mvn package shade:shade >/dev/null 2>/dev/null
 
-DomainStacks=( "Games" "MapGames" "PlayerGames" "PlayerGameCounts" )
-for Stack in "${DomainStacks[@]}"
-do
-	StackId=$(aws cloudformation delete-stack --stack-name Capi-${Stack})
-	PrintInfo "Deleting the ${BIBlue}${Stack}${Green} stack..."
-done
-echo
-
-PrintSeparator
-printf '    » Waiting...  '
-while true
-do
-	Statuses=$(aws cloudformation describe-stacks --query Stacks[*].StackStatus --output text)
-
-	if [[ ! ${Statuses[*]} =~ "DELETE_IN_PROGRESS" ]]; then
-		break
+	ExitCode=$?
+	if [[ ${ExitCode} -ne 0 ]] ; then
+		cd -
+		return
 	fi
 
-	SpinProgress
-	sleep .01;
-done
+	PrintInfo "Uploading to S3..."
+	aws s3 cp target/${1}-0.0.1-SNAPSHOT.jar s3://cartographer-api-lambda-code/${1}-0.0.1-SNAPSHOT.jar >/dev/null 2>/dev/null
+	PrintInfo "Updating the function with the value in S3."
+	aws lambda update-function-code --function-name ${1} --s3-bucket cartographer-api-lambda-code --s3-key ${1}-0.0.1-SNAPSHOT.jar >/dev/null 2>/dev/null
 
-PrintBoldInfo "DONE!"
-PrintSeparator
-PrintBoldInfo "Finished deleting CAPI!"
+	cd - >/dev/null 2>/dev/null
+fi
+
 echo

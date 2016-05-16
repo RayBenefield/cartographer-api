@@ -13,6 +13,8 @@ REAL_DIR=$(dirname ${REAL_FILE})
 source $REAL_DIR/colors.sh
 source $REAL_DIR/functions.sh
 
+# Start with a blank line
+echo
 
 ##################################################
 # Provide help documentation
@@ -100,6 +102,7 @@ do
 done
 
 Unindent
+echo
 PrintSeparator
 echo
 
@@ -125,24 +128,23 @@ do
 	# Get Queue/Topic ARN from Outputs with "Queue${TargetDomain}" key
 	FunctionArn=${OutputMap[${FunctionKey}]}
 
-	PrintInfo "${BIBlue}${Rate}${Green} ----> ${BIBlue}${FunctionKey}${No_Color}"
+	PrintInfo "${BIBlue}${FunctionKey}${No_Color} (${Rate})"
 
 	# Create the rule (ScheduledEvent)
-	RuleArn=$(aws events put-rule --schedule-expression "rate(${Rate})" --name ${FunctionKey} --output text)
+	RuleArn=$( { aws events put-rule --schedule-expression "rate(${Rate})" --name ${FunctionKey} --output text; } 2>&1 ) || PrintException "${RuleArn}"
 	# Add permission for event to exceute the function
-	Permission=$(aws lambda add-permission \
+	Permission=$( { aws lambda add-permission \
 		--statement-id ${Iterator} \
 		--function-name ${FunctionArn} \
 		--action 'lambda:InvokeFunction' \
 		--principal events.amazonaws.com \
-		--source-arn ${RuleArn}
-	)
+		--source-arn ${RuleArn}; } 2>&1 \
+	) || PrintException "Already Exists!"
 	# Tie the rule to the function
-	Subsciption=$(aws events put-targets --rule ${FunctionKey} --targets Id=${Iterator},Arn=${FunctionArn})
-
-	Iterator++
+	Subsciption=$( { aws events put-targets --rule ${FunctionKey} --targets Id=${Iterator},Arn=${FunctionArn}; } 2>&1 ) || PrintException "${Subscription}"
 done
 
+echo
 Unindent
 PrintSeparator
 echo
@@ -185,6 +187,7 @@ fi
 # Wait for the Core to finish creating
 ##################################################
 
+echo
 PrintSeparator
 printf '    » Waiting...  '
 while true

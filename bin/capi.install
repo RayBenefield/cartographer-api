@@ -40,6 +40,10 @@ if [[ "${help}" = "h" ]]; then
     exit
 fi
 
+# Update paths so they are relative
+# Setup easy development scripts (aws.upload, aws.disableEvent, aws.stuff)
+# Setup easy development scripts (capi.addPlayer)
+
 # Needs to accept a stage (test, prod, dev)
 # Needs to accept a Halo API Key
 # Needs to package all of the Lambda Functions
@@ -57,7 +61,7 @@ fi
 # Needs to output the the current API endpoint and API key
 
 PrintSeparator
-PrintBoldInfo "CAPI Architecture"
+PrintBoldInfo "CAPI Architecture [${BIBlue}Creation${BIGreen}]"
 PrintSeparator
 echo
 
@@ -71,10 +75,10 @@ for Stack in "${DomainStacks[@]}"
 do
 	if aws cloudformation describe-stacks --stack-name Capi-${Stack} > /dev/null 2>&1; then
 		PrintInfo "Updating the ${BIBlue}${Stack}${Green} stack..."
-		StackId=$( { aws cloudformation update-stack --stack-name Capi-${Stack} --template-body file:////Users//GodlyPerfection//CAPI-Workspace//${Stack}//Template.json --capabilities CAPABILITY_IAM --query StackId; } 2>&1 ) || PrintWarning "${StackId}"
+		StackId=$( { aws cloudformation update-stack --stack-name Capi-${Stack} --template-body file:////Users//GodlyPerfection//CAPI-Workspace//${Stack}//Template.json --capabilities CAPABILITY_IAM --query StackId; } 2>&1 ) || PrintException "No updates are needed!"
 	else
 		PrintInfo "Creating the ${BIBlue}${Stack}${Green} stack..."
-		StackId=$( { aws cloudformation create-stack --stack-name Capi-${Stack} --template-body file:////Users//GodlyPerfection//CAPI-Workspace//${Stack}//Template.json --capabilities CAPABILITY_IAM --query StackId; } 2>&1 ) || PrintWarning "${StackId}"
+		StackId=$( { aws cloudformation create-stack --stack-name Capi-${Stack} --template-body file:////Users//GodlyPerfection//CAPI-Workspace//${Stack}//Template.json --capabilities CAPABILITY_IAM --query StackId; } 2>&1 ) || PrintException "${StackId}"
 	fi
 done
 echo

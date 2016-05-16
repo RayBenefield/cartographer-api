@@ -203,7 +203,7 @@ function PrintWarning()
 
 function PrintSeparator()
 {
-    echo -e "${Purple}--------------------------------------------------${No_Color}"
+    echo -e "    ${Purple}--------------------------------------------------${No_Color}"
 }
 
 function PrintPasta()
@@ -216,4 +216,11 @@ function PrintError()
 {
     error=${1}
     echo -e "${indentation}${Red}» ${White}${On_Red}[ERROR]${Red} ${error}${No_Color}"
+}
+
+function PrintException()
+{
+    Indent
+    PrintWarning "${@}"
+    Unindent
 }
