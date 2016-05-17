@@ -79,9 +79,7 @@ public class PlayerGamesAdder implements RequestHandler<ScheduledEvent, List<Pla
         while (context.getRemainingTimeInMillis() > 30000) {
             CapiUtils.logObject(context, context.getRemainingTimeInMillis(), "Remaining milliseconds");
             CapiUtils.logObject(context, checkpoint, "PlayerGamesCheckpoint for " + gamertag);
-            if (!StringUtils.isNullOrEmpty(checkpoint.getLastMatch())) {
-                gameReader.setLastMatch(checkpoint.getLastMatch());
-            }
+            gameReader.setLastMatch(checkpoint.getLastMatch());
 
             results = gameReader.getPlayerGamesByGamertag(gamertag, checkpoint.getTotalGamesLoaded(), 25);
 
