@@ -6,9 +6,7 @@
  4) Pull out the Halo 5 Wrapper into its own project
  5) Find a fix to the DynamoEvent test parsing
  6) Setup a system that updates all functions when the CAPI Domain is built
- 7) Find fix for when a clean build unlinks the tst/ folder for projects
  8) Setup Unit Testing for all classes
- 9) Move the PlayerGameCountsUpdater behind SNS
  11) Proper handling of Configurations that allows for environment configs (through ConfigReader)
  12) Create Templates:
  	 - Reader and Writer Repositories
@@ -18,13 +16,8 @@
  	 - Lazy IOC and Dependency Injection constructors
  	 - Dynamo Attribute/HashKey/RangeKey getters/setters
  14) Add Value Objects to Dynamo Domain Objects with proper marshaling/unmarshaling for "always valid" domain objects
- 15) Implement Swagger, RAML, or API Blueprint for documentation generation and importing into API Gateway
- 16) Create all AWS resources using CloudFormation
- 17) Add Static CAPI Utilities to clean up messy Handler code
- 	 - ObjectMapper that converts string into a JsonNode or returns an empty JsonNode
  18) Refactor ObjectWriters out of SnsWriters and redirect them to the generic objectWriters
  20) Circumvent SNSEvent and convert them into domain objects by adding a setRecords(List<SNSRecord>) to domain objects since Lambda parses input out in a particular way
  21) Default all Lambda functions to accept a list of Domain objects and package single domain objects into a List when calling (like API Gateway endpoints)
- 23) Maximize Lambda Executions for certain functions... loop through batches of messages from an SQS queue before completing
  24) Use Jackson to support Domain Object views for returning API results
  25) Update SegmentScanner to use an actual queue URL instead of a queue URL key to avoid having to upload it for every new queue
