@@ -26,4 +26,7 @@ public class DomainQueueFillRequest {
 		this.queueUrlKey = queueUrlKey;
 	}
 
+    public DomainQueueFillRequest() {
+    }
+
 }
