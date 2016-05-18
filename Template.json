@@ -147,6 +147,15 @@
                 ]
             }
         },
+        "SegmentScannerPermission": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+                "Action": "lambda:*",
+                "FunctionName": { "Fn::GetAtt": [ "SegmentScanner", "Arn" ] },
+                "Principal": "sns.amazonaws.com",
+                "SourceArn": { "Ref": "SegmentScannerRequestContinue" }
+            }
+        },
         "SegmentScanner": {
             "Type": "AWS::Lambda::Function",
             "Properties": {
