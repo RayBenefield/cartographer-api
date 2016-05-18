@@ -1,23 +1,45 @@
-*** Bonus TODO List ***
+*** For Production ***
+
+ 1) Setup the Configuration Table in the Template
+     - Change the Config key naming convention
+     - Move the Core system into its own Domain Stack
+ 2) Write the naming convention document
+ 3) Create Read Replica like tables for Raw Data domains
+     - PlayerGames
+     - Games
+ 4) Fix the SegmentScanner/DomainQueueFiller to deal with Throughput properly
+ 5) More time saving scripts
+     - capi.disable
+     - capi.execute
+     - aws.upload (handle uploading all functions, and include shared domain building)
+ 6) Setup the capi.setup script with s3 bucket creation, Swagger uploading, etc.
+ 7) Setup the ability to spin up different stages of CAPI (dev, test, prod)
+     - CloudFormation updates
+     - Configuration updates
+ 8) Setup Configurations, Outputs of stack, Mappings, and Parameters in a JSON document for scripting access
+ 9) Setup all Lambda functions to handle bulk operations
+ 10) Expose Getter Bulk operation POST endpoints
+ 11) Parameters for budgeting (DynamoDB)
+ 12) Setup the Patreon
+
+
+*** Nice to have ***
 
  1) Refactor out the handler business logic into Domain services that are called by the Handlers to make CAPI framework agnostic from Lambda.
  2) Explore the Context and check to see if there is a way to differentiate a test vs an actual execution
  3) Pull out the CAPI Wrapper into its own project
  4) Pull out the Halo 5 Wrapper into its own project
  5) Find a fix to the DynamoEvent test parsing
- 6) Setup a system that updates all functions when the CAPI Domain is built
- 8) Setup Unit Testing for all classes
- 11) Proper handling of Configurations that allows for environment configs (through ConfigReader)
- 12) Create Templates:
+ 6) Setup Unit Testing for all classes
+ 7) Create Templates:
  	 - Reader and Writer Repositories
  	 - Dynamo Domain Objects
  	 - Specific Repository types like SNS, Dynamo, etc.
- 13) Create Snippets:
+ 8) Create Snippets:
  	 - Lazy IOC and Dependency Injection constructors
  	 - Dynamo Attribute/HashKey/RangeKey getters/setters
- 14) Add Value Objects to Dynamo Domain Objects with proper marshaling/unmarshaling for "always valid" domain objects
- 18) Refactor ObjectWriters out of SnsWriters and redirect them to the generic objectWriters
- 20) Circumvent SNSEvent and convert them into domain objects by adding a setRecords(List<SNSRecord>) to domain objects since Lambda parses input out in a particular way
- 21) Default all Lambda functions to accept a list of Domain objects and package single domain objects into a List when calling (like API Gateway endpoints)
- 24) Use Jackson to support Domain Object views for returning API results
- 25) Update SegmentScanner to use an actual queue URL instead of a queue URL key to avoid having to upload it for every new queue
+ 9) Add Value Objects to Dynamo Domain Objects with proper marshaling/unmarshaling for "always valid" domain objects
+ 10) Refactor ObjectWriters out of SnsWriters and redirect them to the generic objectWriters
+ 11) Circumvent SNSEvent and convert them into domain objects by adding a setRecords(List<SNSRecord>) to domain objects since Lambda parses input out in a particular way
+ 12) Use Jackson to support Domain Object views for returning API results
+ 13) Update SegmentScanner to use an actual queue URL instead of a queue URL key to avoid having to upload it for every new queue
