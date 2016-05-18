@@ -1,0 +1,118 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Parameters": {
+        "Stage": {
+            "Type": "String",
+            "Default": "test",
+            "Description": "The environment stage."
+        }
+    },
+    "Resources": {
+        "CartographerApiLambdaRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Sid": "",
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": "lambda.amazonaws.com"
+                            },
+                            "Action": "sts:AssumeRole"
+                        }
+                    ]
+                },
+                "ManagedPolicyArns": [
+                    "arn:aws:iam::789201490085:policy/lambda_basic_execution_role_policy_7889af1c-44c9-4841-8228-b63a2a89050b",
+                    "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
+                    "arn:aws:iam::aws:policy/AmazonSNSFullAccess"
+                ]
+            }
+        },
+        "DomainQueueFiller": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+                "FunctionName": "DomainQueueFiller",
+                "Description": "Populate an SQS queue with all entries from a Domain table.",
+                "Runtime": "java8",
+                "Handler": "com.cartographerapi.functions.DomainQueueFiller",
+                "Code": {
+                    "S3Bucket": "cartographer-api-lambda-code",
+                    "S3Key": "DomainQueueFiller-0.0.1-SNAPSHOT.jar"
+                },
+                "Role": { "Fn::GetAtt": ["CartographerApiLambdaRole", "Arn"] },
+                "Timeout": "15",
+                "MemorySize": "512"
+            }
+        },
+        "SegmentScannerRequestContinue": {
+            "Type": "AWS::SNS::Topic",
+            "DependsOn": [ "SegmentScanner" ],
+            "Properties": {
+                "DisplayName": "SegmentScannerRequestContinue",
+                "TopicName": "Capi-SegmentScannerRequest-Continue",
+                "Subscription": [
+                    {
+                        "Endpoint": { "Fn::GetAtt": [ "SegmentScanner", "Arn" ] },
+                        "Protocol": "lambda"
+                    }
+                ]
+            }
+        },
+        "SegmentScannerPermission": {
+            "Type": "AWS::Lambda::Permission",
+            "DependsOn": [ "SegmentScannerRequestContinue", "SegmentScanner" ],
+            "Properties": {
+                "Action": "lambda:*",
+                "FunctionName": { "Fn::GetAtt": [ "SegmentScanner", "Arn" ] },
+                "Principal": "sns.amazonaws.com",
+                "SourceArn": { "Ref": "SegmentScannerRequestContinue" }
+            }
+        },
+        "SegmentScanner": {
+            "Type": "AWS::Lambda::Function",
+            "DependsOn": [ "CartographerApiLambdaRole" ],
+            "Properties": {
+                "FunctionName": "SegmentScanner",
+                "Description": "Scan a segment of the Domain database until timeout or finished.",
+                "Runtime": "java8",
+                "Handler": "com.cartographerapi.functions.SegmentScanner",
+                "Code": {
+                    "S3Bucket": "cartographer-api-lambda-code",
+                    "S3Key": "SegmentScanner-0.0.1-SNAPSHOT.jar"
+                },
+                "Role": { "Fn::GetAtt": ["CartographerApiLambdaRole", "Arn"] },
+                "Timeout": "300",
+                "MemorySize": "512"
+            }
+        }
+    },
+    "Outputs": {
+        "ArnSegmentScannerRequestContinue": {
+            "Description": "The ARN for SegmentScannerRequestContinue topic.",
+            "Value": { "Ref": "SegmentScannerRequestContinue" }
+        },
+        "TopicNameSegmentScannerRequestContinue": {
+            "Description": "The Topic Name for SegmentScannerRequestContinue topic.",
+            "Value": { "Fn::GetAtt" : [ "SegmentScannerRequestContinue", "TopicName" ] }
+        },
+        "ArnDomainQueueFiller": {
+            "Description": "The ARN for the DomainQueueFiller function.",
+            "Value": { "Fn::GetAtt" : [ "DomainQueueFiller", "Arn" ] }
+        },
+        "LogicalIdDomainQueueFiller": {
+            "Description": "The logical ID for the DomainQueueFiller function.",
+            "Value": { "Ref": "DomainQueueFiller" }
+        },
+        "ArnSegmentScanner": {
+            "Description": "The ARN for the SegmentScanner function.",
+            "Value": { "Fn::GetAtt" : [ "SegmentScanner", "Arn" ] }
+        },
+        "LogicalIdSegmentScanner": {
+            "Description": "The logical ID for the SegmentScanner function.",
+            "Value": { "Ref": "SegmentScanner" }
+        }
+    }
+}

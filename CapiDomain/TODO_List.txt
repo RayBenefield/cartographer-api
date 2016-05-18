@@ -2,7 +2,6 @@
 
  1) Setup the Configuration Table in the Template
      - Change the Config key naming convention
-     - Move the Core system into its own Domain Stack
  2) Write the naming convention document
  3) Create Read Replica like tables for Raw Data domains
      - PlayerGames

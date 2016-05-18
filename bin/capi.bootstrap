@@ -47,7 +47,7 @@ fi
 # Generate a hashmap of the Output Values
 ##################################################
 
-DomainStacks=( "Games" "MapGames" "PlayerGames" "PlayerGameCounts" )
+DomainStacks=( "Core" "Games" "MapGames" "PlayerGames" "PlayerGameCounts" )
 declare -A OutputMap
 for Stack in "${DomainStacks[@]}"
 do
@@ -151,14 +151,14 @@ echo
 
 
 ##################################################
-# Create the CAPI Core
+# Create the CAPI Api
 ##################################################
 
-if aws cloudformation describe-stacks --stack-name Capi-Core > /dev/null 2>&1; then
-	PrintInfo "Updating the ${BIBlue}Capi-Core${Green} stack..."
+if aws cloudformation describe-stacks --stack-name Capi-API > /dev/null 2>&1; then
+	PrintInfo "Updating the ${BIBlue}API${Green} stack..."
 	StackId=$( { \
 		aws cloudformation update-stack \
-		--stack-name Capi-Core \
+		--stack-name Capi-API \
 		--template-body file:////Users//GodlyPerfection//CAPI-Workspace//Template.json \
 		--capabilities CAPABILITY_IAM \
 		--query StackId \
@@ -166,12 +166,12 @@ if aws cloudformation describe-stacks --stack-name Capi-Core > /dev/null 2>&1; t
 			ParameterKey=PlayerGameCountsGetterArn, ParameterValue=${OutputMap[PlayerGameCountsGetterArn]} \
 			ParameterKey=PlayerGameCountsUpdaterArn, ParameterValue=${OutputMap[PlayerGameCountsUpdaterArn]} \ 
 			ParameterKey=PlayerGamesGetterArn, ParameterValue=${OutputMap[PlayerGamesGetterArn]}; \
-	} 2>&1 ) || PrintWarning "${StackId}"
+	} 2>&1 ) || PrintException "${StackId}"
 else
-	PrintInfo "Creating the ${BIBlue}Capi-Core${Green} stack..."
+	PrintInfo "Creating the ${BIBlue}API${Green} stack..."
 	StackId=$( { \
 		aws cloudformation create-stack \
-		--stack-name Capi-Core \
+		--stack-name Capi-API \
 		--template-body file:////Users//GodlyPerfection//CAPI-Workspace//Template.json \
 		--capabilities CAPABILITY_IAM \
 		--query StackId \
@@ -179,7 +179,7 @@ else
 			ParameterKey=PlayerGameCountsGetterArn,ParameterValue=${OutputMap[PlayerGameCountsGetterArn]} \
 			ParameterKey=PlayerGameCountsUpdaterArn,ParameterValue=${OutputMap[PlayerGameCountsUpdaterArn]} \
 			ParameterKey=PlayerGamesGetterArn,ParameterValue=${OutputMap[PlayerGamesGetterArn]}; \ 
-	} 2>&1 ) || PrintWarning "${StackId}"
+	} 2>&1 ) || PrintException "${StackId}"
 fi
 
 
