@@ -48,7 +48,7 @@ fi
 # Install all utility bash scripts.
 PrintInfo "Installing bash utility scripts to ${BGreen}/usr/local/bin${Green}."
 Indent
-findCommand="find \`pwd\` -type f \( -name \"capi.install\" -o -name \"capi.delete\" -o -name \"capi.bootstrap\" -o -name \"aws.upload\" -o -name \"capi.addPlayer\" \)"
+findCommand="find \`pwd\` -type f \( -name \"capi.install\" -o -name \"capi.delete\" -o -name \"capi.bootstrap\" -o -name \"aws.upload\" -o -name \"capi.addPlayer\" -o -name \"capi.setup\" \)"
 files=$(eval ${findCommand})
 SymlinkFiles "${files}" "/usr/local/bin"
 Unindent

@@ -1,0 +1,80 @@
+#!/usr/local/bin/bash
+
+# This gets the path of the executing script.
+SELF_PATH=$(cd -P -- "$(dirname -- "${0}")" && pwd -P) && SELF_PATH=${SELF_PATH}/$(basename -- "${0}")
+# If the path is a symlink (which is likely if it is in /usr/local/bin) this will get the actual filepath.
+REAL_FILE=$(readlink ${SELF_PATH})
+# If it isn't a symlink then let's stick with SELF_PATH
+if [[ -z $REAL_FILE ]]; then
+    REAL_FILE=${SELF_PATH}
+fi
+REAL_DIR=$(dirname ${REAL_FILE})
+
+source $REAL_DIR/colors.sh
+source $REAL_DIR/functions.sh
+
+# Start with a blank line.
+echo
+
+
+##################################################
+# Provide help documentation
+##################################################
+
+# Provide help.
+getopts h help
+if [[ "${help}" = "h" ]]; then
+    PrintInfo "Description"
+    echo
+    PrintDescription "Enter the script's ${BIBlue}description${No_Color} here."
+    echo
+    PrintInfo "Usage"
+    echo
+    PrintCodeLine "script.template [-h]"
+    echo
+    PrintInfo "Examples"
+    echo
+    PrintCodeLine "script.template"
+    echo
+    PrintBoldInfo "Required Environment Variables"
+    echo
+    PrintCodeLine "${BICyan}EXAMPLE_ENV_VARIABLE${Cyan}=<some-description-of-variable>"
+    echo
+
+    exit
+fi
+
+# Verify we have the CDT Security Tools path to use jwt.
+VerifyEnv "CAPI_BUCKET" "The bucket to store CAPI's code"
+
+BucketList=( $(aws s3api list-buckets --query 'Buckets[*].Name' --output text) )
+
+if ! containsElement "${CAPI_BUCKET}" "${BucketList[@]}"; then
+	PrintInfo "Creating the ${CAPI_BUCKET} bucket."
+	echo
+	aws s3api create-bucket --bucket ${CAPI_BUCKET}
+else
+	PrintWarning "Bucket ${BIBlue}${CAPI_BUCKET}${BIYellow} already exists."
+	echo
+fi
+
+
+##################################################
+# Upload the Swagger template
+##################################################
+
+PrintInfo "Uploading the Swagger template."
+aws s3 cp CapiSwagger.json s3://${CAPI_BUCKET}/CapiSwagger.json > /dev/null 2>&1
+
+
+##################################################
+# Package and upload all of the functions
+##################################################
+
+Functions=( "DomainQueueFiller" "SegmentScanner" "PlayerGameCountsUpdater" "PlayerGameCountsGetter" "PlayerGameCountsRefresher" "PlayerGameCountsPublisher" "PlayerGamesAdder" "PlayerGamesGetter" "PlayerGamesPublisher" "GamesAdder" "GamesPublisher" "MapGamesAdder" )
+for Function in ${Functions[@]};
+do
+	aws.upload ${Function}
+done
+
+echo

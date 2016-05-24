@@ -152,6 +152,13 @@ function SpinProgress
 	printf "%s\b" "${spin:i++%spincount:1}"
 }
 
+function containsElement
+{
+	local e
+	for e in "${@:2}"; do [[ "$e" == "$1" ]] && return 0; done
+	return 1
+}
+
 #################### Formatting Functions ####################
 function Indent()
 {

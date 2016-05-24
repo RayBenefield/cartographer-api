@@ -1,22 +1,21 @@
 *** For Production ***
 
- 1) Setup the capi.setup script with s3 bucket creation, Swagger uploading, etc.
- 2) Create Read Replica like tables for Raw Data domains
-     - Matches
-     - PlayerMatches
- 3) Setup Getters:
-     - Matches
-     - MapMatches
- 4) Setup all Lambda functions to handle bulk operations
-     - PlayerMatchCounts
-     - PlayerMatches
-     - Matches
-     - MapMatches
- 5) Expose Getter Bulk operation POST endpoints
- 6) Setup the ability to spin up different stages of CAPI (dev, test, prod)
+ 1) Create Read Replica like tables for Raw Data domains
+     - Games
+     - PlayerGames
+ 2) Setup Getters:
+     - Games
+     - MapGames
+ 3) Setup all Lambda functions to handle bulk operations
+     - PlayerGameCounts
+     - PlayerGames
+     - Games
+     - MapGames
+ 4) Expose Getter Bulk operation POST endpoints
+ 5) Setup the ability to spin up different stages of CAPI (dev, test, prod)
      - CloudFormation updates
      - Configuration updates
- 7) Change the JSON output to match the Halo API format (ProperCase keys and better formatted time)
+ 6) Change the JSON output to match the Halo API format (ProperCase keys and better formatted time)
 
 
 *** Nice to have ***
