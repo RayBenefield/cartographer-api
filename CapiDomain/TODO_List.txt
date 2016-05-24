@@ -1,23 +1,22 @@
 *** For Production ***
 
- 1) Change Game to Match across the entire system
- 2) Setup the capi.setup script with s3 bucket creation, Swagger uploading, etc.
- 3) Create Read Replica like tables for Raw Data domains
+ 1) Setup the capi.setup script with s3 bucket creation, Swagger uploading, etc.
+ 2) Create Read Replica like tables for Raw Data domains
      - Matches
      - PlayerMatches
- 4) Setup Getters:
+ 3) Setup Getters:
      - Matches
      - MapMatches
- 5) Setup all Lambda functions to handle bulk operations
+ 4) Setup all Lambda functions to handle bulk operations
      - PlayerMatchCounts
      - PlayerMatches
      - Matches
      - MapMatches
- 6) Expose Getter Bulk operation POST endpoints
- 7) Setup the ability to spin up different stages of CAPI (dev, test, prod)
+ 5) Expose Getter Bulk operation POST endpoints
+ 6) Setup the ability to spin up different stages of CAPI (dev, test, prod)
      - CloudFormation updates
      - Configuration updates
- 8) Change the JSON output to match the Halo API format (ProperCase keys and better formatted time)
+ 7) Change the JSON output to match the Halo API format (ProperCase keys and better formatted time)
 
 
 *** Nice to have ***
@@ -51,3 +50,4 @@
  19) Use Jackson to support Domain Object views for returning API results
  20) Update SegmentScanner to use an actual queue URL instead of a queue URL key to avoid having to upload it for every new queue
  21) Setup Cloudwatch Alarms
+ 22) Change Game to Match across the entire system
