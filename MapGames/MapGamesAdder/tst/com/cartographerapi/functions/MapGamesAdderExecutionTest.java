@@ -11,6 +11,8 @@ import com.amazonaws.services.lambda.runtime.Context;
 
 import com.cartographerapi.domain.ScheduledEvent;
 import com.cartographerapi.domain.mapgames.MapGame;
+import com.cartographerapi.domain.ExecutionTests;
+import org.junit.experimental.categories.Category;
 
 /**
  * Test the execution of the MapGamesAdder.
@@ -18,7 +20,8 @@ import com.cartographerapi.domain.mapgames.MapGame;
  * @author GodlyPerfection
  * 
  */
-public class MapGamesAdderTest {
+@Category(ExecutionTests.class)
+public class MapGamesAdderExecutionTest {
 
     private static ScheduledEvent input;
 

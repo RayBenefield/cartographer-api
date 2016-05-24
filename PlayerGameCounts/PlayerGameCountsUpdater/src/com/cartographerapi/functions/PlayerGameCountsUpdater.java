@@ -74,7 +74,7 @@ public class PlayerGameCountsUpdater implements RequestHandler<ScheduledEvent, P
      */
     public PlayerGameCountsUpdater() {
         this(
-            new PlayersSqsReader("sqsCapiPlayersForPlayerGameCounts"),
+            new PlayersSqsReader("QueueUrlPlayersForPlayerGameCounts"),
             new PlayerGameCountsDynamoReader(),
             new PlayerGameCountsDynamoWriter(),
             new PlayerGameCountsHaloApiReader()

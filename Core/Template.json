@@ -8,6 +8,28 @@
         }
     },
     "Resources": {
+        "Config": {
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+                "TableName": "Config",
+                "ProvisionedThroughput": {
+                    "ReadCapacityUnits": 1,
+                    "WriteCapacityUnits": 1
+                },
+                "AttributeDefinitions": [
+                    {
+                        "AttributeName": "Key",
+                        "AttributeType": "S"
+                    }
+                ],
+                "KeySchema": [
+                    {
+                        "AttributeName": "Key",
+                        "KeyType": "HASH"
+                    }
+                ]
+            }
+        },
         "CartographerApiLambdaRole": {
             "Type": "AWS::IAM::Role",
             "Properties": {
@@ -47,12 +69,12 @@
                 "MemorySize": "512"
             }
         },
-        "SegmentScannerRequestContinue": {
+        "ContinueSegmentScannerRequest": {
             "Type": "AWS::SNS::Topic",
             "DependsOn": [ "SegmentScanner" ],
             "Properties": {
-                "DisplayName": "SegmentScannerRequestContinue",
-                "TopicName": "Capi-SegmentScannerRequest-Continue",
+                "DisplayName": "ContinueSegmentScannerRequest",
+                "TopicName": "Capi-ContinueSegmentScannerRequest",
                 "Subscription": [
                     {
                         "Endpoint": { "Fn::GetAtt": [ "SegmentScanner", "Arn" ] },
@@ -63,12 +85,12 @@
         },
         "SegmentScannerPermission": {
             "Type": "AWS::Lambda::Permission",
-            "DependsOn": [ "SegmentScannerRequestContinue", "SegmentScanner" ],
+            "DependsOn": [ "ContinueSegmentScannerRequest", "SegmentScanner" ],
             "Properties": {
                 "Action": "lambda:*",
                 "FunctionName": { "Fn::GetAtt": [ "SegmentScanner", "Arn" ] },
                 "Principal": "sns.amazonaws.com",
-                "SourceArn": { "Ref": "SegmentScannerRequestContinue" }
+                "SourceArn": { "Ref": "ContinueSegmentScannerRequest" }
             }
         },
         "SegmentScanner": {
@@ -90,29 +112,21 @@
         }
     },
     "Outputs": {
-        "ArnSegmentScannerRequestContinue": {
-            "Description": "The ARN for SegmentScannerRequestContinue topic.",
-            "Value": { "Ref": "SegmentScannerRequestContinue" }
+        "TopicArnContinueSegmentScannerRequest": {
+            "Description": "The ARN for the ContinueSegmentScannerRequest topic.",
+            "Value": { "Ref": "ContinueSegmentScannerRequest" }
         },
-        "TopicNameSegmentScannerRequestContinue": {
-            "Description": "The Topic Name for SegmentScannerRequestContinue topic.",
-            "Value": { "Fn::GetAtt" : [ "SegmentScannerRequestContinue", "TopicName" ] }
+        "TopicNameContinueSegmentScannerRequest": {
+            "Description": "The Topic Name for the ContinueSegmentScannerRequest topic.",
+            "Value": { "Fn::GetAtt" : [ "ContinueSegmentScannerRequest", "TopicName" ] }
         },
-        "ArnDomainQueueFiller": {
+        "FuncArnDomainQueueFiller": {
             "Description": "The ARN for the DomainQueueFiller function.",
             "Value": { "Fn::GetAtt" : [ "DomainQueueFiller", "Arn" ] }
         },
-        "LogicalIdDomainQueueFiller": {
-            "Description": "The logical ID for the DomainQueueFiller function.",
-            "Value": { "Ref": "DomainQueueFiller" }
-        },
-        "ArnSegmentScanner": {
+        "FuncArnSegmentScanner": {
             "Description": "The ARN for the SegmentScanner function.",
             "Value": { "Fn::GetAtt" : [ "SegmentScanner", "Arn" ] }
-        },
-        "LogicalIdSegmentScanner": {
-            "Description": "The logical ID for the SegmentScanner function.",
-            "Value": { "Ref": "SegmentScanner" }
         }
     }
 }

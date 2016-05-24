@@ -6,7 +6,7 @@ SELF_PATH=$(cd -P -- "$(dirname -- "${0}")" && pwd -P) && SELF_PATH=${SELF_PATH}
 REAL_FILE=$(readlink ${SELF_PATH})
 # If it isn't a symlink then let's stick with SELF_PATH
 if [[ -z $REAL_FILE ]]; then
-    REAL_FILE=${SELF_PATH}
+	REAL_FILE=${SELF_PATH}
 fi
 REAL_DIR=$(dirname ${REAL_FILE})
 
@@ -23,32 +23,38 @@ echo
 # Provide help.
 getopts h help
 if [[ "${help}" = "h" ]]; then
-    PrintInfo "Description"
-    echo
-    PrintDescription "Enter the script's ${BIBlue}description${No_Color} here."
-    echo
-    PrintInfo "Usage"
-    echo
-    PrintCodeLine "script.template [-h]"
-    echo
-    PrintInfo "Examples"
-    echo
-    PrintCodeLine "script.template"
-    echo
-    PrintBoldInfo "Required Environment Variables"
-    echo
-    PrintCodeLine "${BICyan}EXAMPLE_ENV_VARIABLE${Cyan}=<some-description-of-variable>"
-    echo
+	PrintInfo "Description"
+	echo
+	PrintDescription "Enter the script's ${BIBlue}description${No_Color} here."
+	echo
+	PrintInfo "Usage"
+	echo
+	PrintCodeLine "script.template [-h]"
+	echo
+	PrintInfo "Examples"
+	echo
+	PrintCodeLine "script.template"
+	echo
+	PrintBoldInfo "Required Environment Variables"
+	echo
+	PrintCodeLine "${BICyan}EXAMPLE_ENV_VARIABLE${Cyan}=<some-description-of-variable>"
+	echo
 
-    exit
+	exit
 fi
+
+declare -A OutputMap
+
+##################################################
+# Add Halo API Key to OutputMap
+##################################################
+OutputMap["HaloApiKey"]=${HALO_API_KEY}
 
 ##################################################
 # Generate a hashmap of the Output Values
 ##################################################
 
 DomainStacks=( "Core" "Games" "MapGames" "PlayerGames" "PlayerGameCounts" )
-declare -A OutputMap
 for Stack in "${DomainStacks[@]}"
 do
 	Outputs=$(aws cloudformation describe-stacks --stack-name Capi-${Stack} --query 'Stacks[0].Outputs[*].[OutputKey,OutputValue]' --output text)
@@ -83,7 +89,13 @@ echo
 Indent
 
 ##### TODO: Move Mappings to JSON file and use JQ for parsing
-Mappings=( "TopicNewGames:QueueGamesForMapGames" "TopicNewPlayerGames:QueuePlayerGamesForGames" "TopicNewPlayerGameCounts:QueuePlayerGameCountsForPlayerGames" "TopicUpdatedPlayerGameCounts:QueuePlayerGameCountsForPlayerGames" "TopicPlayersTotalGamesUpdated:QueuePlayersForPlayerGameCounts" )
+Mappings=( \
+	"TopicArnNewGames:QueueArnGamesForMapGames" \
+	"TopicArnNewPlayerGames:QueueArnPlayerGamesForGames" \
+	"TopicArnNewPlayerGameCounts:QueueArnPlayerGameCountsForPlayerGames" \
+	"TopicArnUpdatedPlayerGameCounts:QueueArnPlayerGameCountsForPlayerGames" \
+	"TopicArnTotalGamesUpdatedPlayers:QueueArnPlayersForPlayerGameCounts" \
+)
 for Mapping in "${Mappings[@]}"
 do
 	# Split mapping into ${SourceTopic} `:` ${TargetQueue}
@@ -108,40 +120,16 @@ echo
 
 
 ##################################################
-# Tie Cloudwatch Scheduled Events to Lambdas
-##################################################
+# Create/Populate the Configuration table
+#################################################
 
-PrintInfo "Setting Cloudwatch Scheduled Events..."
-echo
-Indent
+# Table should be created in Core
+# Use the OutputMap to populate the Config Table
 
-##### TODO: Move Mappings to JSON file and use JQ for parsing
-Mappings=( "PlayerGamesAdderArn:1 minute" "GamesAdderArn:1 minute" "MapGamesAdderArn:1 minute" "PlayerGameCountsUpdaterArn:1 minute" "PlayerGameCountsRefresherArn:1 hour" )
-Iterator=0
-for Mapping in "${Mappings[@]}"
+for Key in "${!OutputMap[@]}"
 do
-	# Split mapping into ${SourceTopic} `:` ${TargetQueue}
-	IFS=':' read -ra Map <<< "$Mapping"
-	FunctionKey=${Map[0]}
-	Rate=${Map[1]}
-
-	# Get Queue/Topic ARN from Outputs with "Queue${TargetDomain}" key
-	FunctionArn=${OutputMap[${FunctionKey}]}
-
-	PrintInfo "${BIBlue}${FunctionKey}${No_Color} (${Rate})"
-
-	# Create the rule (ScheduledEvent)
-	RuleArn=$( { aws events put-rule --schedule-expression "rate(${Rate})" --name ${FunctionKey} --output text; } 2>&1 ) || PrintException "${RuleArn}"
-	# Add permission for event to exceute the function
-	Permission=$( { aws lambda add-permission \
-		--statement-id ${Iterator} \
-		--function-name ${FunctionArn} \
-		--action 'lambda:InvokeFunction' \
-		--principal events.amazonaws.com \
-		--source-arn ${RuleArn}; } 2>&1 \
-	) || PrintException "Already Exists!"
-	# Tie the rule to the function
-	Subsciption=$( { aws events put-targets --rule ${FunctionKey} --targets Id=${Iterator},Arn=${FunctionArn}; } 2>&1 ) || PrintException "${Subscription}"
+	aws dynamodb put-item --table-name Config --item "{ \"Key\": { \"S\": \"${Key}\" }, \"Value\": { \"S\": \"${OutputMap[${Key}]}\" } }"
+	PrintInfo "Added ${BIBlue}${Key}${Green} to the ${BIGreen}Config${Green} table"
 done
 
 echo
@@ -163,9 +151,9 @@ if aws cloudformation describe-stacks --stack-name Capi-API > /dev/null 2>&1; th
 		--capabilities CAPABILITY_IAM \
 		--query StackId \
 		--parameters \
-			ParameterKey=PlayerGameCountsGetterArn, ParameterValue=${OutputMap[PlayerGameCountsGetterArn]} \
-			ParameterKey=PlayerGameCountsUpdaterArn, ParameterValue=${OutputMap[PlayerGameCountsUpdaterArn]} \ 
-			ParameterKey=PlayerGamesGetterArn, ParameterValue=${OutputMap[PlayerGamesGetterArn]}; \
+		ParameterKey=FuncArnPlayerGameCountsGetter,ParameterValue=${OutputMap[FuncArnPlayerGameCountsGetter]} \
+		ParameterKey=FuncArnPlayerGameCountsUpdater,ParameterValue=${OutputMap[FuncArnPlayerGameCountsUpdater]} \ 
+		ParameterKey=FuncArnPlayerGamesGetter,ParameterValue=${OutputMap[FuncArnPlayerGamesGetter]}; \
 	} 2>&1 ) || PrintException "${StackId}"
 else
 	PrintInfo "Creating the ${BIBlue}API${Green} stack..."
@@ -176,10 +164,10 @@ else
 		--capabilities CAPABILITY_IAM \
 		--query StackId \
 		--parameters \
-			ParameterKey=PlayerGameCountsGetterArn,ParameterValue=${OutputMap[PlayerGameCountsGetterArn]} \
-			ParameterKey=PlayerGameCountsUpdaterArn,ParameterValue=${OutputMap[PlayerGameCountsUpdaterArn]} \
-			ParameterKey=PlayerGamesGetterArn,ParameterValue=${OutputMap[PlayerGamesGetterArn]}; \ 
-	} 2>&1 ) || PrintException "${StackId}"
+		ParameterKey=FuncArnPlayerGameCountsGetter,ParameterValue=${OutputMap[FuncArnPlayerGameCountsGetter]} \
+		ParameterKey=FuncArnPlayerGameCountsUpdater,ParameterValue=${OutputMap[FuncArnPlayerGameCountsUpdater]} \
+		ParameterKey=FuncArnPlayerGamesGetter,ParameterValue=${OutputMap[FuncArnPlayerGamesGetter]}; \ 
+} 2>&1 ) || PrintException "${StackId}"
 fi
 
 
@@ -203,5 +191,53 @@ do
 done
 
 PrintBoldInfo "DONE!"
+PrintSeparator
+echo
+
+
+##################################################
+# Tie Cloudwatch Scheduled Events to Lambdas
+##################################################
+
+PrintInfo "Setting Cloudwatch Scheduled Events..."
+echo
+Indent
+
+##### TODO: Move Mappings to JSON file and use JQ for parsing
+Mappings=( \
+	"FuncArnPlayerGamesAdder:1 minute" \
+	"FuncArnGamesAdder:1 minute" \
+	"FuncArnMapGamesAdder:1 minute" \
+	"FuncArnPlayerGameCountsUpdater:1 minute" \
+	"FuncArnPlayerGameCountsRefresher:1 hour" \
+)
+Iterator=0
+for Mapping in "${Mappings[@]}"
+do
+	# Split mapping into ${SourceTopic} `:` ${TargetQueue}
+	IFS=':' read -ra Map <<< "$Mapping"
+	FunctionKey=${Map[0]}
+	Rate=${Map[1]}
+
+	# Get Queue/Topic ARN from Outputs with "Queue${TargetDomain}" key
+	FunctionArn=${OutputMap[${FunctionKey}]}
+
+	PrintInfo "${BIBlue}${FunctionKey}${No_Color} (${Rate})"
+
+	# Create the rule (ScheduledEvent)
+	RuleArn=$( { aws events put-rule --schedule-expression "rate(${Rate})" --name ${FunctionKey} --output text; } 2>&1 ) || PrintException "${RuleArn}"
+	# Add permission for event to exceute the function
+	Permission=$( { aws lambda add-permission \
+		--statement-id ${Iterator} \
+		--function-name ${FunctionArn} \
+		--action 'lambda:InvokeFunction' \
+		--principal events.amazonaws.com \
+		--source-arn ${RuleArn}; } 2>&1 \
+		) || PrintException "Already Exists!"
+	# Tie the rule to the function
+	Subsciption=$( { aws events put-targets --rule ${FunctionKey} --targets Id=${Iterator},Arn=${FunctionArn}; } 2>&1 ) || PrintException "${Subscription}"
+done
+
+echo
 PrintSeparator
 echo

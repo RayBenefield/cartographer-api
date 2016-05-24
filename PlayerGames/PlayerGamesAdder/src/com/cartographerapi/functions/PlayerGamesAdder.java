@@ -113,13 +113,13 @@ public class PlayerGamesAdder implements RequestHandler<ScheduledEvent, List<Pla
      */
     public PlayerGamesAdder() {
         this(
-            new PlayerGameCountsSqsReader("sqsCapiPlayerGameCountsForPlayerGames"),
+            new PlayerGameCountsSqsReader("QueueUrlPlayerGameCountsForPlayerGames"),
             new PlayerGamesHaloApiReader(),
             new PlayerGamesDynamoWriter(),
             new PlayerGamesCheckpointDynamoReader(),
             new PlayerGamesCheckpointDynamoWriter(),
-            new PlayerGameCountsSnsWriter("snsCapiPlayerGameCountsContinue"),
-            new ObjectSnsWriter("snsCapiPlayerUpdatedTotalGames")
+            new PlayerGameCountsSnsWriter("TopicArnContinuePlayerGameCounts"),
+            new ObjectSnsWriter("TopicArnTotalGamesUpdatedPlayers")
         );
     }
 

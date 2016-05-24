@@ -162,49 +162,77 @@
                 "MemorySize": 512
             }
         },
-        "PlayerGameCountsNew": {
+        "NewPlayerGameCounts": {
             "Type": "AWS::SNS::Topic",
             "Properties": {
-                "DisplayName": "PlayerGameCountsNew",
-                "TopicName": "Capi-PlayerGameCounts-New",
+                "DisplayName": "NewPlayerGameCounts",
+                "TopicName": "Capi-NewPlayerGameCounts",
                 "Subscription": [
                 ]
             }
         },
-        "PlayerGameCountsUpdated": {
+        "UpdatedPlayerGameCounts": {
             "Type": "AWS::SNS::Topic",
             "Properties": {
-                "DisplayName": "PlayerGameCountsUpdated",
-                "TopicName": "Capi-PlayerGameCounts-Updated",
+                "DisplayName": "UpdatedPlayerGameCounts",
+                "TopicName": "Capi-UpdatedPlayerGameCounts",
                 "Subscription": [
                 ]
             }
         }
     },
     "Outputs": {
-        "QueuePlayersForPlayerGameCounts": {
-            "Description": "Players that need to get PlayerGameCounts for.",
-            "Value": { "Fn::GetAtt": [ "PlayersForPlayerGameCounts", "Arn" ] }
+        "QueueArnPlayersForPlayerGameCounts": {
+            "Description": "The ARN for the PlayersForPlayerGameCounts queue.",
+            "Value": { "Fn::GetAtt" : [ "PlayersForPlayerGameCounts", "Arn" ] }
         },
-        "TopicNewPlayerGameCounts": {
-            "Description": "New PlayerGameCounts added to the system.",
-            "Value": { "Ref": "PlayerGameCountsNew" }
+        "QueueUrlPlayersForPlayerGameCounts": {
+            "Description": "The url for the PlayersForPlayerGameCounts queue.",
+            "Value": { "Ref": "PlayersForPlayerGameCounts" }
         },
-        "TopicUpdatedPlayerGameCounts": {
-            "Description": "Updated PlayerGameCounts in the system.",
-            "Value": { "Ref": "PlayerGameCountsUpdated" }
+        "QueueNamePlayersForPlayerGameCounts": {
+            "Description": "The name for the PlayersForPlayerGameCounts queue.",
+            "Value": { "Fn::GetAtt" : [ "PlayersForPlayerGameCounts", "QueueName" ] }
         },
-        "PlayerGameCountsGetterArn": {
-            "Description": "The Arn for the PlayerGameCountsGetter.",
-            "Value": { "Fn::GetAtt": [ "PlayerGameCountsGetter", "Arn" ] }
+        "TopicArnNewPlayerGameCounts": {
+            "Description": "The ARN for the NewPlayerGameCounts topic.",
+            "Value": { "Ref": "NewPlayerGameCounts" }
         },
-        "PlayerGameCountsUpdaterArn": {
-            "Description": "The Arn for the PlayerGameCountsUpdater.",
-            "Value": { "Fn::GetAtt": [ "PlayerGameCountsUpdater", "Arn" ] }
+        "TopicNameNewPlayerGameCounts": {
+            "Description": "The Topic Name for the NewPlayerGameCounts topic.",
+            "Value": { "Fn::GetAtt" : [ "NewPlayerGameCounts", "TopicName" ] }
         },
-        "PlayerGameCountsRefresherArn": {
-            "Description": "The Arn for the PlayerGameCountsRefresher.",
-            "Value": { "Fn::GetAtt": [ "PlayerGameCountsRefresher", "Arn" ] }
+        "TopicArnUpdatedPlayerGameCounts": {
+            "Description": "The ARN for the UpdatedPlayerGameCounts topic.",
+            "Value": { "Ref": "UpdatedPlayerGameCounts" }
+        },
+        "TopicNameUpdatedPlayerGameCounts": {
+            "Description": "The Topic Name for the UpdatedPlayerGameCounts topic.",
+            "Value": { "Fn::GetAtt" : [ "UpdatedPlayerGameCounts", "TopicName" ] }
+        },
+        "FuncArnPlayerGameCountsGetter": {
+            "Description": "The ARN for the PlayerGameCountsGetter function.",
+            "Value": { "Fn::GetAtt" : [ "PlayerGameCountsGetter", "Arn" ] }
+        },
+        "FuncIdPlayerGameCountsGetter": {
+            "Description": "The logical ID for the PlayerGameCountsGetter function.",
+            "Value": { "Ref": "PlayerGameCountsGetter" }
+        },
+        "FuncArnPlayerGameCountsUpdater": {
+            "Description": "The ARN for the PlayerGameCountsUpdater function.",
+            "Value": { "Fn::GetAtt" : [ "PlayerGameCountsUpdater", "Arn" ] }
+        },
+        "FuncIdPlayerGameCountsUpdater": {
+            "Description": "The logical ID for the PlayerGameCountsUpdater function.",
+            "Value": { "Ref": "PlayerGameCountsUpdater" }
+        },
+        "FuncArnPlayerGameCountsRefresher": {
+            "Description": "The ARN for the PlayerGameCountsRefresher function.",
+            "Value": { "Fn::GetAtt" : [ "PlayerGameCountsRefresher", "Arn" ] }
+        },
+        "FuncIdPlayerGameCountsRefresher": {
+            "Description": "The logical ID for the PlayerGameCountsRefresher function.",
+            "Value": { "Ref": "PlayerGameCountsRefresher" }
         }
     }
 }

@@ -16,24 +16,24 @@ import com.amazonaws.regions.Regions;
  */
 public class ConfigDynamoReader implements ConfigReader {
 
-	private AmazonDynamoDBClient client;
-	private DynamoDBMapper mapper;
+    private AmazonDynamoDBClient client;
+    private DynamoDBMapper mapper;
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getValue(String key) {
-		return mapper.load(ConfigurationSetting.class, key).getValue();
-	}
-	
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getValue(String key) {
+        return mapper.load(ConfigurationSetting.class, key).getValue();
+    }
+    
     /**
      * The lazy IOC constructor.
      */
-	public ConfigDynamoReader() {
-        client = new AmazonDynamoDBClient();		                           
+    public ConfigDynamoReader() {
+        client = new AmazonDynamoDBClient();                                   
         client.setRegion(Region.getRegion(Regions.US_WEST_2));
         mapper = new DynamoDBMapper(client);
-	}
+    }
 
 }

@@ -40,6 +40,8 @@ if [[ "${help}" = "h" ]]; then
     exit
 fi
 
+VerifyEnv "HALO_API_KEY" "API Key to Access the Halo API"
+
 # Update paths so they are relative
 # Setup easy development scripts (aws.upload, aws.disableEvent, aws.stuff)
 # Setup easy development scripts (capi.addPlayer)

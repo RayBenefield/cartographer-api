@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import com.amazonaws.services.lambda.runtime.Context;
 
-import com.cartographerapi.domain.players.Player;
+import com.cartographerapi.domain.ScheduledEvent;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCounts;
 
 import com.cartographerapi.functions.PlayerGameCountsUpdater;
@@ -23,14 +23,14 @@ import org.junit.experimental.categories.Category;
 @Category(ExecutionTests.class)
 public class PlayerGameCountsUpdaterExecutionTest {
 
-    private static Player input;
+    private static ScheduledEvent input;
 
     /**
      * Setup the input for the function.
      */
     @BeforeClass
     public static void createInput() throws IOException {
-        input = new Player("MythicFritz");
+        input = new ScheduledEvent();
     }
 
     /**

@@ -28,18 +28,11 @@ function VerifyEnv()
 
     # We need to have the CDT security tools directory for access to the jwt tool.
     if [[ ! -z "${envValue}" ]]; then
-        if [[ ! -z "${expectedFile}" ]]; then
-            exec 5>&1
-            results=$( VerifyFileExist "${expectedFile}" "${envValue}" | tee /dev/fd/5 )
-            if [[ -z $results ]]; then
-                return
-            fi
-        fi
-    else
-        PrintError "${envName} is not set!"
-        echo 
+	return
     fi
 
+    PrintError "${envName} is not set!"
+    echo 
     PrintInfo "Set your ${envName} on the command line with:"
     echo 
     PrintCodeLine "export ${BICyan}${envName}${Cyan}=<${expectedValueDescription}>"

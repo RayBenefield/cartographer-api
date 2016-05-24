@@ -6,15 +6,15 @@
             "Default": "test",
             "Description": "The environment/stage for this stack."
         },
-        "PlayerGameCountsGetterArn": {
+        "FuncArnPlayerGameCountsGetter": {
             "Type": "String",
             "Description": "Arn for the PlayerGameCountsGetter Function."
         },
-        "PlayerGameCountsUpdaterArn": {
+        "FuncArnPlayerGameCountsUpdater": {
             "Type": "String",
             "Description": "Arn for the PlayerGameCountsUpdater Function."
         },
-        "PlayerGamesGetterArn": {
+        "FuncArnPlayerGamesGetter": {
             "Type": "String",
             "Description": "Arn for the PlayerGamesGetter Function."
         }
@@ -60,7 +60,7 @@
             "DependsOn": [ "CAPI" ],
             "Properties": {
                 "Action": "lambda:*",
-                "FunctionName": { "Ref": "PlayerGameCountsGetterArn" },
+                "FunctionName": { "Ref": "FuncArnPlayerGameCountsGetter" },
                 "Principal": "apigateway.amazonaws.com",
                 "SourceArn": {
                     "Fn::Join": [ ":", [
@@ -79,7 +79,7 @@
             "Type": "AWS::Lambda::Permission",
             "Properties": {
                 "Action": "lambda:*",
-                "FunctionName": { "Ref": "PlayerGamesGetterArn" },
+                "FunctionName": { "Ref": "FuncArnPlayerGamesGetter" },
                 "Principal": "apigateway.amazonaws.com",
                 "SourceArn": {
                     "Fn::Join": [ ":", [

@@ -83,7 +83,7 @@ public class GamesAdder implements RequestHandler<ScheduledEvent, List<Game>> {
             new GamesDynamoReader(),
             new GamesHaloApiReader(),
             new GamesDynamoWriter(),
-            new PlayerGamesSqsReader("sqsCapiPlayerGamesForGames")
+            new PlayerGamesSqsReader("QueueUrlPlayerGamesForGames")
         );
     }
 

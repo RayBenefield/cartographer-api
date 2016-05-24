@@ -106,13 +106,25 @@
         }
     },
     "Outputs": {
-        "QueueGamesForMapGames": {
-            "Description": "Queue Url that will subscribe to the relevant topics.",
-            "Value": { "Fn::GetAtt": [ "GamesForMapGames", "Arn" ] }
+        "QueueArnGamesForMapGames": {
+            "Description": "The ARN for the GamesForMapGames queue.",
+            "Value": { "Fn::GetAtt" : [ "GamesForMapGames", "Arn" ] }
         },
-        "MapGamesAdderArn": {
-            "Description": "The Arn for the MapGamesAdder.",
-            "Value": { "Fn::GetAtt": [ "MapGamesAdder", "Arn" ] }
+        "QueueUrlGamesForMapGames": {
+            "Description": "The url for the GamesForMapGames queue.",
+            "Value": { "Ref": "GamesForMapGames" }
+        },
+        "QueueNameGamesForMapGames": {
+            "Description": "The name for the GamesForMapGames queue.",
+            "Value": { "Fn::GetAtt" : [ "GamesForMapGames", "QueueName" ] }
+        },
+        "FuncArnMapGamesAdder": {
+            "Description": "The ARN for the MapGamesAdder function.",
+            "Value": { "Fn::GetAtt" : [ "MapGamesAdder", "Arn" ] }
+        },
+        "FuncIdMapGamesAdder": {
+            "Description": "The logical ID for the MapGamesAdder function.",
+            "Value": { "Ref": "MapGamesAdder" }
         }
     }
 }

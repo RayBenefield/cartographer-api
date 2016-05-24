@@ -64,7 +64,7 @@ public class MapGamesAdder implements RequestHandler<ScheduledEvent, List<MapGam
      */
     public MapGamesAdder() {
         this(
-            new GamesSqsReader("sqsCapiGamesForMapGames"),
+            new GamesSqsReader("QueueUrlGamesForMapGames"),
             new MapGamesDynamoWriter()
         );
     }

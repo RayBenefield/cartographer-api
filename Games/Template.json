@@ -127,28 +127,40 @@
                 "MemorySize": "512"
             }
         },
-        "GamesNew": {
+        "NewGames": {
             "Type": "AWS::SNS::Topic",
             "Properties": {
-                "DisplayName": "GamesNew",
-                "TopicName": "Capi-Games-New",
+                "DisplayName": "NewGames",
+                "TopicName": "Capi-NewGames",
                 "Subscription": [
                 ]
             }
         }
     },
     "Outputs": {
-        "QueuePlayerGamesForGames": {
-            "Description": "Queue Url that will subscribe to the relevant topics.",
-            "Value": { "Fn::GetAtt": [ "PlayerGamesForGames", "Arn" ] }
+        "QueueArnPlayerGamesForGames": {
+            "Description": "The ARN for the PlayerGamesForGames queue.",
+            "Value": { "Fn::GetAtt" : [ "PlayerGamesForGames", "Arn" ] }
         },
-        "TopicNewGames": {
-            "Description": "All event topics.",
-            "Value": { "Ref": "GamesNew" }
+        "QueueUrlPlayerGamesForGames": {
+            "Description": "The url for the PlayerGamesForGames queue.",
+            "Value": { "Ref": "PlayerGamesForGames" }
         },
-        "GamesAdderArn": {
-            "Description": "The Arn for the GamesAdder.",
-            "Value": { "Fn::GetAtt": [ "GamesAdder", "Arn" ] }
+        "QueueNamePlayerGamesForGames": {
+            "Description": "The name for the PlayerGamesForGames queue.",
+            "Value": { "Fn::GetAtt" : [ "PlayerGamesForGames", "QueueName" ] }
+        },
+        "TopicArnNewGames": {
+            "Description": "The ARN for the NewGames topic.",
+            "Value": { "Ref": "NewGames" }
+        },
+        "TopicNameNewGames": {
+            "Description": "The Topic Name for the NewGames topic.",
+            "Value": { "Fn::GetAtt" : [ "NewGames", "TopicName" ] }
+        },
+        "FuncArnGamesAdder": {
+            "Description": "The ARN for the GamesAdder function.",
+            "Value": { "Fn::GetAtt" : [ "GamesAdder", "Arn" ] }
         }
     }
 }

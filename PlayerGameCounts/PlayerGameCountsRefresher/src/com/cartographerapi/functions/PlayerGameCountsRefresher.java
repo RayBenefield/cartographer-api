@@ -63,7 +63,7 @@ public class PlayerGameCountsRefresher implements RequestHandler<ScheduledEvent,
      * The lazy IOC constructor for Lambda to instantiate.
      */
     public PlayerGameCountsRefresher() {
-    	this(new ObjectSqsWriter("sqsCapiPlayersForPlayerGameCounts"), new PlayerGameCountsDynamoReader());
+    	this(new ObjectSqsWriter("QueueUrlPlayersForPlayerGameCounts"), new PlayerGameCountsDynamoReader());
     }
 
     /**

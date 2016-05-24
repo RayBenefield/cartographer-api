@@ -70,8 +70,8 @@ public class PlayerGameCountsPublisher implements RequestHandler<DynamodbEvent, 
      */
     public PlayerGameCountsPublisher() {
     	this(
-			new PlayerGameCountsSnsWriter("snsCapiPlayerGameCountsNew"),
-			new PlayerGameCountsSnsWriter("snsCapiPlayerGameCountsUpdated")
+			new PlayerGameCountsSnsWriter("TopicArnNewPlayerGameCounts"),
+			new PlayerGameCountsSnsWriter("TopicArnUpdatedPlayerGameCounts")
 		);
     }
 

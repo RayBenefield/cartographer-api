@@ -89,12 +89,12 @@
                 "MemorySize": "512"
             }
         },
-        "PlayerGameCountsContinue": {
+        "ContinuePlayerGameCounts": {
             "Type": "AWS::SNS::Topic",
             "DependsOn": [ "PlayerGameCountsForPlayerGames" ],
             "Properties": {
-                "DisplayName": "PlayerGameCountsContinue",
-                "TopicName": "Capi-PlayerGameCounts-Continue",
+                "DisplayName": "ContinuePlayerGameCounts",
+                "TopicName": "Capi-ContinuePlayerGameCounts",
                 "Subscription": [
                     {
                         "Endpoint": { "Fn::GetAtt": [ "PlayerGameCountsForPlayerGames", "Arn" ] },
@@ -189,45 +189,77 @@
                 "MemorySize": "512"
             }
         },
-        "PlayerGamesNew": {
+        "NewPlayerGames": {
             "Type": "AWS::SNS::Topic",
             "Properties": {
-                "DisplayName": "PlayerGamesNew",
-                "TopicName": "Capi-PlayerGames-New",
+                "DisplayName": "NewPlayerGames",
+                "TopicName": "Capi-NewPlayerGames",
                 "Subscription": [
                 ]
             }
         },
-        "PlayersTotalGamesUpdated": {
+        "TotalGamesUpdatedPlayers": {
             "Type": "AWS::SNS::Topic",
             "Properties": {
-                "DisplayName": "PlayersTotalGamesUpdated",
-                "TopicName": "Capi-PlayerTotalGamesUpdated",
+                "DisplayName": "TotalGamesUpdatedPlayers",
+                "TopicName": "Capi-TotalGamesUpdatedPlayers",
                 "Subscription": [
                 ]
             }
         }
     },
     "Outputs": {
-        "QueuePlayerGameCountsForPlayerGames": {
-            "Description": "Accepts PlayerGameCount jobs to be turned into PlayerGames.",
-            "Value": { "Fn::GetAtt": [ "PlayerGameCountsForPlayerGames", "Arn" ] }
+        "QueueArnPlayerGameCountsForPlayerGames": {
+            "Description": "The ARN for the PlayerGameCountsForPlayerGames queue.",
+            "Value": { "Fn::GetAtt" : [ "PlayerGameCountsForPlayerGames", "Arn" ] }
         },
-        "TopicNewPlayerGames": {
-            "Description": "New PlayerGames added to the system.",
-            "Value": { "Ref": "PlayerGamesNew" }
+        "QueueUrlPlayerGameCountsForPlayerGames": {
+            "Description": "The url for the PlayerGameCountsForPlayerGames queue.",
+            "Value": { "Ref": "PlayerGameCountsForPlayerGames" }
         },
-        "TopicPlayersTotalGamesUpdated": {
-            "Description": "A Player's TotalGames has been updated.",
-            "Value": { "Ref": "PlayersTotalGamesUpdated" }
+        "QueueNamePlayerGameCountsForPlayerGames": {
+            "Description": "The name for the PlayerGameCountsForPlayerGames queue.",
+            "Value": { "Fn::GetAtt" : [ "PlayerGameCountsForPlayerGames", "QueueName" ] }
         },
-        "PlayerGamesGetterArn": {
-            "Description": "The Arn for the PlayerGamesGetter.",
-            "Value": { "Fn::GetAtt": [ "PlayerGamesGetter", "Arn" ] }
+        "TopicArnNewPlayerGames": {
+            "Description": "The ARN for the NewPlayerGames topic.",
+            "Value": { "Ref": "NewPlayerGames" }
         },
-        "PlayerGamesAdderArn": {
-            "Description": "The Arn for the PlayerGamesAdder.",
-            "Value": { "Fn::GetAtt": [ "PlayerGamesAdder", "Arn" ] }
+        "TopicNameNewPlayerGames": {
+            "Description": "The Topic Name for the NewPlayerGames topic.",
+            "Value": { "Fn::GetAtt" : [ "NewPlayerGames", "TopicName" ] }
+        },
+        "TopicArnTotalGamesUpdatedPlayers": {
+            "Description": "The ARN for the TotalGamesUpdatedPlayers topic.",
+            "Value": { "Ref": "TotalGamesUpdatedPlayers" }
+        },
+        "TopicNameTotalGamesUpdatedPlayers": {
+            "Description": "The Topic Name for the TotalGamesUpdatedPlayers topic.",
+            "Value": { "Fn::GetAtt" : [ "TotalGamesUpdatedPlayers", "TopicName" ] }
+        },
+        "TopicArnContinuePlayerGameCounts": {
+            "Description": "The ARN for the ContinuePlayerGameCounts topic.",
+            "Value": { "Ref": "ContinuePlayerGameCounts" }
+        },
+        "TopicNameContinuePlayerGameCounts": {
+            "Description": "The Topic Name for the ContinuePlayerGameCounts topic.",
+            "Value": { "Fn::GetAtt" : [ "ContinuePlayerGameCounts", "TopicName" ] }
+        },
+        "FuncArnPlayerGamesGetter": {
+            "Description": "The ARN for the PlayerGamesGetter function.",
+            "Value": { "Fn::GetAtt" : [ "PlayerGamesGetter", "Arn" ] }
+        },
+        "FuncIdPlayerGamesGetter": {
+            "Description": "The logical ID for the PlayerGamesGetter function.",
+            "Value": { "Ref": "PlayerGamesGetter" }
+        },
+        "FuncArnPlayerGamesAdder": {
+            "Description": "The ARN for the PlayerGamesAdder function.",
+            "Value": { "Fn::GetAtt" : [ "PlayerGamesAdder", "Arn" ] }
+        },
+        "FuncIdPlayerGamesAdder": {
+            "Description": "The logical ID for the PlayerGamesAdder function.",
+            "Value": { "Ref": "PlayerGamesAdder" }
         }
     }
 }
