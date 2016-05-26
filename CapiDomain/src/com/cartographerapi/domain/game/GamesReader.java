@@ -15,6 +15,6 @@ public interface GamesReader {
 	 * @param matchId
 	 * @return
 	 */
-	public Game getGameByMatchId(String matchId);
+	public Game getGameByMatchId(MatchId matchId);
 
 }

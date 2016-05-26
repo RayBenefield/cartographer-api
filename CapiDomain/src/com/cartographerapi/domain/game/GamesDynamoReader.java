@@ -22,8 +22,8 @@ public class GamesDynamoReader implements GamesReader {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Game getGameByMatchId(String matchId) {
-		return dbMapper.load(Game.class, matchId);
+	public Game getGameByMatchId(MatchId matchId) {
+		return dbMapper.load(Game.class, matchId.getMatchId());
 	}
 
     /**

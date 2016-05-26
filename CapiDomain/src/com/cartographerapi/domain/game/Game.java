@@ -59,36 +59,36 @@ public class Game {
     @SuppressWarnings("unchecked")
     public Game(Map<String, Object> map) {
         this(
-            (String)map.get("matchId"),
+            new MatchId((String)map.get("matchId")),
             (LinkedHashMap<String, Object>)map.get("gameData")
         );
     }
 
-    public Game(String matchId, Map<String, Object> gameData) {
+    public Game(MatchId matchId, Map<String, Object> gameData) {
         mapper = new ObjectMapper();
 
-        this.matchId = matchId;
+        this.matchId = matchId.getMatchId();
         try {
             this.setGameData(mapper.writeValueAsString(gameData));
         } catch (IOException exception) {
         }
     }
 
-    public Game(String matchId, JsonNode gameData) {
-        this.matchId = matchId;
+    public Game(MatchId matchId, JsonNode gameData) {
+        this.matchId = matchId.getMatchId();
         this.gameData = gameData;
     }
 
-    public Game(String matchId, String gameData) {
+    public Game(MatchId matchId, String gameData) {
         mapper = new ObjectMapper();
 
-        this.matchId = matchId;
+        this.matchId = matchId.getMatchId();
         this.setGameData(gameData);
     }
 
     public Game(Item item) {
         this(
-            item.getString("MatchId"),
+            new MatchId(item.getString("MatchId")),
             item.getString("GameData")
         );
     }

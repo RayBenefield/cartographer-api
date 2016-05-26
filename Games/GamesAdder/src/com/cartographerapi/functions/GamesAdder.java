@@ -5,6 +5,7 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.cartographerapi.domain.CapiUtils;
 import com.cartographerapi.domain.ScheduledEvent;
 import com.cartographerapi.domain.game.Game;
+import com.cartographerapi.domain.game.MatchId;
 import com.cartographerapi.domain.game.GamesDynamoReader;
 import com.cartographerapi.domain.game.GamesHaloApiReader;
 import com.cartographerapi.domain.game.GamesReader;
@@ -54,14 +55,14 @@ public class GamesAdder implements RequestHandler<ScheduledEvent, List<Game>> {
 
             // For each game, check the cache and if it isn't there find it and save it
             for (PlayerGame game : games) {
-                Game cachedGame = cacheReader.getGameByMatchId(game.getMatchId());
+                Game cachedGame = cacheReader.getGameByMatchId(new MatchId(game.getMatchId()));
                 if (cachedGame != null) {
                     queueReader.processedPlayerGame(game);
                     continue;
                 }
 
                 Game foundGame = null;
-                foundGame = sourceReader.getGameByMatchId(game.getMatchId());
+                foundGame = sourceReader.getGameByMatchId(new MatchId(game.getMatchId()));
 
                 if (foundGame != null) {
                     cacheWriter.saveGame(foundGame);
