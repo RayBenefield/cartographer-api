@@ -63,6 +63,59 @@
                 }
             }
         },
+        "/map/{mapId}/game": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "mapId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "mapId",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/MapId"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "200 response",
+                        "schema": {
+                            "$ref": "#/definitions/Empty"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ],
+                "x-amazon-apigateway-integration": {
+                    "responses": {
+                        "default": {
+                            "statusCode": "200"
+                        }
+                    },
+                    "passthroughBehavior": "when_no_match",
+                    "httpMethod": "POST",
+                    "requestTemplates": {
+                        "application/json": "#set($mi = $input.params('mapId'))\n{\n    \"mapId\" : \"$util.urlDecode($mi)\"\n}"
+                    },
+                    "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:789201490085:function:MapGamesGetter/invocations",
+                    "type": "aws"
+                }
+            }
+        },
         "/player/{gamertag}/game": {
             "get": {
                 "consumes": [
@@ -193,6 +246,14 @@
             "type": "object",
             "properties": {
                 "matchId": {
+                    "type": "string"
+                }
+            }
+        },
+        "MapId": {
+            "type": "object",
+            "properties": {
+                "mapId": {
                     "type": "string"
                 }
             }

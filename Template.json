@@ -21,6 +21,10 @@
         "FuncArnBareGamesGetter": {
             "Type": "String",
             "Description": "Arn for the BareGamesGetter Function."
+        },
+        "FuncArnMapGamesGetter": {
+            "Type": "String",
+            "Description": "Arn for the MapGamesGetter Function."
         }
     },
     "Resources": {
@@ -112,6 +116,25 @@
                         { "Fn::Join": [ "", [
                             { "Ref": "CAPI" },
                             "/*/GET/game/*"
+                        ] ] }
+                    ] ]
+                }
+            }
+        },
+        "CapiToMapGamesGetter": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+                "Action": "lambda:*",
+                "FunctionName": { "Ref": "FuncArnMapGamesGetter" },
+                "Principal": "apigateway.amazonaws.com",
+                "SourceArn": {
+                    "Fn::Join": [ ":", [
+                        "arn:aws:execute-api",
+                        { "Ref": "AWS::Region" },
+                        { "Ref": "AWS::AccountId" },
+                        { "Fn::Join": [ "", [
+                            { "Ref": "CAPI" },
+                            "/*/GET/map/*/game"
                         ] ] }
                     ] ]
                 }

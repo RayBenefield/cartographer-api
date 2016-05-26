@@ -103,6 +103,23 @@
                     "StreamViewType": "NEW_AND_OLD_IMAGES"
                 }
             }
+        },
+        "MapGamesGetter": {
+            "Type": "AWS::Lambda::Function",
+            "DependsOn": [ "MapGames" ],
+            "Properties": {
+                "FunctionName": "MapGamesGetter",
+                "Description": "Get the MapGames from the cache.",
+                "Runtime": "java8",
+                "Handler": "com.cartographerapi.functions.MapGamesGetter",
+                "Code": {
+                    "S3Bucket": "cartographer-api-lambda-code",
+                    "S3Key": "MapGamesGetter-0.0.1-SNAPSHOT.jar"
+                },
+                "Role": { "Fn::GetAtt": ["CartographerApiLambdaRole", "Arn"] },
+                "Timeout": "15",
+                "MemorySize": "512"
+            }
         }
     },
     "Outputs": {
@@ -125,6 +142,14 @@
         "FuncIdMapGamesAdder": {
             "Description": "The logical ID for the MapGamesAdder function.",
             "Value": { "Ref": "MapGamesAdder" }
+        },
+        "FuncArnMapGamesGetter": {
+            "Description": "The ARN for the MapGamesGetter function.",
+            "Value": { "Fn::GetAtt" : [ "MapGamesGetter", "Arn" ] }
+        },
+        "FuncIdMapGamesGetter": {
+            "Description": "The logical ID for the MapGamesGetter function.",
+            "Value": { "Ref": "MapGamesGetter" }
         }
     }
 }
