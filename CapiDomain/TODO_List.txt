@@ -1,4 +1,4 @@
-*** For Production ***
+*** For Hackathon ***
 
  1) Setup all Lambda functions to handle bulk operations
      - PlayerGameCounts
@@ -10,6 +10,7 @@
      - CloudFormation updates
      - Configuration updates
  4) Change the JSON output to match the Halo API format (ProperCase keys and better formatted time)
+ 5) Add the GameEvents domain
 
 
 *** Nice to have ***
