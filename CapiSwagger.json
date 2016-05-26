@@ -58,7 +58,7 @@
                     "requestTemplates": {
                         "application/json": "#set($gt = $input.params('gamertag'))\n{\n    \"gamertag\" : \"$util.urlDecode($gt)\"\n}"
                     },
-                    "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:789201490085:function:PlayerGamesGetter/invocations",
+                    "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:789201490085:function:BarePlayerGamesGetter/invocations",
                     "type": "aws"
                 }
             }

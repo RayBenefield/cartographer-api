@@ -17,20 +17,18 @@ import java.io.IOException;
  *    Gamertag
  *    MatchId
  *    GameNumber
- *    GameData
  * </pre>
  *
  * @author GodlyPerfection
  *
  */
-@DynamoDBTable(tableName="PlayerGames")
-public class PlayerGame {
+@DynamoDBTable(tableName="BarePlayerGames")
+public class BarePlayerGame {
 
     private ObjectMapper mapper;
     private String gamertag;
     private String matchId;
     private Integer gameNumber;
-    private JsonNode gameData;
 
     @DynamoDBHashKey(attributeName="Gamertag")
     public String getGamertag() {
@@ -59,51 +57,30 @@ public class PlayerGame {
         this.gameNumber = gameNumber;
     }
 
-    @DynamoDBAttribute(attributeName="GameData")
-    @DynamoDBMarshalling (marshallerClass = JsonNodeMarshaller.class)
-    public JsonNode getGameData() {
-        return gameData;
+    public BarePlayerGame(PlayerGame game) {
+        mapper = new ObjectMapper();
+
+        this.gamertag = game.getGamertag();
+        this.gameNumber = game.getGameNumber();
+        this.matchId = game.getMatchId();
     }
 
-    public void setGameData(JsonNode gameData) {
-        this.gameData = gameData;
-    }
-
-    public void setGameData(String gameData) {
-        try {
-            this.gameData = mapper.readTree(gameData);
-        } catch (IOException exception) {
-            this.gameData = mapper.createObjectNode();
-            this.setGameNumber(0);
-        }
-    }
-
-    public PlayerGame(String gamertag, Integer gameNumber, String gameData) {
+    public BarePlayerGame(String gamertag, Integer gameNumber, String matchId) {
         mapper = new ObjectMapper();
 
         this.gamertag = gamertag;
         this.gameNumber = gameNumber;
-        this.setGameData(gameData);
-        this.matchId = this.gameData.path("Id").path("MatchId").asText();
+        this.matchId = matchId;
     }
 
-    public PlayerGame(String gamertag, Integer gameNumber, JsonNode gameData) {
-        mapper = new ObjectMapper();
-
-        this.gamertag = gamertag;
-        this.gameNumber = gameNumber;
-        this.gameData = gameData;
-        this.matchId = this.gameData.path("Id").path("MatchId").asText();
-    }
-
-    public PlayerGame(Item item) {
+    public BarePlayerGame(Item item) {
         this(
             item.getString("Gamertag"),
             item.getNumber("GameNumber").intValue(),
-            item.getString("GameData")
+            item.getString("MatchId")
         );
     }
 
-    public PlayerGame() {
+    public BarePlayerGame() {
     }
 }

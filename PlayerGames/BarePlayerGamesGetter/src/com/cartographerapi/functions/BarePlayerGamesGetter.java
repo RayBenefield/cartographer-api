@@ -9,9 +9,9 @@ import java.util.Scanner;
 
 import com.cartographerapi.domain.CapiUtils;
 import com.cartographerapi.domain.players.Player;
-import com.cartographerapi.domain.playergames.PlayerGame;
-import com.cartographerapi.domain.playergames.PlayerGamesDynamoReader;
-import com.cartographerapi.domain.playergames.PlayerGamesReader;
+import com.cartographerapi.domain.playergames.BarePlayerGame;
+import com.cartographerapi.domain.playergames.BarePlayerGamesDynamoReader;
+import com.cartographerapi.domain.playergames.BarePlayerGamesReader;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -20,27 +20,27 @@ import java.io.IOException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * Check the PlayerGames that are stored in the cache.
+ * Check the BarePlayerGames that are stored in the cache.
  *
  * @author GodlyPerfection
  *
  */
-public class PlayerGamesGetter implements RequestStreamHandler, RequestHandler<Player, List<PlayerGame>> {
+public class BarePlayerGamesGetter implements RequestStreamHandler, RequestHandler<Player, List<BarePlayerGame>> {
 
-    private PlayerGamesReader cacheReader;
+    private BarePlayerGamesReader cacheReader;
 
     /**
-     * Get the PlayerGames that currently exist in the cache.
+     * Get the BarePlayerGames that currently exist in the cache.
      *
      * @param input The Player sent in to execute the Lambda.
      * @param context The Lambda execution context.
-     * @return The PlayerGames in the cache.
+     * @return The BarePlayerGames in the cache.
      */
     @Override
     // TODO Accept JSON view names in order to determine what data to show.
-    public List<PlayerGame> handleRequest(Player input, Context context) {
-        List<PlayerGame> games = cacheReader.getPlayerGamesByGamertag(input.getGamertag());
-        CapiUtils.logObject(context, games.size(), "# of PlayerGames in the cache");
+    public List<BarePlayerGame> handleRequest(Player input, Context context) {
+        List<BarePlayerGame> games = cacheReader.getBarePlayerGamesByGamertag(input.getGamertag());
+        CapiUtils.logObject(context, games.size(), "# of BarePlayerGames in the cache");
         return games;
     }
 
@@ -57,7 +57,7 @@ public class PlayerGamesGetter implements RequestStreamHandler, RequestHandler<P
         ObjectMapper mapper = new ObjectMapper();
 
         Player req = mapper.readValue(convertStreamToString(inputStream), Player.class);
-        List<PlayerGame> games = cacheReader.getPlayerGamesByGamertag(req.getGamertag());
+        List<BarePlayerGame> games = cacheReader.getBarePlayerGamesByGamertag(req.getGamertag());
         outputStream.write(mapper.writeValueAsString(games).getBytes(java.nio.charset.Charset.forName("UTF-8")));
     }
 
@@ -77,14 +77,14 @@ public class PlayerGamesGetter implements RequestStreamHandler, RequestHandler<P
     /**
      * The lazy IOC constructor for Lambda to instantiate.
      */
-    public PlayerGamesGetter() {
-        this(new PlayerGamesDynamoReader());
+    public BarePlayerGamesGetter() {
+        this(new BarePlayerGamesDynamoReader());
     }
 
     /**
      * The real constructor that supports dependency injection.
      */
-    public PlayerGamesGetter(PlayerGamesReader cacheReader) {
+    public BarePlayerGamesGetter(BarePlayerGamesReader cacheReader) {
         this.cacheReader = cacheReader;
     }
 

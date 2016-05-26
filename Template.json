@@ -14,9 +14,9 @@
             "Type": "String",
             "Description": "Arn for the PlayerGameCountsUpdater Function."
         },
-        "FuncArnPlayerGamesGetter": {
+        "FuncArnBarePlayerGamesGetter": {
             "Type": "String",
-            "Description": "Arn for the PlayerGamesGetter Function."
+            "Description": "Arn for the BarePlayerGamesGetter Function."
         }
     },
     "Resources": {
@@ -75,11 +75,11 @@
                 }
             }
         },
-        "CapiToPlayerGamesGetter": {
+        "CapiToBarePlayerGamesGetter": {
             "Type": "AWS::Lambda::Permission",
             "Properties": {
                 "Action": "lambda:*",
-                "FunctionName": { "Ref": "FuncArnPlayerGamesGetter" },
+                "FunctionName": { "Ref": "FuncArnBarePlayerGamesGetter" },
                 "Principal": "apigateway.amazonaws.com",
                 "SourceArn": {
                     "Fn::Join": [ ":", [

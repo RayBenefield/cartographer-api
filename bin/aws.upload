@@ -60,6 +60,8 @@ if [ -d "${Directory}" ]; then
 
 	PrintInfo "Uploading to S3..."
 	aws s3 cp target/${1}-0.0.1-SNAPSHOT.jar s3://cartographer-api-lambda-code/${1}-0.0.1-SNAPSHOT.jar >/dev/null 2>/dev/null
+
+	# TODO: Add logic to create the function if it doesn't exist.
 	PrintInfo "Updating the function with the value in S3."
 	aws lambda update-function-code --function-name ${1} --s3-bucket cartographer-api-lambda-code --s3-key ${1}-0.0.1-SNAPSHOT.jar >/dev/null 2>/dev/null
 

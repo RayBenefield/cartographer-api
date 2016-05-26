@@ -2,7 +2,6 @@
 
  1) Create Read Replica like tables for Raw Data domains
      - Games
-     - PlayerGames
  2) Setup Getters:
      - Games
      - MapGames

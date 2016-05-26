@@ -31,6 +31,23 @@
                 ]
             }
         },
+        "BarePlayerGamesGetter": {
+            "Type": "AWS::Lambda::Function",
+            "DependsOn": [ "BarePlayerGames" ],
+            "Properties": {
+                "FunctionName": "BarePlayerGamesGetter",
+                "Description": "Get the bare version of PlayerGames",
+                "Runtime": "java8",
+                "Handler": "com.cartographerapi.functions.BarePlayerGamesGetter",
+                "Code": {
+                    "S3Bucket": "cartographer-api-lambda-code",
+                    "S3Key": "BarePlayerGamesGetter-0.0.1-SNAPSHOT.jar"
+                },
+                "Role": { "Fn::GetAtt": ["CartographerApiLambdaRole", "Arn"] },
+                "Timeout": "15",
+                "MemorySize": "512"
+            }
+        },
         "PlayerGamesGetter": {
             "Type": "AWS::Lambda::Function",
             "DependsOn": [ "PlayerGames" ],
@@ -282,6 +299,14 @@
         "FuncIdPlayerGamesGetter": {
             "Description": "The logical ID for the PlayerGamesGetter function.",
             "Value": { "Ref": "PlayerGamesGetter" }
+        },
+        "FuncArnBarePlayerGamesGetter": {
+            "Description": "The ARN for the BarePlayerGamesGetter function.",
+            "Value": { "Fn::GetAtt" : [ "BarePlayerGamesGetter", "Arn" ] }
+        },
+        "FuncIdBarePlayerGamesGetter": {
+            "Description": "The logical ID for the BarePlayerGamesGetter function.",
+            "Value": { "Ref": "BarePlayerGamesGetter" }
         },
         "FuncArnPlayerGamesAdder": {
             "Description": "The ARN for the PlayerGamesAdder function.",

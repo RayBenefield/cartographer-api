@@ -30,12 +30,12 @@ import com.cartographerapi.domain.playergamescheckpoints.PlayerGamesCheckpointWr
 
 /**
  * Pull a batch of 24 games to be saved into our PlayerGames cache.
- * 
+ *
  * @author GodlyPerfection
- * 
+ *
  */
 public class PlayerGamesAdder implements RequestHandler<ScheduledEvent, List<PlayerGame>> {
-    
+
     private PlayerGameCountsQueueReader queueReader;
     private PlayerGamesHaloApiReader gameReader;
     private PlayerGamesWriter gameWriter;
@@ -50,7 +50,7 @@ public class PlayerGamesAdder implements RequestHandler<ScheduledEvent, List<Pla
      * and update the checkpoint. If we did not find the full batch of games
      * (results were maxed at 24), then we have more games to pull so published
      * to an SNS topic to trigger another batch pull.
-     * 
+     *
      * @param input The SNS event that triggered this.
      * @param context The Lambda execution context.
      * @return The newly added PlayerGames.
@@ -104,10 +104,10 @@ public class PlayerGamesAdder implements RequestHandler<ScheduledEvent, List<Pla
                 }
             }
         }
-        
+
         return results;
     }
-    
+
     /**
      * The lazy IOC constructor for Lambda to instantiate.
      */
