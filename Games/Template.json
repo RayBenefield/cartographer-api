@@ -96,6 +96,28 @@
                 }
             }
         },
+        "BareGames": {
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+                "TableName": "BareGames",
+                "ProvisionedThroughput": {
+                    "ReadCapacityUnits": 1,
+                    "WriteCapacityUnits": 1
+                },
+                "AttributeDefinitions": [
+                    {
+                        "AttributeName": "MatchId",
+                        "AttributeType": "S"
+                    }
+                ],
+                "KeySchema": [
+                    {
+                        "AttributeName": "MatchId",
+                        "KeyType": "HASH"
+                    }
+                ]
+            }
+        },
         "GamesPublisherStream": {
             "Type": "AWS::Lambda::EventSourceMapping",
             "DependsOn": [ "Games", "GamesPublisher" ],
