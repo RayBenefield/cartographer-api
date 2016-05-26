@@ -71,6 +71,23 @@
                 "MemorySize": "512"
             }
         },
+        "BareGamesGetter": {
+            "Type": "AWS::Lambda::Function",
+            "DependsOn": [ "BareGames" ],
+            "Properties": {
+                "FunctionName": "BareGamesGetter",
+                "Description": "Get a bare Game information by MatchId.",
+                "Runtime": "java8",
+                "Handler": "com.cartographerapi.functions.BareGamesGetter",
+                "Code": {
+                    "S3Bucket": "cartographer-api-lambda-code",
+                    "S3Key": "BareGamesGetter-0.0.1-SNAPSHOT.jar"
+                },
+                "Role": { "Fn::GetAtt": ["CartographerApiLambdaRole", "Arn"] },
+                "Timeout": "15",
+                "MemorySize": "512"
+            }
+        },
         "Games": {
             "Type": "AWS::DynamoDB::Table",
             "Properties": {
@@ -101,7 +118,7 @@
             "Properties": {
                 "TableName": "BareGames",
                 "ProvisionedThroughput": {
-                    "ReadCapacityUnits": 1,
+                    "ReadCapacityUnits": 2,
                     "WriteCapacityUnits": 1
                 },
                 "AttributeDefinitions": [
@@ -183,6 +200,14 @@
         "FuncArnGamesAdder": {
             "Description": "The ARN for the GamesAdder function.",
             "Value": { "Fn::GetAtt" : [ "GamesAdder", "Arn" ] }
+        },
+        "FuncArnBareGamesGetter": {
+            "Description": "The ARN for the BareGamesGetter function.",
+            "Value": { "Fn::GetAtt" : [ "BareGamesGetter", "Arn" ] }
+        },
+        "FuncIdBareGamesGetter": {
+            "Description": "The logical ID for the BareGamesGetter function.",
+            "Value": { "Ref": "BareGamesGetter" }
         }
     }
 }

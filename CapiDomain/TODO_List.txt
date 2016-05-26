@@ -1,7 +1,6 @@
 *** For Production ***
 
  1) Setup Getters:
-     - Games
      - MapGames
  2) Setup all Lambda functions to handle bulk operations
      - PlayerGameCounts

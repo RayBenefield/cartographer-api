@@ -2,7 +2,7 @@
     "swagger": "2.0",
     "info": {
         "version": "2016-04-23T10:39:38Z",
-        "title": "Cartographer API"
+        "title": "CAPI"
     },
     "host": "q98m1h2tv6.execute-api.us-west-2.amazonaws.com",
     "basePath": "/test",
@@ -10,6 +10,59 @@
         "https"
     ],
     "paths": {
+        "/game/{matchId}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "matchId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "MatchId",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/MatchId"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "200 response",
+                        "schema": {
+                            "$ref": "#/definitions/Empty"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ],
+                "x-amazon-apigateway-integration": {
+                    "responses": {
+                        "default": {
+                            "statusCode": "200"
+                        }
+                    },
+                    "passthroughBehavior": "when_no_match",
+                    "httpMethod": "POST",
+                    "requestTemplates": {
+                        "application/json": "#set($mi = $input.params('matchId'))\n{\n    \"matchId\" : \"$util.urlDecode($mi)\"\n}"
+                    },
+                    "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:789201490085:function:BareGamesGetter/invocations",
+                    "type": "aws"
+                }
+            }
+        },
         "/player/{gamertag}/game": {
             "get": {
                 "consumes": [
@@ -132,6 +185,14 @@
             "type": "object",
             "properties": {
                 "gamertag": {
+                    "type": "string"
+                }
+            }
+        },
+        "MatchId": {
+            "type": "object",
+            "properties": {
+                "matchId": {
                     "type": "string"
                 }
             }

@@ -17,6 +17,10 @@
         "FuncArnBarePlayerGamesGetter": {
             "Type": "String",
             "Description": "Arn for the BarePlayerGamesGetter Function."
+        },
+        "FuncArnBareGamesGetter": {
+            "Type": "String",
+            "Description": "Arn for the BareGamesGetter Function."
         }
     },
     "Resources": {
@@ -89,6 +93,25 @@
                         { "Fn::Join": [ "", [
                             { "Ref": "CAPI" },
                             "/*/GET/player/*/game"
+                        ] ] }
+                    ] ]
+                }
+            }
+        },
+        "CapiToBareGamesGetter": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+                "Action": "lambda:*",
+                "FunctionName": { "Ref": "FuncArnBareGamesGetter" },
+                "Principal": "apigateway.amazonaws.com",
+                "SourceArn": {
+                    "Fn::Join": [ ":", [
+                        "arn:aws:execute-api",
+                        { "Ref": "AWS::Region" },
+                        { "Ref": "AWS::AccountId" },
+                        { "Fn::Join": [ "", [
+                            { "Ref": "CAPI" },
+                            "/*/GET/game/*"
                         ] ] }
                     ] ]
                 }
