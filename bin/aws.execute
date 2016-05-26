@@ -26,30 +26,22 @@ getopts h help
 if [[ "${help}" = "h" ]]; then
     PrintInfo "Description"
     echo
-    PrintDescription "Installs the following:"
-    echo
-    Indent
-    PrintDescription " - Utility bash scripts to ${BIBlue}/usr/local/bin${No_Color}"
-    Unindent
+    PrintDescription "Enter the script's ${BIBlue}description${No_Color} here."
     echo
     PrintInfo "Usage"
     echo
-    PrintCodeLine "${0} [-h]"
+    PrintCodeLine "script.template [-h]"
     echo
     PrintInfo "Examples"
     echo
-    PrintCodeLine "${0}"
-    PrintCodeLine "${0} -h"
+    PrintCodeLine "script.template"
+    echo
+    PrintBoldInfo "Required Environment Variables"
+    echo
+    PrintCodeLine "${BICyan}EXAMPLE_ENV_VARIABLE${Cyan}=<some-description-of-variable>"
     echo
 
     exit
 fi
 
-# Install all utility bash scripts.
-PrintInfo "Installing bash utility scripts to ${BGreen}/usr/local/bin${Green}."
-Indent
-findCommand="find \`pwd\` -type f \( -name \"capi.install\" -o -name \"capi.delete\" -o -name \"capi.bootstrap\" -o -name \"aws.upload\" -o -name \"capi.addPlayer\" -o -name \"capi.setup\" -o -name \"aws.execute\" \)"
-files=$(eval ${findCommand})
-SymlinkFiles "${files}" "/usr/local/bin"
-Unindent
-echo
+aws lambda invoke --function-name ${1} .invokeResults
