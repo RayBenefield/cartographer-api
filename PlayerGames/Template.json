@@ -158,6 +158,36 @@
                 }
             }
         },
+        "BarePlayerGames": {
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+                "TableName": "BarePlayerGames",
+                "ProvisionedThroughput": {
+                    "ReadCapacityUnits": 1,
+                    "WriteCapacityUnits": 1
+                },
+                "AttributeDefinitions": [
+                    {
+                        "AttributeName": "Gamertag",
+                        "AttributeType": "S"
+                    },
+                    {
+                        "AttributeName": "GameNumber",
+                        "AttributeType": "N"
+                    }
+                ],
+                "KeySchema": [
+                    {
+                        "AttributeName": "Gamertag",
+                        "KeyType": "HASH"
+                    },
+                    {
+                        "AttributeName": "GameNumber",
+                        "KeyType": "RANGE"
+                    }
+                ]
+            }
+        },
         "PlayerGamesPublisherStream": {
             "Type": "AWS::Lambda::EventSourceMapping",
             "DependsOn": [ "PlayerGames", "PlayerGamesPublisher" ],
