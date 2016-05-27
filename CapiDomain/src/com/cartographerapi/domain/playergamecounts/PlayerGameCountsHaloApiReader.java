@@ -1,15 +1,22 @@
 package com.cartographerapi.domain.playergamecounts;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.cartographerapi.domain.Halo5ApiWrapper;
-import com.fasterxml.jackson.databind.JsonNode;
+import java.util.List;
+import java.util.ArrayList;
+
 import java.io.IOException;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import com.cartographerapi.domain.Halo5ApiWrapper;
+import com.cartographerapi.domain.players.Player;
+
 
 /**
  * Reader repository for PlayerGameCounts from the Halo API.
- * 
+ *
  * @see PlayerGameCountsReader
- * 
+ *
  * @author GodlyPerfection
  *
  */
@@ -80,7 +87,23 @@ public class PlayerGameCountsHaloApiReader implements PlayerGameCountsReader {
 
         return new PlayerGameCounts(counts.getGamertag(), completedGames, totalGames);
     }
-    
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<PlayerGameCounts> getPlayerGameCountsByPlayers(List<Player> players) {
+        List<PlayerGameCounts> counts = new ArrayList<PlayerGameCounts>();
+
+        for (Player player : players) {
+            counts.add(
+                getPlayerGameCountsByGamertag(player.getGamertag())
+            );
+        }
+
+        return counts;
+    }
+
     /**
      * The lazy IOC constructor.
      */

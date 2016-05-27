@@ -31,7 +31,7 @@ public class PlayerGameCountsGetterExecutionTest {
      */
     @BeforeClass
     public static void createInput() throws IOException {
-        input = new Player("GodlyPerfection");
+        input = new Player("Ray Benefield");
     }
 
     /**

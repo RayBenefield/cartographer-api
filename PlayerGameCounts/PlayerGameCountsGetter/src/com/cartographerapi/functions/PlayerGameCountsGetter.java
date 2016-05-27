@@ -1,51 +1,44 @@
 package com.cartographerapi.functions;
 
+import java.util.List;
+import java.util.Arrays;
+
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 
-import com.cartographerapi.domain.CapiUtils;
 import com.cartographerapi.domain.players.Player;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCounts;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCountsDynamoReader;
-import com.cartographerapi.domain.playergamecounts.PlayerGameCountsReader;
+import com.cartographerapi.domain.playergamecounts.PlayerGameCountsGetterService;
 
 /**
- * Gets the PlayerGameCounts from the cache, and adds to the cache if it doesn't
- * exist.
- * 
+ * Gets the PlayerGameCounts from the cache.
+ *
  * @author GodlyPerfection
- * 
+ *
  */
 public class PlayerGameCountsGetter implements RequestHandler<Player, PlayerGameCounts> {
 
-	private PlayerGameCountsReader cacheReader;
-	
-	/**
-	 * Checks the cache to see if PlayerGameCounts already exist. If it doesn't
-	 * exist then it calls the updater to try to add it to the cache.
-	 * 
-	 * @param gamertag The Player given as input to the Lambda function.
-	 * @param context The Lambda execution context.
-	 * @return The cached PlayerGameCounts for a Player.
-	 */
-    @Override
-    public PlayerGameCounts handleRequest(Player input, Context context) {
-		PlayerGameCounts counts = cacheReader.getPlayerGameCountsByGamertag(input.getGamertag());
-		CapiUtils.logObject(context, counts, "PlayerGameCounts for " + counts.getGamertag());
-		return counts;
-    }
-    
-    /**
-     * The lazy IOC constructor for Lambda to instantiate.
-     */
-    public PlayerGameCountsGetter() {
-    	this(new PlayerGameCountsDynamoReader());
-    }
+    private PlayerGameCountsGetterService getterService;
 
     /**
-     * The real constructor that supports dependency injection.
+     * Checks the cache for the current PlayerGameCounts for the Player.
+     *
+     * @param input The Player given as input to the Lambda function.
+     * @param context The Lambda execution context.
+     * @return The cached PlayerGameCounts for a Player.
      */
-    public PlayerGameCountsGetter(PlayerGameCountsReader cacheReader) {
-    	this.cacheReader = cacheReader;
+    @Override
+    public PlayerGameCounts handleRequest(Player input, Context context) {
+        List<PlayerGameCounts> results =
+            getterService.getPlayerGameCounts(Arrays.asList(input));
+
+        return results.get(0);
+    }
+
+    public PlayerGameCountsGetter() {
+        this.getterService = new PlayerGameCountsGetterService(
+            new PlayerGameCountsDynamoReader()
+        );
     }
 }
