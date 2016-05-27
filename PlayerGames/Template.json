@@ -48,6 +48,23 @@
                 "MemorySize": "512"
             }
         },
+        "BarePlayerGamesBulkGetter": {
+            "Type": "AWS::Lambda::Function",
+            "DependsOn": [ "BarePlayerGames" ],
+            "Properties": {
+                "FunctionName": "BarePlayerGamesBulkGetter",
+                "Description": "Get several batches of PlayerGames for multiple players.",
+                "Runtime": "java8",
+                "Handler": "com.cartographerapi.functions.BarePlayerGamesBulkGetter",
+                "Code": {
+                    "S3Bucket": "cartographer-api-lambda-code",
+                    "S3Key": "BarePlayerGamesBulkGetter-0.0.1-SNAPSHOT.jar"
+                },
+                "Role": { "Fn::GetAtt": ["CartographerApiLambdaRole", "Arn"] },
+                "Timeout": "15",
+                "MemorySize": "512"
+            }
+        },
         "PlayerGamesGetter": {
             "Type": "AWS::Lambda::Function",
             "DependsOn": [ "PlayerGames" ],
@@ -315,6 +332,14 @@
         "FuncIdPlayerGamesAdder": {
             "Description": "The logical ID for the PlayerGamesAdder function.",
             "Value": { "Ref": "PlayerGamesAdder" }
+        },
+        "FuncArnBarePlayerGamesBulkGetter": {
+            "Description": "The ARN for the BarePlayerGamesBulkGetter function.",
+            "Value": { "Fn::GetAtt" : [ "BarePlayerGamesBulkGetter", "Arn" ] }
+        },
+        "FuncIdBarePlayerGamesBulkGetter": {
+            "Description": "The logical ID for the BarePlayerGamesBulkGetter function.",
+            "Value": { "Ref": "BarePlayerGamesBulkGetter" }
         }
     }
 }

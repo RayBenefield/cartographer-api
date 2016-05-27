@@ -1,11 +1,9 @@
 *** For Hackathon ***
 
  1) Setup all Lambda functions to handle bulk operations
-     - PlayerGames
      - Games
      - MapGames
  2) Expose Getter Bulk operation POST endpoints
-     - PlayerGames
      - Games
      - MapGames
  3) Setup the ability to spin up different stages of CAPI (dev, test, prod)
