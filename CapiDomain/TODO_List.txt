@@ -5,7 +5,6 @@
      - Games
      - MapGames
  2) Expose Getter Bulk operation POST endpoints
-     - PlayerGameCounts
      - PlayerGames
      - Games
      - MapGames

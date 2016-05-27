@@ -155,7 +155,8 @@ if aws cloudformation describe-stacks --stack-name Capi-API > /dev/null 2>&1; th
 		ParameterKey=FuncArnPlayerGameCountsUpdater,ParameterValue=${OutputMap[FuncArnPlayerGameCountsUpdater]} \
 		ParameterKey=FuncArnBarePlayerGamesGetter,ParameterValue=${OutputMap[FuncArnBarePlayerGamesGetter]} \
 		ParameterKey=FuncArnBareGamesGetter,ParameterValue=${OutputMap[FuncArnBareGamesGetter]} \
-		ParameterKey=FuncArnMapGamesGetter,ParameterValue=${OutputMap[FuncArnMapGamesGetter]}; \
+		ParameterKey=FuncArnMapGamesGetter,ParameterValue=${OutputMap[FuncArnMapGamesGetter]} \
+		ParameterKey=FuncArnPlayerGameCountsBulkGetter,ParameterValue=${OutputMap[FuncArnPlayerGameCountsBulkGetter]}; \
 	} 2>&1 ) || PrintException "${StackId}"
 else
 	PrintInfo "Creating the ${BIBlue}API${Green} stack..."
@@ -170,7 +171,8 @@ else
 		ParameterKey=FuncArnPlayerGameCountsUpdater,ParameterValue=${OutputMap[FuncArnPlayerGameCountsUpdater]} \
 		ParameterKey=FuncArnBarePlayerGamesGetter,ParameterValue=${OutputMap[FuncArnBarePlayerGamesGetter]} \
 		ParameterKey=FuncArnBareGamesGetter,ParameterValue=${OutputMap[FuncArnBareGamesGetter]} \
-		ParameterKey=FuncArnMapGamesGetter,ParameterValue=${OutputMap[FuncArnMapGamesGetter]}; \
+		ParameterKey=FuncArnMapGamesGetter,ParameterValue=${OutputMap[FuncArnMapGamesGetter]} \
+		ParameterKey=FuncArnPlayerGameCountsBulkGetter,ParameterValue=${OutputMap[FuncArnPlayerGameCountsBulkGetter]}; \
 	} 2>&1 ) || PrintException "${StackId}"
 fi
 

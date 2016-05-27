@@ -48,6 +48,23 @@
                 "MemorySize": "512"
             }
         },
+        "PlayerGameCountsBulkGetter": {
+            "Type": "AWS::Lambda::Function",
+            "DependsOn": [ "PlayerGameCounts" ],
+            "Properties": {
+                "FunctionName": "PlayerGameCountsBulkGetter",
+                "Description": "Get multiple PlayerGameCounts.",
+                "Runtime": "java8",
+                "Handler": "com.cartographerapi.functions.PlayerGameCountsBulkGetter",
+                "Code": {
+                    "S3Bucket": "cartographer-api-lambda-code",
+                    "S3Key": "PlayerGameCountsBulkGetter-0.0.1-SNAPSHOT.jar"
+                },
+                "Role": { "Fn::GetAtt": ["CartographerApiLambdaRole", "Arn"] },
+                "Timeout": "15",
+                "MemorySize": "512"
+            }
+        },
         "PlayersForPlayerGameCounts": {
             "Type": "AWS::SQS::Queue",
             "Properties": {
@@ -233,6 +250,14 @@
         "FuncIdPlayerGameCountsRefresher": {
             "Description": "The logical ID for the PlayerGameCountsRefresher function.",
             "Value": { "Ref": "PlayerGameCountsRefresher" }
+        },
+        "FuncArnPlayerGameCountsBulkGetter": {
+            "Description": "The ARN for the PlayerGameCountsBulkGetter function.",
+            "Value": { "Fn::GetAtt" : [ "PlayerGameCountsBulkGetter", "Arn" ] }
+        },
+        "FuncIdPlayerGameCountsBulkGetter": {
+            "Description": "The logical ID for the PlayerGameCountsBulkGetter function.",
+            "Value": { "Ref": "PlayerGameCountsBulkGetter" }
         }
     }
 }
