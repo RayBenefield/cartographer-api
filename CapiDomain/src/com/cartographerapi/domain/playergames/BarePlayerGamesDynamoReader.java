@@ -11,6 +11,8 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 
+import com.cartographerapi.domain.players.Player;
+
 /**
  * Reader repository for BarePlayerGames from a DynamoDB table.
  *
@@ -53,6 +55,20 @@ public class BarePlayerGamesDynamoReader implements BarePlayerGamesReader {
             .withExpressionAttributeValues(eav);
 
         return dbMapper.query(BarePlayerGame.class, queryExpression);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Map<Player, List<BarePlayerGame>> getBarePlayerGamesByPlayers(List<Player> players) {
+        Map<Player, List<BarePlayerGame>> results = new HashMap<Player, List<BarePlayerGame>>();
+
+        for (Player player : players) {
+            results.put(player, this.getBarePlayerGamesByGamertag(player.getGamertag()));
+        }
+
+        return results;
     }
 
     /**
