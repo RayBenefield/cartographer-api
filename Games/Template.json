@@ -88,6 +88,23 @@
                 "MemorySize": "512"
             }
         },
+        "BareGamesBulkGetter": {
+            "Type": "AWS::Lambda::Function",
+            "DependsOn": [ "BareGames" ],
+            "Properties": {
+                "FunctionName": "BareGamesBulkGetter",
+                "Description": "Get a bulk of bare games.",
+                "Runtime": "java8",
+                "Handler": "com.cartographerapi.functions.BareGamesBulkGetter",
+                "Code": {
+                    "S3Bucket": "cartographer-api-lambda-code",
+                    "S3Key": "BareGamesBulkGetter-0.0.1-SNAPSHOT.jar"
+                },
+                "Role": { "Fn::GetAtt": ["CartographerApiLambdaRole", "Arn"] },
+                "Timeout": "15",
+                "MemorySize": "512"
+            }
+        },
         "Games": {
             "Type": "AWS::DynamoDB::Table",
             "Properties": {
@@ -208,6 +225,14 @@
         "FuncIdBareGamesGetter": {
             "Description": "The logical ID for the BareGamesGetter function.",
             "Value": { "Ref": "BareGamesGetter" }
+        },
+        "FuncArnBareGamesBulkGetter": {
+            "Description": "The ARN for the BareGamesBulkGetter function.",
+            "Value": { "Fn::GetAtt" : [ "BareGamesBulkGetter", "Arn" ] }
+        },
+        "FuncIdBareGamesBulkGetter": {
+            "Description": "The logical ID for the BareGamesBulkGetter function.",
+            "Value": { "Ref": "BareGamesBulkGetter" }
         }
     }
 }
