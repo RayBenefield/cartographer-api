@@ -40,6 +40,20 @@ public class MapGamesDynamoReader implements MapGamesReader {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Map<MapId, List<MapGame>> getMapGamesByMapIds(List<MapId> mapIds) {
+        Map<MapId, List<MapGame>> results = new HashMap<MapId, List<MapGame>>();
+
+        for (MapId mapId : mapIds) {
+            results.put(mapId, this.getMapGamesByMapId(mapId));
+        }
+
+        return results;
+    }
+
+    /**
      * The lazy IOC constructor.
      */
     public MapGamesDynamoReader() {
