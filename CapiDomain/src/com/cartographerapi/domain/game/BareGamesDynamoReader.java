@@ -1,5 +1,8 @@
 package com.cartographerapi.domain.game;
 
+import java.util.List;
+import java.util.ArrayList;
+
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.regions.Region;
@@ -24,6 +27,20 @@ public class BareGamesDynamoReader implements BareGamesReader {
     @Override
     public BareGame getBareGameByMatchId(MatchId matchId) {
         return dbMapper.load(BareGame.class, matchId.getMatchId());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<BareGame> getBareGamesByMatchIds(List<MatchId> matchIds) {
+        List<BareGame> results = new ArrayList<BareGame>();
+
+        for (MatchId matchId : matchIds) {
+            results.add(dbMapper.load(BareGame.class, matchId.getMatchId()));
+        }
+
+        return results;
     }
 
     /**
