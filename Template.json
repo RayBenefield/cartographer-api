@@ -33,6 +33,10 @@
         "FuncArnBarePlayerGamesBulkGetter": {
             "Type": "String",
             "Description": "Arn for the BarePlayerGamesBulkGetter."
+        },
+        "FuncArnBareGamesBulkGetter": {
+            "Type": "String",
+            "Description": "Arn for the BareGamesBulkGetter."
         }
     },
     "Resources": {
@@ -181,6 +185,25 @@
                         { "Fn::Join": [ "", [
                             { "Ref": "CAPI" },
                             "/*/POST/player/game"
+                        ] ] }
+                    ] ]
+                }
+            }
+        },
+        "CapiToBareGamesBulkGetter": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+                "Action": "lambda:*",
+                "FunctionName": { "Ref": "FuncArnBareGamesBulkGetter" },
+                "Principal": "apigateway.amazonaws.com",
+                "SourceArn": {
+                    "Fn::Join": [ ":", [
+                        "arn:aws:execute-api",
+                        { "Ref": "AWS::Region" },
+                        { "Ref": "AWS::AccountId" },
+                        { "Fn::Join": [ "", [
+                            { "Ref": "CAPI" },
+                            "/*/POST/game"
                         ] ] }
                     ] ]
                 }

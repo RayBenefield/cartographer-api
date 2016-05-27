@@ -285,6 +285,38 @@
 					"type": "aws"
 				}
 			}
+		},
+		"/game": {
+			"post": {
+				"consumes": [
+					"application/json"
+				],
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "200 response",
+						"schema": {
+							"$ref": "#/definitions/Empty"
+						}
+					}
+				},
+				"x-amazon-apigateway-integration": {
+					"responses": {
+						"default": {
+							"statusCode": "200"
+						}
+					},
+					"requestTemplates": {
+						"application/json": "[\n    #foreach($matchId in $input.path('$'))\n    {\n        \"matchId\": \"$matchId\"\n    }#if($foreach.hasNext),#end\n    #end\n]\n"
+					},
+					"uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:789201490085:function:BareGamesBulkGetter/invocations",
+					"passthroughBehavior": "when_no_templates",
+					"httpMethod": "POST",
+					"type": "aws"
+				}
+			}
 		}
 	},
 	"securityDefinitions": {
