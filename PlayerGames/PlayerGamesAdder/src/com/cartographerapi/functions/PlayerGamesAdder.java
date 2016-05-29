@@ -97,11 +97,11 @@ public class PlayerGamesAdder implements RequestHandler<ScheduledEvent, List<Pla
                 checkpoint.setLastMatch(results.get(results.size() - 1).getMatchId());
                 checkpoint.setTotalGamesLoaded(checkpoint.getTotalGamesLoaded() + results.size());
                 checkpointWriter.savePlayerGamesCheckpoint(checkpoint);
+            }
 
-                if (checkpoint.getTotalGamesLoaded().equals(counts.getTotalGames())) {
-                    queueReader.processedPlayerGameCounts(counts);
-                    break;
-                }
+            if (checkpoint.getTotalGamesLoaded().equals(counts.getTotalGames())) {
+                queueReader.processedPlayerGameCounts(counts);
+                break;
             }
         }
 
