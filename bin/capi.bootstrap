@@ -69,21 +69,6 @@ done
 # Generate a hashmap of the Output Values
 ##################################################
 
-# GamesForMapGames Queue -sub-> to Games-New Topic
-# QueueGames:TopicNewMapGames
-# GamesForGameEvents Queue -sub-> to Games-New Topic
-# QueueGames:TopicNewGameEvents
-# GamesForPlayers Queue -sub-> to Games-New Topic
-# Games:New-Players
-# PlayersForPlayerGameCounts Queue -sub-> to Players-New Topic
-# Players:New-PlayerGameCounts
-# PlayerGamesForGames Queue -sub-> to PlayerGames-New Topic
-# PlayerGames-New-Games
-# PlayerGameCountsForPlayerGames Queue -sub-> to PlayerGameCounts-New/Updated/Continue Topics
-# PlayerGames:New-PlayerGameCounts
-# PlayerGames:Updated-PlayerGameCounts
-# PlayerGames:Continue-PlayerGameCounts
-
 PrintInfo "Mapping Queues to Topics..."
 echo
 Indent
