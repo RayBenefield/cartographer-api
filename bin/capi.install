@@ -47,19 +47,19 @@ VerifyEnv "HALO_API_KEY" "API Key to Access the Halo API"
 # Setup easy development scripts (capi.addPlayer)
 
 # Needs to accept a stage (test, prod, dev)
-# Needs to accept a Halo API Key
-# Needs to package all of the Lambda Functions
-# Needs to setup an s3 bucket for file uploads
-# Needs to upload the Swagger Template
-# Needs to upload all of the Lambda Functions
+# DONE! to accept a Halo API Key
+# DONE! to package all of the Lambda Functions
+# DONE! to setup an s3 bucket for file uploads
+# DONE! to upload the Swagger Template
+# DONE! to upload all of the Lambda Functions
 # DONE! Create/Update PlayerGameCounts the Stacks
 # DONE! Create/Update PlayerGames the Stacks
 # DONE! Create/Update Games the Stacks
 # DONE! Create/Update MapGames the Stacks
 # DONE! Subscribe all of the Queues to all of the Topics
-# Needs to create Cloudwatch Events and added them to the Lambdas
+# DONE! to create Cloudwatch Events and added them to the Lambdas
 # DONE! Create/Update the CAPI API
-# Needs to setup a Configuration Table
+# DONE! to setup a Configuration Table
 # Needs to output the the current API endpoint and API key
 
 PrintSeparator
