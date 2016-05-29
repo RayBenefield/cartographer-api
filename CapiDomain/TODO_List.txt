@@ -1,42 +1,59 @@
 *** For Hackathon ***
 
- 1) Setup the ability to spin up different stages of CAPI (dev, test, prod)
-     - CloudFormation updates
-     - Configuration updates
- 2) Change the JSON output to match the Halo API format (ProperCase keys and better formatted time)
- 3) Add the GameEvents domain
+ 1) Change the JSON output to match the Halo API format (ProperCase keys and better formatted time)
+ 2) Add the GameEvents domain
 
 
 *** Nice to have ***
 
- 1) Fix the SegmentScanner/DomainQueueFiller to deal with Throughput properly
- 2) Swagger documentation
- 3) Setup the Patreon
- 4) Parameters for budgeting (DynamoDB)
- 5) Setup Configurations, Outputs of stack, Mappings, and Parameters in a JSON document for scripting access
- 6) More time saving scripts
+ 1) Setup the ability to spin up different stages of CAPI (dev, test, prod)
+ 	- Install/Bootstrap scripts
+		- Accept the stage parameter in the install script
+		- Create/Update the Stack creation to include the stage name
+		- Change the waiting logic to only check stacks for the relevant stage
+		- Include the stage name when generating the output map
+		- Configuration values are stored based on Stage
+		- Change the Stack name of the API to accommodate the stage
+		- Change the API waiting logic to only check for the appropriate API stack
+		- Change the name of scheduled events to include the stage
+	- Templates
+		- Update the stage for the API name
+		- Update the Key names and access
+		- Figure out versioning the lambda functions for each environment
+			- s3 storage
+			- locking versions for a stage (like prod)
+		- Update the Names of each resource to include `CAPI-$Stage-$Resource`
+		- How to handle configuration values for each stage (prod with more throughput than test)
+	- Code
+		- DynamoDB name resolver to look at the proper tables
+ 2) Fix the SegmentScanner/DomainQueueFiller to deal with Throughput properly
+ 3) Swagger documentation
+ 4) Setup the Patreon
+ 5) Parameters for budgeting (DynamoDB)
+ 6) Setup Configurations, Outputs of stack, Mappings, and Parameters in a JSON document for scripting access
+ 7) More time saving scripts
      - capi.disable
      - capi.execute
      - aws.upload (handle uploading all functions, and include shared domain building)
      - capi.purgePlayer (remove a player so we can re-add them)
- 7) Write the naming convention document
- 8) Refactor out the handler business logic into Domain services that are called by the Handlers to make CAPI framework agnostic from Lambda.
- 9) Explore the Context and check to see if there is a way to differentiate a test vs an actual execution
- 10) Pull out the CAPI Wrapper into its own project
- 11) Pull out the Halo 5 Wrapper into its own project
- 12) Find a fix to the DynamoEvent test parsing
- 13) Setup Unit Testing for all classes
- 14) Create Templates:
+ 8) Write the naming convention document
+ 9) Refactor out the handler business logic into Domain services that are called by the Handlers to make CAPI framework agnostic from Lambda.
+ 10) Explore the Context and check to see if there is a way to differentiate a test vs an actual execution
+ 11) Pull out the CAPI Wrapper into its own project
+ 12) Pull out the Halo 5 Wrapper into its own project
+ 13) Find a fix to the DynamoEvent test parsing
+ 14) Setup Unit Testing for all classes
+ 15) Create Templates:
 	 - Reader and Writer Repositories
 	 - Dynamo Domain Objects
 	 - Specific Repository types like SNS, Dynamo, etc.
- 15) Create Snippets:
+ 16) Create Snippets:
 	 - Lazy IOC and Dependency Injection constructors
 	 - Dynamo Attribute/HashKey/RangeKey getters/setters
- 16) Add Value Objects to Dynamo Domain Objects with proper marshaling/unmarshaling for "always valid" domain objects
- 17) Refactor ObjectWriters out of SnsWriters and redirect them to the generic objectWriters
- 18) Circumvent SNSEvent and convert them into domain objects by adding a setRecords(List<SNSRecord>) to domain objects since Lambda parses input out in a particular way
- 19) Use Jackson to support Domain Object views for returning API results
- 20) Update SegmentScanner to use an actual queue URL instead of a queue URL key to avoid having to upload it for every new queue
- 21) Setup Cloudwatch Alarms
- 22) Change Game to Match across the entire system
+ 17) Add Value Objects to Dynamo Domain Objects with proper marshaling/unmarshaling for "always valid" domain objects
+ 18) Refactor ObjectWriters out of SnsWriters and redirect them to the generic objectWriters
+ 19) Circumvent SNSEvent and convert them into domain objects by adding a setRecords(List<SNSRecord>) to domain objects since Lambda parses input out in a particular way
+ 20) Use Jackson to support Domain Object views for returning API results
+ 21) Update SegmentScanner to use an actual queue URL instead of a queue URL key to avoid having to upload it for every new queue
+ 22) Setup Cloudwatch Alarms in CloudFormation with enabling/disabling
+ 23) Change Game to Match across the entire system
