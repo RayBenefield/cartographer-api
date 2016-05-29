@@ -1,410 +1,271 @@
 {
-	"swagger": "2.0",
-	"info": {
-		"version": "2016-04-23T10:39:38Z",
-		"title": "CAPI"
-	},
-	"host": "q98m1h2tv6.execute-api.us-west-2.amazonaws.com",
-	"basePath": "/test",
-	"schemes": [
-		"https"
-	],
-	"paths": {
-		"/game/{matchId}": {
-			"get": {
-				"consumes": [
-					"application/json"
-				],
-				"produces": [
-					"application/json"
-				],
-				"parameters": [
-					{
-						"name": "matchId",
-						"in": "path",
-						"required": true,
-						"type": "string"
-					},
-					{
-						"in": "body",
-						"name": "MatchId",
-						"required": true,
-						"schema": {
-							"$ref": "#/definitions/MatchId"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "200 response",
-						"schema": {
-							"$ref": "#/definitions/Empty"
-						}
-					}
-				},
-				"security": [
-					{
-						"api_key": []
-					}
-				],
-				"x-amazon-apigateway-integration": {
-					"responses": {
-						"default": {
-							"statusCode": "200"
-						}
-					},
-					"passthroughBehavior": "when_no_match",
-					"httpMethod": "POST",
-					"requestTemplates": {
-						"application/json": "#set($mi = $input.params('matchId'))\n{\n    \"matchId\" : \"$util.urlDecode($mi)\"\n}"
-					},
-					"uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:789201490085:function:BareGamesGetter/invocations",
-					"type": "aws"
-				}
-			}
-		},
-		"/map/{mapId}/game": {
-			"get": {
-				"consumes": [
-					"application/json"
-				],
-				"produces": [
-					"application/json"
-				],
-				"parameters": [
-					{
-						"name": "mapId",
-						"in": "path",
-						"required": true,
-						"type": "string"
-					},
-					{
-						"in": "body",
-						"name": "mapId",
-						"required": true,
-						"schema": {
-							"$ref": "#/definitions/MapId"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "200 response",
-						"schema": {
-							"$ref": "#/definitions/Empty"
-						}
-					}
-				},
-				"security": [
-					{
-						"api_key": []
-					}
-				],
-				"x-amazon-apigateway-integration": {
-					"responses": {
-						"default": {
-							"statusCode": "200"
-						}
-					},
-					"passthroughBehavior": "when_no_match",
-					"httpMethod": "POST",
-					"requestTemplates": {
-						"application/json": "#set($mi = $input.params('mapId'))\n{\n    \"mapId\" : \"$util.urlDecode($mi)\"\n}"
-					},
-					"uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:789201490085:function:MapGamesGetter/invocations",
-					"type": "aws"
-				}
-			}
-		},
-		"/player/{gamertag}/game": {
-			"get": {
-				"consumes": [
-					"application/json"
-				],
-				"produces": [
-					"application/json"
-				],
-				"parameters": [
-					{
-						"name": "gamertag",
-						"in": "path",
-						"required": true,
-						"type": "string"
-					},
-					{
-						"in": "body",
-						"name": "Gamertag",
-						"required": true,
-						"schema": {
-							"$ref": "#/definitions/Gamertag"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "200 response",
-						"schema": {
-							"$ref": "#/definitions/Empty"
-						}
-					}
-				},
-				"security": [
-					{
-						"api_key": []
-					}
-				],
-				"x-amazon-apigateway-integration": {
-					"responses": {
-						"default": {
-							"statusCode": "200"
-						}
-					},
-					"passthroughBehavior": "when_no_match",
-					"httpMethod": "POST",
-					"requestTemplates": {
-						"application/json": "#set($gt = $input.params('gamertag'))\n{\n    \"gamertag\" : \"$util.urlDecode($gt)\"\n}"
-					},
-					"uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:789201490085:function:BarePlayerGamesGetter/invocations",
-					"type": "aws"
-				}
-			}
-		},
-		"/player/{gamertag}/game/count": {
-			"get": {
-				"consumes": [
-					"application/json"
-				],
-				"produces": [
-					"application/json"
-				],
-				"parameters": [
-					{
-						"name": "gamertag",
-						"in": "path",
-						"required": true,
-						"type": "string"
-					},
-					{
-						"in": "body",
-						"name": "Gamertag",
-						"required": true,
-						"schema": {
-							"$ref": "#/definitions/Gamertag"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "200 response",
-						"schema": {
-							"$ref": "#/definitions/Empty"
-						}
-					}
-				},
-				"security": [
-					{
-						"api_key": []
-					}
-				],
-				"x-amazon-apigateway-integration": {
-					"responses": {
-						"default": {
-							"statusCode": "200"
-						}
-					},
-					"passthroughBehavior": "when_no_match",
-					"httpMethod": "POST",
-					"requestTemplates": {
-						"application/json": "#set($gt = $input.params('gamertag'))\n{\n    \"gamertag\" : \"$util.urlDecode($gt)\"\n}"
-					},
-					"uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:789201490085:function:PlayerGameCountsGetter/invocations",
-					"type": "aws"
-				}
-			}
-		},
-		"/player/game/count": {
-			"post": {
-				"consumes": [
-					"application/json"
-				],
-				"produces": [
-					"application/json"
-				],
-				"responses": {
-					"200": {
-						"description": "200 response",
-						"schema": {
-							"$ref": "#/definitions/Empty"
-						}
-					}
-				},
-				"security": [
-					{
-						"api_key": []
-					}
-				],
-				"x-amazon-apigateway-integration": {
-					"responses": {
-						"default": {
-							"statusCode": "200"
-						}
-					},
-					"requestTemplates": {
-						"application/json": "[\n    #foreach($gamertag in $input.path('$'))\n    {\n        \"gamertag\": \"$gamertag\"\n    }#if($foreach.hasNext),#end\n    #end\n]\n"
-					},
-					"uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:789201490085:function:PlayerGameCountsBulkGetter/invocations",
-					"passthroughBehavior": "when_no_templates",
-					"httpMethod": "POST",
-					"type": "aws"
-				}
-			}
-		},
-		"/player/game": {
-			"post": {
-				"consumes": [
-					"application/json"
-				],
-				"produces": [
-					"application/json"
-				],
-				"responses": {
-					"200": {
-						"description": "200 response",
-						"schema": {
-							"$ref": "#/definitions/Empty"
-						}
-					}
-				},
-				"security": [
-					{
-						"api_key": []
-					}
-				],
-				"x-amazon-apigateway-integration": {
-					"responses": {
-						"default": {
-							"statusCode": "200"
-						}
-					},
-					"requestTemplates": {
-						"application/json": "[\n    #foreach($gamertag in $input.path('$'))\n    {\n        \"gamertag\": \"$gamertag\"\n    }#if($foreach.hasNext),#end\n    #end\n]\n"
-					},
-					"uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:789201490085:function:BarePlayerGamesBulkGetter/invocations",
-					"passthroughBehavior": "when_no_templates",
-					"httpMethod": "POST",
-					"type": "aws"
-				}
-			}
-		},
-		"/game": {
-			"post": {
-				"consumes": [
-					"application/json"
-				],
-				"produces": [
-					"application/json"
-				],
-				"responses": {
-					"200": {
-						"description": "200 response",
-						"schema": {
-							"$ref": "#/definitions/Empty"
-						}
-					}
-				},
-				"security": [
-					{
-						"api_key": []
-					}
-				],
-				"x-amazon-apigateway-integration": {
-					"responses": {
-						"default": {
-							"statusCode": "200"
-						}
-					},
-					"requestTemplates": {
-						"application/json": "[\n    #foreach($matchId in $input.path('$'))\n    {\n        \"matchId\": \"$matchId\"\n    }#if($foreach.hasNext),#end\n    #end\n]\n"
-					},
-					"uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:789201490085:function:BareGamesBulkGetter/invocations",
-					"passthroughBehavior": "when_no_templates",
-					"httpMethod": "POST",
-					"type": "aws"
-				}
-			}
-		},
-		"/map/game": {
-			"post": {
-				"consumes": [
-					"application/json"
-				],
-				"produces": [
-					"application/json"
-				],
-				"responses": {
-					"200": {
-						"description": "200 response",
-						"schema": {
-							"$ref": "#/definitions/Empty"
-						}
-					}
-				},
-				"security": [
-					{
-						"api_key": []
-					}
-				],
-				"x-amazon-apigateway-integration": {
-					"responses": {
-						"default": {
-							"statusCode": "200"
-						}
-					},
-					"requestTemplates": {
-						"application/json": "[\n    #foreach($mapId in $input.path('$'))\n    {\n        \"mapId\": \"$mapId\"\n    }#if($foreach.hasNext),#end\n    #end\n]\n"
-					},
-					"uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:789201490085:function:MapGamesBulkGetter/invocations",
-					"passthroughBehavior": "when_no_templates",
-					"httpMethod": "POST",
-					"type": "aws"
-				}
-			}
-		}
-	},
-	"securityDefinitions": {
-		"api_key": {
-			"type": "apiKey",
-			"name": "x-api-key",
-			"in": "header"
-		}
-	},
-	"definitions": {
-		"Empty": {
-			"type": "object"
-		},
-		"Gamertag": {
-			"type": "object",
-			"properties": {
-				"gamertag": {
-					"type": "string"
-				}
-			}
-		},
-		"MatchId": {
-			"type": "object",
-			"properties": {
-				"matchId": {
-					"type": "string"
-				}
-			}
-		},
-		"MapId": {
-			"type": "object",
-			"properties": {
-				"mapId": {
-					"type": "string"
-				}
-			}
-		}
-	}
+    "swagger": "2.0",
+    "info": {
+        "version": "2016-04-23T10:39:38Z",
+        "title": "CAPI"
+    },
+    "host": "q98m1h2tv6.execute-api.us-west-2.amazonaws.com",
+    "basePath": "/test",
+    "schemes": [
+        "https"
+    ],
+    "paths": {
+        "/game/{matchId}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "matchId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "MatchId",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/MatchId"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "200 response",
+                        "schema": {
+                            "$ref": "#/definitions/Empty"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ],
+                "x-amazon-apigateway-integration": {
+                    "responses": {
+                        "default": {
+                            "statusCode": "200"
+                        }
+                    },
+                    "passthroughBehavior": "when_no_match",
+                    "httpMethod": "POST",
+                    "requestTemplates": {
+                        "application/json": "#set($mi = $input.params('matchId'))\n{\n    \"matchId\" : \"$util.urlDecode($mi)\"\n}"
+                    },
+                    "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:789201490085:function:BareGamesGetter/invocations",
+                    "type": "aws"
+                }
+            }
+        },
+        "/map/{mapId}/game": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "mapId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "mapId",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/MapId"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "200 response",
+                        "schema": {
+                            "$ref": "#/definitions/Empty"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ],
+                "x-amazon-apigateway-integration": {
+                    "responses": {
+                        "default": {
+                            "statusCode": "200"
+                        }
+                    },
+                    "passthroughBehavior": "when_no_match",
+                    "httpMethod": "POST",
+                    "requestTemplates": {
+                        "application/json": "#set($mi = $input.params('mapId'))\n{\n    \"mapId\" : \"$util.urlDecode($mi)\"\n}"
+                    },
+                    "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:789201490085:function:MapGamesGetter/invocations",
+                    "type": "aws"
+                }
+            }
+        },
+        "/player/{gamertag}/game": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "gamertag",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "Gamertag",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Gamertag"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "200 response",
+                        "schema": {
+                            "$ref": "#/definitions/Empty"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ],
+                "x-amazon-apigateway-integration": {
+                    "responses": {
+                        "default": {
+                            "statusCode": "200"
+                        }
+                    },
+                    "passthroughBehavior": "when_no_match",
+                    "httpMethod": "POST",
+                    "requestTemplates": {
+                        "application/json": "#set($gt = $input.params('gamertag'))\n{\n    \"gamertag\" : \"$util.urlDecode($gt)\"\n}"
+                    },
+                    "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:789201490085:function:BarePlayerGamesGetter/invocations",
+                    "type": "aws"
+                }
+            }
+        },
+        "/player/{gamertag}/game/count": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "gamertag",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "Gamertag",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Gamertag"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "200 response",
+                        "schema": {
+                            "$ref": "#/definitions/Empty"
+                        }
+                    },
+                    "404": {
+                        "description": "404 response"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ],
+                "x-amazon-apigateway-integration": {
+                    "responses": {
+                        "default": {
+                            "statusCode": "200"
+                        },
+                        ".*404 Not Found.*": {
+                            "statusCode": "404",
+                            "responseTemplates": {
+                                "application/json": "{\n    \"statusCode\": 404,\n    \"message\": \"$input.path('$.errorMessage')\"\n}"
+                            }
+                        }
+                    },
+                    "requestTemplates": {
+                        "application/json": "#set($gt = $input.params('gamertag'))\n{\n    \"gamertag\" : \"$util.urlDecode($gt)\"\n}"
+                    },
+                    "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:789201490085:function:PlayerGameCountsGetter/invocations",
+                    "passthroughBehavior": "when_no_match",
+                    "httpMethod": "POST",
+                    "type": "aws"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "api_key": {
+            "type": "apiKey",
+            "name": "x-api-key",
+            "in": "header"
+        }
+    },
+    "definitions": {
+        "Empty": {
+            "type": "object"
+        },
+        "Gamertag": {
+            "type": "object",
+            "properties": {
+                "gamertag": {
+                    "type": "string"
+                }
+            }
+        },
+        "MatchId": {
+            "type": "object",
+            "properties": {
+                "matchId": {
+                    "type": "string"
+                }
+            }
+        },
+        "MapId": {
+            "type": "object",
+            "properties": {
+                "mapId": {
+                    "type": "string"
+                }
+            }
+        }
+    }
 }

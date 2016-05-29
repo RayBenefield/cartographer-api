@@ -10,6 +10,7 @@ import com.cartographerapi.domain.players.Player;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCounts;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCountsDynamoReader;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCountsGetterService;
+import com.cartographerapi.domain.exceptions.NotFoundException;
 
 /**
  * Gets the PlayerGameCounts from the cache.
@@ -32,6 +33,12 @@ public class PlayerGameCountsGetter implements RequestHandler<Player, PlayerGame
     public PlayerGameCounts handleRequest(Player input, Context context) {
         List<PlayerGameCounts> results =
             getterService.getPlayerGameCounts(Arrays.asList(input));
+
+        if (results.get(0) == null) {
+            throw new NotFoundException(
+                "The player with the gamertag of `" + input.getGamertag() + "` was not found."
+            );
+        }
 
         return results.get(0);
     }
