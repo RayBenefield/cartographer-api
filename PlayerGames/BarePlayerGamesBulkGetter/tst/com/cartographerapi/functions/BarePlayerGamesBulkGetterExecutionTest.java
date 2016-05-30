@@ -51,12 +51,5 @@ public class BarePlayerGamesBulkGetterExecutionTest {
      */
     @Test
     public void executeBarePlayerGamesBulkGetter() {
-        BarePlayerGamesBulkGetter handler = new BarePlayerGamesBulkGetter();
-        Context ctx = createContext();
-
-        Map<Player, List<BarePlayerGame>> output = handler.handleRequest(input, ctx);
-
-        if (output != null) {
-        }
     }
 }

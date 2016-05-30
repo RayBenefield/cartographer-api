@@ -1,5 +1,7 @@
 package com.cartographerapi.domain.players;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Represents an Xbox Live (XBL) Player, a single user's XBL identity.
  * A Gamertag is not case-sensitive for uniqueness, but presentation of the
@@ -18,6 +20,7 @@ package com.cartographerapi.domain.players;
  */
 public class Player {
 
+    @JsonProperty("Gamertag")
 	private String gamertag;
 
 	public String getGamertag() {
