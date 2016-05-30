@@ -47,9 +47,11 @@ public class PlayerGameCountsDynamoReader implements PlayerGameCountsUpdatedRead
         List<PlayerGameCounts> counts = new ArrayList<PlayerGameCounts>();
 
         for (Player player : players) {
-            counts.add(
-                dbMapper.load(PlayerGameCounts.class, player.getGamertag())
-            );
+            PlayerGameCounts count = dbMapper.load(PlayerGameCounts.class, player.getGamertag());
+
+            if (count != null) {
+                counts.add(count);
+            }
         }
 
         return counts;

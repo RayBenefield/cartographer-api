@@ -1,6 +1,10 @@
 package com.cartographerapi.functions;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.InputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 
 import java.util.Arrays;
 import java.util.List;
@@ -12,9 +16,12 @@ import com.amazonaws.services.lambda.runtime.Context;
 
 import com.cartographerapi.domain.players.Player;
 import com.cartographerapi.domain.playergamecounts.PlayerGameCounts;
-
-import com.cartographerapi.functions.PlayerGameCountsBulkGetter;
 import com.cartographerapi.domain.ExecutionTests;
+import com.cartographerapi.functions.PlayerGameCountsBulkGetter;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.type.TypeReference;
+
 import org.junit.experimental.categories.Category;
 
 /**
@@ -52,18 +59,28 @@ public class PlayerGameCountsBulkGetterExecutionTest {
      * Execute the PlayerGameCountsBulkGetter.
      */
     @Test
-    public void executePlayerGameCountsUpdater() {
-        PlayerGameCountsBulkGetter getter = new PlayerGameCountsBulkGetter();
-        Context ctx = createContext();
+    public void executePlayerGameCountsBulkGetter() {
+        try {
+            PlayerGameCountsBulkGetter getter = new PlayerGameCountsBulkGetter();
+            Context ctx = createContext();
+            ObjectMapper mapper = new ObjectMapper();
 
-        List<PlayerGameCounts> output = getter.handleRequest(input, ctx);
+            InputStream inputStream = new ByteArrayInputStream(
+                mapper.writeValueAsString(input).getBytes("UTF-8")
+            );
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            getter.handleRequest(inputStream, outputStream, ctx);
+            String outputString = new String(outputStream.toByteArray(), java.nio.charset.StandardCharsets.UTF_8);
+            List<PlayerGameCounts> output = mapper.readValue(outputString, new TypeReference<List<PlayerGameCounts>>(){});
 
-        if (output != null) {
-            for (PlayerGameCounts counts : output) {
-                System.out.println(counts.getGamertag());
-                System.out.println(counts.getGamesCompleted());
-                System.out.println(counts.getTotalGames());
+            if (output != null) {
+                for (PlayerGameCounts counts : output) {
+                    System.out.println(counts.getGamertag());
+                    System.out.println(counts.getGamesCompleted());
+                    System.out.println(counts.getTotalGames());
+                }
             }
+        } catch (IOException exception) {
         }
     }
 }
