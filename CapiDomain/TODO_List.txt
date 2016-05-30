@@ -1,6 +1,7 @@
 *** For Hackathon ***
 
  1) Change the JSON output to match the Halo API format (ProperCase keys and better formatted time)
+	- PlayerGamesGetter
 	- PlayerGamesBulkGetter
 	- GamesGetter
 	- GamesBulkGetter
@@ -62,3 +63,4 @@
  21) Update SegmentScanner to use an actual queue URL instead of a queue URL key to avoid having to upload it for every new queue
  22) Setup Cloudwatch Alarms in CloudFormation with enabling/disabling
  23) Change Game to Match across the entire system
+ 24) Don't make multiple requests for the same IDs (asking for 40+ "ray benefield")
