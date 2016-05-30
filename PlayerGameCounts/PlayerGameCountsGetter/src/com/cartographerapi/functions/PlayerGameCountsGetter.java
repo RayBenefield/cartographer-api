@@ -48,7 +48,7 @@ public class PlayerGameCountsGetter implements RequestStreamHandler {
         List<PlayerGameCounts> results =
             getterService.getPlayerGameCounts(Arrays.asList(input));
 
-        if (results.get(0) == null) {
+        if (results.size() == 0) {
             throw new NotFoundException(
                 "The player with the gamertag of `" + input.getGamertag() + "` was not found."
             );

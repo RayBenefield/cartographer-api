@@ -16,6 +16,8 @@ import com.amazonaws.services.dynamodbv2.document.internal.InternalUtils;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 
+import com.amazonaws.util.StringUtils;
+
 import com.cartographerapi.domain.players.Player;
 
 /**
@@ -47,6 +49,10 @@ public class PlayerGameCountsDynamoReader implements PlayerGameCountsUpdatedRead
         List<PlayerGameCounts> counts = new ArrayList<PlayerGameCounts>();
 
         for (Player player : players) {
+            if (StringUtils.isNullOrEmpty(player.getGamertag())) {
+                continue;
+            }
+
             PlayerGameCounts count = dbMapper.load(PlayerGameCounts.class, player.getGamertag());
 
             if (count != null) {
