@@ -11,6 +11,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Domain object that handles the data for a Player to Game relationship.
  * <pre>
@@ -26,8 +28,14 @@ import java.io.IOException;
 public class BarePlayerGame {
 
     private ObjectMapper mapper;
+
+    @JsonProperty("Gamertag")
     private String gamertag;
+
+    @JsonProperty("MatchId")
     private String matchId;
+
+    @JsonProperty("GameNumber")
     private Integer gameNumber;
 
     @DynamoDBHashKey(attributeName="Gamertag")

@@ -293,6 +293,9 @@
                         "schema": {
                             "$ref": "#/definitions/Empty"
                         }
+                    },
+                    "404": {
+                        "description": "404 response"
                     }
                 },
                 "security": [
@@ -304,6 +307,12 @@
                     "responses": {
                         "default": {
                             "statusCode": "200"
+                        },
+                        ".*404 Not Found.*": {
+                            "statusCode": "404",
+                            "responseTemplates": {
+                                "application/json": "{\n    \"statusCode\": 404,\n    \"message\": \"$input.path('$.errorMessage')\"\n}"
+                            }
                         }
                     },
                     "requestTemplates": {

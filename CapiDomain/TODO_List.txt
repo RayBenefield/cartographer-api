@@ -1,7 +1,6 @@
 *** For Hackathon ***
 
  1) Change the JSON output to match the Halo API format (ProperCase keys and better formatted time)
-	- PlayerGamesGetter
 	- PlayerGamesBulkGetter
 	- GamesGetter
 	- GamesBulkGetter

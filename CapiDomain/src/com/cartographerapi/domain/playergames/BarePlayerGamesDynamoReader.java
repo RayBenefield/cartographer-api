@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
+import com.amazonaws.util.StringUtils;
+
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
@@ -65,7 +67,15 @@ public class BarePlayerGamesDynamoReader implements BarePlayerGamesReader {
         Map<Player, List<BarePlayerGame>> results = new HashMap<Player, List<BarePlayerGame>>();
 
         for (Player player : players) {
-            results.put(player, this.getBarePlayerGamesByGamertag(player.getGamertag()));
+            if (StringUtils.isNullOrEmpty(player.getGamertag())) {
+                continue;
+            }
+
+            List<BarePlayerGame> games = this.getBarePlayerGamesByGamertag(player.getGamertag());
+
+            if (games.size() > 0) {
+                results.put(player, games);
+            }
         }
 
         return results;
