@@ -4,10 +4,14 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import com.amazonaws.services.dynamodbv2.document.Item;
+
 import java.util.Date;
 import java.util.Map;
+
 import org.joda.time.DateTimeZone;
 import org.joda.time.DateTime;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Domain object that handles the data relevant to the counts for Games for a
@@ -18,88 +22,95 @@ import org.joda.time.DateTime;
  *    TotalGames
  *    LastUpdated
  * </pre>
- * 
+ *
  * @author GodlyPerfection
  *
  */
 @DynamoDBTable(tableName="PlayerGameCounts")
 public class PlayerGameCounts {
 
-	private String gamertag;
-	private Integer gamesCompleted;
-	private Integer totalGames;
-	private Date lastUpdated;
+    @JsonProperty("Gamertag")
+    private String gamertag;
 
-	@DynamoDBHashKey(attributeName="Gamertag")
-	public String getGamertag() {
-		return gamertag;
-	}
+    @JsonProperty("GamesCompleted")
+    private Integer gamesCompleted;
 
-	public void setGamertag(String gamertag) {
-		this.gamertag = gamertag;
-	}
+    @JsonProperty("TotalGames")
+    private Integer totalGames;
 
-	@DynamoDBAttribute(attributeName="GamesCompleted")
-	public Integer getGamesCompleted() {
-		return gamesCompleted;
-	}
+    @JsonProperty("LastUpdated")
+    private Date lastUpdated;
 
-	public void setGamesCompleted(Integer gamesCompleted) {
-		this.gamesCompleted = gamesCompleted;
-	}
+    @DynamoDBHashKey(attributeName="Gamertag")
+    public String getGamertag() {
+        return gamertag;
+    }
 
-	@DynamoDBAttribute(attributeName="TotalGames")
-	public Integer getTotalGames() {
-		return totalGames;
-	}
+    public void setGamertag(String gamertag) {
+        this.gamertag = gamertag;
+    }
 
-	public void setTotalGames(Integer totalGames) {
-		this.totalGames = totalGames;
-	}
+    @DynamoDBAttribute(attributeName="GamesCompleted")
+    public Integer getGamesCompleted() {
+        return gamesCompleted;
+    }
 
-	@DynamoDBAttribute(attributeName="LastUpdated")
-	public Date getLastUpdated() {
-		return lastUpdated;
-	}
+    public void setGamesCompleted(Integer gamesCompleted) {
+        this.gamesCompleted = gamesCompleted;
+    }
 
-	public void setLastUpdated(Date lastUpdated) {
-		this.lastUpdated = lastUpdated;
-	}
+    @DynamoDBAttribute(attributeName="TotalGames")
+    public Integer getTotalGames() {
+        return totalGames;
+    }
 
-	public PlayerGameCounts(String gamertag, Integer gamesCompleted, Integer totalGames, Date lastUpdated) {
-		this.gamertag = gamertag;
-		this.gamesCompleted = gamesCompleted;
-		this.totalGames = totalGames;
-		this.lastUpdated = lastUpdated;
-	}
+    public void setTotalGames(Integer totalGames) {
+        this.totalGames = totalGames;
+    }
 
-	public PlayerGameCounts(String gamertag, Integer gamesCompleted, Integer totalGames) {
-		this(gamertag, gamesCompleted, totalGames, new Date());
-	}
+    @DynamoDBAttribute(attributeName="LastUpdated")
+    public Date getLastUpdated() {
+        return lastUpdated;
+    }
 
-	// TODO Figure out how to get rid of this Dynamo specific thing.
-	public PlayerGameCounts(Item item) {
-		this(
-			item.getString("Gamertag"),
-			item.getNumber("GamesCompleted").intValue(),
-			item.getNumber("TotalGames").intValue(),
-			new DateTime(item.getString("LastUpdated"), DateTimeZone.UTC).toDate()
-		);
-	}
+    public void setLastUpdated(Date lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
 
-	public PlayerGameCounts(Map<String, Object> map) {
-		this(
-			(String)map.get("gamertag"),
-			(Integer)map.get("gamesCompleted"),
-			(Integer)map.get("totalGames"),
-			new DateTime(map.get("lastUpdated"), DateTimeZone.UTC).toDate()
-		);
-	}
+    public PlayerGameCounts(String gamertag, Integer gamesCompleted, Integer totalGames, Date lastUpdated) {
+        this.gamertag = gamertag;
+        this.gamesCompleted = gamesCompleted;
+        this.totalGames = totalGames;
+        this.lastUpdated = lastUpdated;
+    }
 
-	public PlayerGameCounts(String gamertag) {
-		this(gamertag, 0, 0, new Date());
-	}
+    public PlayerGameCounts(String gamertag, Integer gamesCompleted, Integer totalGames) {
+        this(gamertag, gamesCompleted, totalGames, new Date());
+    }
 
-	public PlayerGameCounts() {
-	}
+    // TODO Figure out how to get rid of this Dynamo specific thing.
+    public PlayerGameCounts(Item item) {
+        this(
+            item.getString("Gamertag"),
+            item.getNumber("GamesCompleted").intValue(),
+            item.getNumber("TotalGames").intValue(),
+            new DateTime(item.getString("LastUpdated"), DateTimeZone.UTC).toDate()
+        );
+    }
+
+    public PlayerGameCounts(Map<String, Object> map) {
+        this(
+            (String)map.get("gamertag"),
+            (Integer)map.get("gamesCompleted"),
+            (Integer)map.get("totalGames"),
+            new DateTime(map.get("lastUpdated"), DateTimeZone.UTC).toDate()
+        );
+    }
+
+    public PlayerGameCounts(String gamertag) {
+        this(gamertag, 0, 0, new Date());
+    }
+
+    public PlayerGameCounts() {
+    }
 }

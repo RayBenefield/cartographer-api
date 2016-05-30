@@ -1,15 +1,24 @@
 package com.cartographerapi.domain;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.internal.InternalUtils;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.lambda.runtime.Context;
+
 import java.io.IOException;
+import java.io.InputStream;
+
+import java.util.Scanner;
 import java.util.Map;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 import com.amazonaws.services.lambda.runtime.events.DynamodbEvent;
 import com.amazonaws.services.lambda.runtime.events.DynamodbEvent.DynamodbStreamRecord;
@@ -145,6 +154,32 @@ public class CapiUtils {
         results.put("deleted", deletedRecords);
 
         return results;
+    }
+
+    /**
+     * Converts an InputStream into a String.
+     *
+     * @param inputStream The inputStream that needs to be converted.
+     * @return The stringified InputStream.
+    */
+    @SuppressWarnings("resource")
+    public static String convertStreamToString(InputStream inputStream) {
+        Scanner scanner = new Scanner(inputStream).useDelimiter("\\A");
+        return scanner.hasNext() ? scanner.next() : "";
+    }
+
+    /**
+     * Provides a proper date formatting ObjectMapper for presentation purposes.
+     *
+     * @return The presentation mapper.
+     */
+    public static ObjectMapper getPresentationMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
+        mapper.setDateFormat(dateFormat);
+
+        return mapper;
     }
 
 }
