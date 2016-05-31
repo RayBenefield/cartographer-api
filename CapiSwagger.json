@@ -37,7 +37,7 @@
                         }
                     },
                     "requestTemplates": {
-                        "application/json": "[\n    #foreach($MatchId in $input.path('$'))\n    {\n        \"MatchId\": \"$MatchId\"\n    }#if($foreach.hasNext),#end\n    #end\n]\n"
+                        "application/json": "[\n    #foreach($MatchId in $input.path('$'))\n    #if($MatchId.matchId != \"\")\n    {\n        \"MatchId\": \"$MatchId.matchId\"\n    }\n    #elseif($MatchId.MatchId != \"\")\n    {\n        \"MatchId\": \"$MatchId.MatchId\"\n    }\n    #else\n    {\n        \"MatchId\": \"$MatchId\"\n    }\n    #end\n    #if($foreach.hasNext),#end\n    #end\n]"
                     },
                     "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:789201490085:function:BareGamesBulkGetter/invocations",
                     "passthroughBehavior": "when_no_templates",
@@ -136,7 +136,7 @@
                         }
                     },
                     "requestTemplates": {
-                        "application/json": "[\n    #foreach($MapId in $input.path('$'))\n    {\n        \"MapId\": \"$MapId\"\n    }#if($foreach.hasNext),#end\n    #end\n]\n"
+                        "application/json": "[\n    #foreach($MapId in $input.path('$'))\n    #if($MapId.mapId != \"\")\n    {\n        \"MapId\": \"$MapId.mapId\"\n    }\n    #elseif($MapId.MapId != \"\")\n    {\n        \"MapId\": \"$MapId.MapId\"\n    }\n    #else\n    {\n        \"MapId\": \"$MapId\"\n    }\n    #end\n    #if($foreach.hasNext),#end\n    #end\n]"
                     },
                     "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:789201490085:function:MapGamesBulkGetter/invocations",
                     "passthroughBehavior": "when_no_templates",
@@ -235,7 +235,7 @@
                         }
                     },
                     "requestTemplates": {
-                        "application/json": "[\n    #foreach($Gamertag in $input.path('$'))\n    {\n        \"Gamertag\": \"$Gamertag\"\n    }#if($foreach.hasNext),#end\n    #end\n]\n"
+                        "application/json": "[\n    #foreach($Gamertag in $input.path('$'))\n    #if($Gamertag.gamertag != \"\")\n    {\n        \"Gamertag\": \"$Gamertag.gamertag\"\n    }\n    #elseif($Gamertag.Gamertag != \"\")\n    {\n        \"Gamertag\": \"$Gamertag.Gamertag\"\n    }\n    #else\n    {\n        \"Gamertag\": \"$Gamertag\"\n    }\n    #end\n    #if($foreach.hasNext),#end\n    #end\n]"
                     },
                     "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:789201490085:function:BarePlayerGamesBulkGetter/invocations",
                     "passthroughBehavior": "when_no_templates",
