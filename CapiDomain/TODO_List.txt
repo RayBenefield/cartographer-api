@@ -1,9 +1,7 @@
 *** For Hackathon ***
 
- 1) Change the JSON output to match the Halo API format (ProperCase keys and better formatted time)
-	- MapGamesGetter
-	- MapGamesBulkGetter
- 2) Add the GameEvents domain
+ 1) Add the GameEvents domain
+ 2) Split off the BarePlayerGames/BareGames domain to subscribe to the Raw versions to fix the bugs
 
 
 *** Nice to have ***
