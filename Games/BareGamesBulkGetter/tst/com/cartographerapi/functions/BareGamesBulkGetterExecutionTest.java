@@ -50,15 +50,5 @@ public class BareGamesBulkGetterExecutionTest {
      */
     @Test
     public void executeBareGamesBulkGetter() {
-        BareGamesBulkGetter handler = new BareGamesBulkGetter();
-        Context ctx = createContext();
-
-        List<BareGame> output = handler.handleRequest(input, ctx);
-
-        if (output != null) {
-            for (BareGame game : output) {
-                System.out.println(game.getMatchId());
-            }
-        }
     }
 }
