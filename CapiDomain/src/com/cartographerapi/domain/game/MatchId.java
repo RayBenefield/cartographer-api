@@ -1,5 +1,7 @@
 package com.cartographerapi.domain.game;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * A MatchId that references a Game in Halo.
  *
@@ -8,6 +10,7 @@ package com.cartographerapi.domain.game;
  */
 public class MatchId {
 
+    @JsonProperty("MatchId")
 	private String matchId;
 
 	public String getMatchId() {

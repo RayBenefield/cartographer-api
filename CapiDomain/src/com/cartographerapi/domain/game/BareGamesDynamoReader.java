@@ -8,6 +8,8 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 
+import com.amazonaws.util.StringUtils;
+
 /**
  * Reader repository for BareGames from a DynamoDB table.
  *
@@ -37,7 +39,15 @@ public class BareGamesDynamoReader implements BareGamesReader {
         List<BareGame> results = new ArrayList<BareGame>();
 
         for (MatchId matchId : matchIds) {
-            results.add(dbMapper.load(BareGame.class, matchId.getMatchId()));
+            if (StringUtils.isNullOrEmpty(matchId.getMatchId())) {
+                continue;
+            }
+
+            BareGame game = dbMapper.load(BareGame.class, matchId.getMatchId());
+
+            if (game != null) {
+                results.add(game);
+            }
         }
 
         return results;

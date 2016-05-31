@@ -49,13 +49,5 @@ public class BareGamesGetterExecutionTest {
      */
     @Test
     public void executeBareGamesGetter() {
-        BareGamesGetter handler = new BareGamesGetter();
-        Context ctx = createContext();
-
-        BareGame output = handler.handleRequest(input, ctx);
-
-        if (output != null) {
-            System.out.println(output.getMatchId());
-        }
     }
 }

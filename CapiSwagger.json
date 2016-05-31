@@ -37,7 +37,7 @@
                         }
                     },
                     "requestTemplates": {
-                        "application/json": "[\n    #foreach($matchId in $input.path('$'))\n    {\n        \"matchId\": \"$matchId\"\n    }#if($foreach.hasNext),#end\n    #end\n]\n"
+                        "application/json": "[\n    #foreach($MatchId in $input.path('$'))\n    {\n        \"MatchId\": \"$MatchId\"\n    }#if($foreach.hasNext),#end\n    #end\n]\n"
                     },
                     "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:789201490085:function:BareGamesBulkGetter/invocations",
                     "passthroughBehavior": "when_no_templates",
@@ -46,7 +46,7 @@
                 }
             }
         },
-        "/game/{matchId}": {
+        "/game/{MatchId}": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -56,7 +56,7 @@
                 ],
                 "parameters": [
                     {
-                        "name": "matchId",
+                        "name": "MatchId",
                         "in": "path",
                         "required": true,
                         "type": "string"
@@ -76,6 +76,9 @@
                         "schema": {
                             "$ref": "#/definitions/Empty"
                         }
+                    },
+                    "404": {
+                        "description": "404 response"
                     }
                 },
                 "security": [
@@ -87,10 +90,16 @@
                     "responses": {
                         "default": {
                             "statusCode": "200"
+                        },
+                        ".*404 Not Found.*": {
+                            "statusCode": "404",
+                            "responseTemplates": {
+                                "application/json": "{\n    \"statusCode\": 404,\n    \"message\": \"$input.path('$.errorMessage')\"\n}"
+                            }
                         }
                     },
                     "requestTemplates": {
-                        "application/json": "#set($mi = $input.params('matchId'))\n{\n    \"matchId\" : \"$util.urlDecode($mi)\"\n}"
+                        "application/json": "#set($mi = $input.params('MatchId'))\n{\n    \"MatchId\" : \"$util.urlDecode($mi)\"\n}"
                     },
                     "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:789201490085:function:BareGamesGetter/invocations",
                     "passthroughBehavior": "when_no_match",
@@ -217,7 +226,7 @@
                         }
                     },
                     "requestTemplates": {
-                        "application/json": "[\n    #foreach($gamertag in $input.path('$'))\n    {\n        \"Gamertag\": \"$gamertag\"\n    }#if($foreach.hasNext),#end\n    #end\n]\n"
+                        "application/json": "[\n    #foreach($Gamertag in $input.path('$'))\n    {\n        \"Gamertag\": \"$Gamertag\"\n    }#if($foreach.hasNext),#end\n    #end\n]\n"
                     },
                     "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:789201490085:function:BarePlayerGamesBulkGetter/invocations",
                     "passthroughBehavior": "when_no_templates",
@@ -254,7 +263,7 @@
                         }
                     },
                     "requestTemplates": {
-                        "application/json": "[\n    #foreach($gamertag in $input.path('$'))\n    #if($gamertag.gamertag != \"\")\n    {\n        \"gamertag\": \"$gamertag.gamertag\"\n    }\n    #elseif($gamertag.Gamertag != \"\")\n    {\n        \"gamertag\": \"$gamertag.Gamertag\"\n    }\n    #else\n    {\n        \"gamertag\": \"$gamertag\"\n    }\n    #end\n    #if($foreach.hasNext),#end\n    #end\n]"
+                        "application/json": "[\n    #foreach($Gamertag in $input.path('$'))\n    #if($Gamertag.gamertag != \"\")\n    {\n        \"Gamertag\": \"$Gamertag.gamertag\"\n    }\n    #elseif($Gamertag.Gamertag != \"\")\n    {\n        \"Gamertag\": \"$Gamertag.Gamertag\"\n    }\n    #else\n    {\n        \"Gamertag\": \"$Gamertag\"\n    }\n    #end\n    #if($foreach.hasNext),#end\n    #end\n]"
                     },
                     "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:789201490085:function:PlayerGameCountsBulkGetter/invocations",
                     "passthroughBehavior": "when_no_templates",
@@ -263,7 +272,7 @@
                 }
             }
         },
-        "/player/{gamertag}/game": {
+        "/player/{Gamertag}/game": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -273,7 +282,7 @@
                 ],
                 "parameters": [
                     {
-                        "name": "gamertag",
+                        "name": "Gamertag",
                         "in": "path",
                         "required": true,
                         "type": "string"
@@ -316,7 +325,7 @@
                         }
                     },
                     "requestTemplates": {
-                        "application/json": "#set($gt = $input.params('gamertag'))\n{\n    \"Gamertag\" : \"$util.urlDecode($gt)\"\n}"
+                        "application/json": "#set($gt = $input.params('Gamertag'))\n{\n    \"Gamertag\" : \"$util.urlDecode($gt)\"\n}"
                     },
                     "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:789201490085:function:BarePlayerGamesGetter/invocations",
                     "passthroughBehavior": "when_no_match",
@@ -325,7 +334,7 @@
                 }
             }
         },
-        "/player/{gamertag}/game/count": {
+        "/player/{Gamertag}/game/count": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -335,7 +344,7 @@
                 ],
                 "parameters": [
                     {
-                        "name": "gamertag",
+                        "name": "Gamertag",
                         "in": "path",
                         "required": true,
                         "type": "string"
@@ -378,7 +387,7 @@
                         }
                     },
                     "requestTemplates": {
-                        "application/json": "#set($gt = $input.params('gamertag'))\n{\n    \"Gamertag\" : \"$util.urlDecode($gt)\"\n}"
+                        "application/json": "#set($gt = $input.params('Gamertag'))\n{\n    \"Gamertag\" : \"$util.urlDecode($gt)\"\n}"
                     },
                     "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:789201490085:function:PlayerGameCountsGetter/invocations",
                     "passthroughBehavior": "when_no_match",
@@ -402,7 +411,7 @@
         "MatchId": {
             "type": "object",
             "properties": {
-                "matchId": {
+                "MatchId": {
                     "type": "string"
                 }
             }
