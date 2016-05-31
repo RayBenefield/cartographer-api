@@ -10,6 +10,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
+import com.amazonaws.util.StringUtils;
 
 /**
  * Reader repository for MapGames from a DynamoDB table.
@@ -47,7 +48,15 @@ public class MapGamesDynamoReader implements MapGamesReader {
         Map<MapId, List<MapGame>> results = new HashMap<MapId, List<MapGame>>();
 
         for (MapId mapId : mapIds) {
-            results.put(mapId, this.getMapGamesByMapId(mapId));
+            if (StringUtils.isNullOrEmpty(mapId.getMapId())) {
+                continue;
+            }
+
+            List<MapGame> games = this.getMapGamesByMapId(mapId);
+
+            if (games.size() > 0) {
+                results.put(mapId, games);
+            }
         }
 
         return results;

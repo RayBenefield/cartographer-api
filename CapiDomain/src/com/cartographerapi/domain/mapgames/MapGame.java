@@ -13,6 +13,8 @@ import java.io.UnsupportedEncodingException;
 
 import com.cartographerapi.domain.game.Game;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Domain object that handles the relationship between a map and a game.
  * <pre>
@@ -26,9 +28,16 @@ import com.cartographerapi.domain.game.Game;
 @DynamoDBTable(tableName="MapGames")
 public class MapGame {
 
+    @JsonProperty("MapId")
     private String mapId;
+
+    @JsonProperty("MatchId")
     private String matchId;
+
+    @JsonProperty("Owner")
     private String owner;
+
+    @JsonProperty("Url")
     private String url;
 
 	private final String URL_FILE_BROWSER = "https://www.halowaypoint.com/en-us/games/halo-5-guardians/xbox-one/map-variants#ugc_halo-5-guardians_xbox-one_mapvariant_%s_%s";

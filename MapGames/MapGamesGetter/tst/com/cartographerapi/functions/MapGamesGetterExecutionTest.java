@@ -49,18 +49,5 @@ public class MapGamesGetterExecutionTest {
      */
     @Test
     public void executeMapGamesGetter() {
-        MapGamesGetter handler = new MapGamesGetter();
-        Context ctx = createContext();
-
-        List<MapGame> output = handler.handleRequest(input, ctx);
-
-        if (output != null) {
-            for (MapGame game : output) {
-                System.out.println(game.getMapId());
-                System.out.println(game.getMatchId());
-                System.out.println(game.getOwner());
-                System.out.println(game.getUrl());
-            }
-        }
     }
 }

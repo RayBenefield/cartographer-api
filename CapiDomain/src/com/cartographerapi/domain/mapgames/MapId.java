@@ -1,5 +1,7 @@
 package com.cartographerapi.domain.mapgames;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * A MapId that references a Map in Halo.
  *
@@ -8,6 +10,7 @@ package com.cartographerapi.domain.mapgames;
  */
 public class MapId {
 
+    @JsonProperty("MapId")
 	private String mapId;
 
 	public String getMapId() {
