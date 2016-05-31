@@ -51,12 +51,5 @@ public class MapGamesBulkGetterExecutionTest {
      */
     @Test
     public void executeMapGamesBulkGetter() {
-        MapGamesBulkGetter handler = new MapGamesBulkGetter();
-        Context ctx = createContext();
-
-        Map<MapId, List<MapGame>> output = handler.handleRequest(input, ctx);
-
-        if (output != null) {
-        }
     }
 }
