@@ -54,7 +54,7 @@ OutputMap["HaloApiKey"]=${HALO_API_KEY}
 # Generate a hashmap of the Output Values
 ##################################################
 
-DomainStacks=( "Core" "Games" "GameEvents" "MapGames" "PlayerGames" "PlayerGameCounts" )
+DomainStacks=( "Core" "Games" "GameEvents" "MapGames" "PlayerGames" "BarePlayerGames" "PlayerGameCounts" )
 for Stack in "${DomainStacks[@]}"
 do
 	Outputs=$(aws cloudformation describe-stacks --stack-name Capi-${Stack} --query 'Stacks[0].Outputs[*].[OutputKey,OutputValue]' --output text)
@@ -78,6 +78,7 @@ Mappings=( \
 	"TopicArnNewGames:QueueArnGamesForMapGames" \
 	"TopicArnNewGames:QueueArnGamesForGameEvents" \
 	"TopicArnNewPlayerGames:QueueArnPlayerGamesForGames" \
+	"TopicArnNewPlayerGames:QueueArnPlayerGamesForBarePlayerGames" \
 	"TopicArnNewPlayerGameCounts:QueueArnPlayerGameCountsForPlayerGames" \
 	"TopicArnUpdatedPlayerGameCounts:QueueArnPlayerGameCountsForPlayerGames" \
 	"TopicArnTotalGamesUpdatedPlayers:QueueArnPlayersForPlayerGameCounts" \
@@ -208,6 +209,7 @@ Indent
 ##### TODO: Move Mappings to JSON file and use JQ for parsing
 Mappings=( \
 	"FuncArnPlayerGamesAdder:1 minute" \
+	"FuncArnBarePlayerGamesAdder:1 minute" \
 	"FuncArnGamesAdder:1 minute" \
 	"FuncArnMapGamesAdder:1 minute" \
 	"FuncArnGameEventsAdder:1 minute" \

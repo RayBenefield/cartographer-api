@@ -1,0 +1,178 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Parameters": {
+        "Stage": {
+            "Type": "String",
+            "Default": "test",
+            "Description": "The environment stage."
+        }
+    },
+    "Resources": {
+        "CartographerApiLambdaRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Sid": "",
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": "lambda.amazonaws.com"
+                            },
+                            "Action": "sts:AssumeRole"
+                        }
+                    ]
+                },
+                "ManagedPolicyArns": [
+                    "arn:aws:iam::789201490085:policy/lambda_basic_execution_role_policy_7889af1c-44c9-4841-8228-b63a2a89050b",
+                    "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
+                    "arn:aws:iam::aws:policy/AmazonSNSFullAccess"
+                ]
+            }
+        },
+        "PlayerGamesForBarePlayerGames": {
+            "Type": "AWS::SQS::Queue",
+            "Properties": {
+                "QueueName": "Capi-PlayerGamesForBarePlayerGames"
+            }
+        },
+        "PlayerGamesForBarePlayerGamesPolicy": {
+            "Type" : "AWS::SQS::QueuePolicy",
+            "DependsOn": [ "PlayerGamesForBarePlayerGames" ],
+            "Properties" : {
+                "PolicyDocument" : {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": "*",
+                            "Action": "SQS:*",
+                            "Resource": { "Fn::GetAtt": [ "PlayerGamesForBarePlayerGames", "Arn" ] }
+                        }
+                    ]
+                },
+                "Queues" : [ { "Ref": "PlayerGamesForBarePlayerGames" } ]
+            }
+        },
+        "BarePlayerGamesAdder": {
+            "Type": "AWS::Lambda::Function",
+            "DependsOn": [ "BarePlayerGames", "PlayerGamesForBarePlayerGames" ],
+            "Properties": {
+                "FunctionName": "BarePlayerGamesAdder",
+                "Description": "Add BarePlayerGames from player games.",
+                "Runtime": "java8",
+                "Handler": "com.cartographerapi.functions.BarePlayerGamesAdder",
+                "Code": {
+                    "S3Bucket": "cartographer-api-lambda-code",
+                    "S3Key": "BarePlayerGamesAdder-0.0.1-SNAPSHOT.jar"
+                },
+                "Role": { "Fn::GetAtt": ["CartographerApiLambdaRole", "Arn"] },
+                "Timeout": "300",
+                "MemorySize": "512"
+            }
+        },
+        "BarePlayerGamesGetter": {
+            "Type": "AWS::Lambda::Function",
+            "DependsOn": [ "BarePlayerGames" ],
+            "Properties": {
+                "FunctionName": "BarePlayerGamesGetter",
+                "Description": "Get the bare version of PlayerGames",
+                "Runtime": "java8",
+                "Handler": "com.cartographerapi.functions.BarePlayerGamesGetter",
+                "Code": {
+                    "S3Bucket": "cartographer-api-lambda-code",
+                    "S3Key": "BarePlayerGamesGetter-0.0.1-SNAPSHOT.jar"
+                },
+                "Role": { "Fn::GetAtt": ["CartographerApiLambdaRole", "Arn"] },
+                "Timeout": "15",
+                "MemorySize": "512"
+            }
+        },
+        "BarePlayerGamesBulkGetter": {
+            "Type": "AWS::Lambda::Function",
+            "DependsOn": [ "BarePlayerGames" ],
+            "Properties": {
+                "FunctionName": "BarePlayerGamesBulkGetter",
+                "Description": "Get several batches of PlayerGames for multiple players.",
+                "Runtime": "java8",
+                "Handler": "com.cartographerapi.functions.BarePlayerGamesBulkGetter",
+                "Code": {
+                    "S3Bucket": "cartographer-api-lambda-code",
+                    "S3Key": "BarePlayerGamesBulkGetter-0.0.1-SNAPSHOT.jar"
+                },
+                "Role": { "Fn::GetAtt": ["CartographerApiLambdaRole", "Arn"] },
+                "Timeout": "15",
+                "MemorySize": "512"
+            }
+        },
+        "BarePlayerGames": {
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+                "TableName": "BarePlayerGames",
+                "ProvisionedThroughput": {
+                    "ReadCapacityUnits": 1,
+                    "WriteCapacityUnits": 1
+                },
+                "AttributeDefinitions": [
+                    {
+                        "AttributeName": "Gamertag",
+                        "AttributeType": "S"
+                    },
+                    {
+                        "AttributeName": "GameNumber",
+                        "AttributeType": "N"
+                    }
+                ],
+                "KeySchema": [
+                    {
+                        "AttributeName": "Gamertag",
+                        "KeyType": "HASH"
+                    },
+                    {
+                        "AttributeName": "GameNumber",
+                        "KeyType": "RANGE"
+                    }
+                ]
+            }
+        }
+    },
+    "Outputs": {
+        "QueueArnPlayerGamesForBarePlayerGames": {
+            "Description": "The ARN for the PlayerGamesForBarePlayerGames queue.",
+            "Value": { "Fn::GetAtt" : [ "PlayerGamesForBarePlayerGames", "Arn" ] }
+        },
+        "QueueUrlPlayerGamesForBarePlayerGames": {
+            "Description": "The url for the PlayerGamesForBarePlayerGames queue.",
+            "Value": { "Ref": "PlayerGamesForBarePlayerGames" }
+        },
+        "QueueNamePlayerGamesForBarePlayerGames": {
+            "Description": "The name for the PlayerGamesForBarePlayerGames queue.",
+            "Value": { "Fn::GetAtt" : [ "PlayerGamesForBarePlayerGames", "QueueName" ] }
+        },
+        "FuncArnBarePlayerGamesAdder": {
+            "Description": "The ARN for the BarePlayerGamesAdder function.",
+            "Value": { "Fn::GetAtt" : [ "BarePlayerGamesAdder", "Arn" ] }
+        },
+        "FuncIdBarePlayerGamesAdder": {
+            "Description": "The logical ID for the BarePlayerGamesAdder function.",
+            "Value": { "Ref": "BarePlayerGamesAdder" }
+        },
+        "FuncArnBarePlayerGamesGetter": {
+            "Description": "The ARN for the BarePlayerGamesGetter function.",
+            "Value": { "Fn::GetAtt" : [ "BarePlayerGamesGetter", "Arn" ] }
+        },
+        "FuncIdBarePlayerGamesGetter": {
+            "Description": "The logical ID for the BarePlayerGamesGetter function.",
+            "Value": { "Ref": "BarePlayerGamesGetter" }
+        },
+        "FuncArnBarePlayerGamesBulkGetter": {
+            "Description": "The ARN for the BarePlayerGamesBulkGetter function.",
+            "Value": { "Fn::GetAtt" : [ "BarePlayerGamesBulkGetter", "Arn" ] }
+        },
+        "FuncIdBarePlayerGamesBulkGetter": {
+            "Description": "The logical ID for the BarePlayerGamesBulkGetter function.",
+            "Value": { "Ref": "BarePlayerGamesBulkGetter" }
+        }
+    }
+}
