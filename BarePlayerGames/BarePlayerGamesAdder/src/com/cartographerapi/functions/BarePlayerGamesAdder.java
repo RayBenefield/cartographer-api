@@ -41,7 +41,6 @@ public class BarePlayerGamesAdder implements RequestHandler<ScheduledEvent, List
         while (context.getRemainingTimeInMillis() > 30000) {
             // Pull games from the queue to inspect
             List<PlayerGame> games = queueReader.getNumberOfPlayerGames(10);
-            CapiUtils.logObject(games, "PlayeGamesFromQueue");
 
             if (games.size() <= 0) {
                 break;

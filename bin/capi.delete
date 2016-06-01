@@ -53,7 +53,7 @@ echo
 # Delete the CAPI Architecture
 ##################################################
 
-DomainStacks=( "API" "Core" "Games" "GameEvents" "MapGames" "PlayerGames" "BarePlayerGames" "PlayerGameCounts" )
+DomainStacks=( "API" "Core" "Games" "BareGames" "GameEvents" "MapGames" "PlayerGames" "BarePlayerGames" "PlayerGameCounts" )
 for Stack in "${DomainStacks[@]}"
 do
 	StackId=$(aws cloudformation delete-stack --stack-name Capi-${Stack})

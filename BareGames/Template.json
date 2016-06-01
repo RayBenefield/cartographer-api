@@ -1,0 +1,169 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Parameters": {
+        "Stage": {
+            "Type": "String",
+            "Default": "test",
+            "Description": "The environment stage."
+        }
+    },
+    "Resources": {
+        "GamesForBareGames": {
+            "Type": "AWS::SQS::Queue",
+            "Properties": {
+                "QueueName": "Capi-GamesForBareGames"
+            }
+        },
+        "PlayerGamesForGamesPolicy": {
+            "Type": "AWS::SQS::QueuePolicy",
+            "Properties": {
+                "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": "*",
+                            "Action": "SQS:*",
+                            "Resource": { "Fn::GetAtt": [ "GamesForBareGames", "Arn" ] }
+                        }
+                    ]
+                },
+                "Queues": [ { "Ref": "GamesForBareGames" } ]
+            }
+        },
+        "CartographerApiLambdaRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Sid": "",
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": "lambda.amazonaws.com"
+                            },
+                            "Action": "sts:AssumeRole"
+                        }
+                    ]
+                },
+                "ManagedPolicyArns": [
+                    "arn:aws:iam::789201490085:policy/lambda_basic_execution_role_policy_7889af1c-44c9-4841-8228-b63a2a89050b",
+                    "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
+                    "arn:aws:iam::aws:policy/AmazonSNSFullAccess"
+                ]
+            }
+        },
+        "BareGamesAdder": {
+            "Type": "AWS::Lambda::Function",
+            "DependsOn": [ "BareGames", "GamesForBareGames" ],
+            "Properties": {
+                "FunctionName": "BareGamesAdder",
+                "Description": "Add bare version of Games.",
+                "Runtime": "java8",
+                "Handler": "com.cartographerapi.functions.BareGamesAdder",
+                "Code": {
+                    "S3Bucket": "cartographer-api-lambda-code",
+                    "S3Key": "BareGamesAdder-0.0.1-SNAPSHOT.jar"
+                },
+                "Role": { "Fn::GetAtt": ["CartographerApiLambdaRole", "Arn"] },
+                "Timeout": "300",
+                "MemorySize": "512"
+            }
+        },
+        "BareGamesGetter": {
+            "Type": "AWS::Lambda::Function",
+            "DependsOn": [ "BareGames" ],
+            "Properties": {
+                "FunctionName": "BareGamesGetter",
+                "Description": "Get a bare Game information by MatchId.",
+                "Runtime": "java8",
+                "Handler": "com.cartographerapi.functions.BareGamesGetter",
+                "Code": {
+                    "S3Bucket": "cartographer-api-lambda-code",
+                    "S3Key": "BareGamesGetter-0.0.1-SNAPSHOT.jar"
+                },
+                "Role": { "Fn::GetAtt": ["CartographerApiLambdaRole", "Arn"] },
+                "Timeout": "15",
+                "MemorySize": "512"
+            }
+        },
+        "BareGamesBulkGetter": {
+            "Type": "AWS::Lambda::Function",
+            "DependsOn": [ "BareGames" ],
+            "Properties": {
+                "FunctionName": "BareGamesBulkGetter",
+                "Description": "Get a bulk of bare games.",
+                "Runtime": "java8",
+                "Handler": "com.cartographerapi.functions.BareGamesBulkGetter",
+                "Code": {
+                    "S3Bucket": "cartographer-api-lambda-code",
+                    "S3Key": "BareGamesBulkGetter-0.0.1-SNAPSHOT.jar"
+                },
+                "Role": { "Fn::GetAtt": ["CartographerApiLambdaRole", "Arn"] },
+                "Timeout": "15",
+                "MemorySize": "512"
+            }
+        },
+        "BareGames": {
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+                "TableName": "BareGames",
+                "ProvisionedThroughput": {
+                    "ReadCapacityUnits": 2,
+                    "WriteCapacityUnits": 1
+                },
+                "AttributeDefinitions": [
+                    {
+                        "AttributeName": "MatchId",
+                        "AttributeType": "S"
+                    }
+                ],
+                "KeySchema": [
+                    {
+                        "AttributeName": "MatchId",
+                        "KeyType": "HASH"
+                    }
+                ]
+            }
+        }
+    },
+    "Outputs": {
+        "QueueArnGamesForBareGames": {
+            "Description": "The ARN for the GamesForBareGames queue.",
+            "Value": { "Fn::GetAtt" : [ "GamesForBareGames", "Arn" ] }
+        },
+        "QueueUrlGamesForBareGames": {
+            "Description": "The url for the GamesForBareGames queue.",
+            "Value": { "Ref": "GamesForBareGames" }
+        },
+        "QueueNameGamesForBareGames": {
+            "Description": "The name for the GamesForBareGames queue.",
+            "Value": { "Fn::GetAtt" : [ "GamesForBareGames", "QueueName" ] }
+        },
+        "FuncArnBareGamesAdder": {
+            "Description": "The ARN for the BareGamesAdder function.",
+            "Value": { "Fn::GetAtt" : [ "BareGamesAdder", "Arn" ] }
+        },
+        "FuncIdBareGamesAdder": {
+            "Description": "The logical ID for the BareGamesAdder function.",
+            "Value": { "Ref": "BareGamesAdder" }
+        },
+        "FuncArnBareGamesGetter": {
+            "Description": "The ARN for the BareGamesGetter function.",
+            "Value": { "Fn::GetAtt" : [ "BareGamesGetter", "Arn" ] }
+        },
+        "FuncIdBareGamesGetter": {
+            "Description": "The logical ID for the BareGamesGetter function.",
+            "Value": { "Ref": "BareGamesGetter" }
+        },
+        "FuncArnBareGamesBulkGetter": {
+            "Description": "The ARN for the BareGamesBulkGetter function.",
+            "Value": { "Fn::GetAtt" : [ "BareGamesBulkGetter", "Arn" ] }
+        },
+        "FuncIdBareGamesBulkGetter": {
+            "Description": "The logical ID for the BareGamesBulkGetter function.",
+            "Value": { "Ref": "BareGamesBulkGetter" }
+        }
+    }
+}

@@ -1,21 +1,23 @@
-package com.cartographerapi.domain.game;
+package com.cartographerapi.domain.baregames;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
+
 import java.util.List;
 import java.util.ArrayList;
 
 /**
- * Writer repository for Games into a DynamoDB table.
+ * Writer repository for BareGames to a DynamoDB table.
  *
- * @see GamesWriter
+ * @see BareGamesWriter
  *
  * @author GodlyPerfection
  *
  */
-public class GamesDynamoWriter implements GamesWriter {
+public class BareGamesDynamoWriter implements BareGamesWriter {
 
     private AmazonDynamoDBClient client;
     private DynamoDBMapper dbMapper;
@@ -24,7 +26,7 @@ public class GamesDynamoWriter implements GamesWriter {
      * {@inheritDoc}
      */
     @Override
-    public Game saveGame(Game game) {
+    public BareGame saveBareGame(BareGame game) {
         dbMapper.save(game);
         return game;
     }
@@ -33,7 +35,7 @@ public class GamesDynamoWriter implements GamesWriter {
      * {@inheritDoc}
      */
     @Override
-    public List<Game> saveGames(List<Game> games) {
+    public List<BareGame> saveBareGames(List<BareGame> games) {
         dbMapper.batchSave(games);
         return games;
     }
@@ -41,7 +43,7 @@ public class GamesDynamoWriter implements GamesWriter {
     /**
      * The lazy IOC constructor.
      */
-    public GamesDynamoWriter() {
+    public BareGamesDynamoWriter() {
         client = new AmazonDynamoDBClient();
         client.setRegion(Region.getRegion(Regions.US_WEST_2));
         dbMapper = new DynamoDBMapper(client);
