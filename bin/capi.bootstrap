@@ -54,7 +54,7 @@ OutputMap["HaloApiKey"]=${HALO_API_KEY}
 # Generate a hashmap of the Output Values
 ##################################################
 
-DomainStacks=( "Core" "Games" "MapGames" "PlayerGames" "PlayerGameCounts" )
+DomainStacks=( "Core" "Games" "GameEvents" "MapGames" "PlayerGames" "PlayerGameCounts" )
 for Stack in "${DomainStacks[@]}"
 do
 	Outputs=$(aws cloudformation describe-stacks --stack-name Capi-${Stack} --query 'Stacks[0].Outputs[*].[OutputKey,OutputValue]' --output text)
@@ -76,6 +76,7 @@ Indent
 ##### TODO: Move Mappings to JSON file and use JQ for parsing
 Mappings=( \
 	"TopicArnNewGames:QueueArnGamesForMapGames" \
+	"TopicArnNewGames:QueueArnGamesForGameEvents" \
 	"TopicArnNewPlayerGames:QueueArnPlayerGamesForGames" \
 	"TopicArnNewPlayerGameCounts:QueueArnPlayerGameCountsForPlayerGames" \
 	"TopicArnUpdatedPlayerGameCounts:QueueArnPlayerGameCountsForPlayerGames" \
@@ -144,7 +145,9 @@ if aws cloudformation describe-stacks --stack-name Capi-API > /dev/null 2>&1; th
 		ParameterKey=FuncArnPlayerGameCountsBulkGetter,ParameterValue=${OutputMap[FuncArnPlayerGameCountsBulkGetter]} \
 		ParameterKey=FuncArnBarePlayerGamesBulkGetter,ParameterValue=${OutputMap[FuncArnBarePlayerGamesBulkGetter]} \
 		ParameterKey=FuncArnBareGamesBulkGetter,ParameterValue=${OutputMap[FuncArnBareGamesBulkGetter]} \
-		ParameterKey=FuncArnMapGamesBulkGetter,ParameterValue=${OutputMap[FuncArnMapGamesBulkGetter]}; \
+		ParameterKey=FuncArnMapGamesBulkGetter,ParameterValue=${OutputMap[FuncArnMapGamesBulkGetter]} \
+		ParameterKey=FuncArnGameEventsBulkGetter,ParameterValue=${OutputMap[FuncArnGameEventsBulkGetter]} \
+		ParameterKey=FuncArnGameEventsGetter,ParameterValue=${OutputMap[FuncArnGameEventsGetter]}; \
 	} 2>&1 ) || PrintException "${StackId}"
 else
 	PrintInfo "Creating the ${BIBlue}API${Green} stack..."
@@ -163,7 +166,9 @@ else
 		ParameterKey=FuncArnPlayerGameCountsBulkGetter,ParameterValue=${OutputMap[FuncArnPlayerGameCountsBulkGetter]} \
 		ParameterKey=FuncArnBarePlayerGamesBulkGetter,ParameterValue=${OutputMap[FuncArnBarePlayerGamesBulkGetter]} \
 		ParameterKey=FuncArnBareGamesBulkGetter,ParameterValue=${OutputMap[FuncArnBareGamesBulkGetter]} \
-		ParameterKey=FuncArnMapGamesBulkGetter,ParameterValue=${OutputMap[FuncArnMapGamesBulkGetter]}; \
+		ParameterKey=FuncArnMapGamesBulkGetter,ParameterValue=${OutputMap[FuncArnMapGamesBulkGetter]} \
+		ParameterKey=FuncArnGameEventsBulkGetter,ParameterValue=${OutputMap[FuncArnGameEventsBulkGetter]} \
+		ParameterKey=FuncArnGameEventsGetter,ParameterValue=${OutputMap[FuncArnGameEventsGetter]}; \
 	} 2>&1 ) || PrintException "${StackId}"
 fi
 
@@ -205,6 +210,7 @@ Mappings=( \
 	"FuncArnPlayerGamesAdder:1 minute" \
 	"FuncArnGamesAdder:1 minute" \
 	"FuncArnMapGamesAdder:1 minute" \
+	"FuncArnGameEventsAdder:1 minute" \
 	"FuncArnPlayerGameCountsUpdater:1 minute" \
 	"FuncArnPlayerGameCountsRefresher:1 hour" \
 )

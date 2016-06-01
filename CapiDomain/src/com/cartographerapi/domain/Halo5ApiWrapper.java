@@ -21,6 +21,7 @@ public class Halo5ApiWrapper {
     private final String URL_CUSTOM_SERVICE_RECORD = "https://www.haloapi.com/stats/h5/servicerecords/custom?players=%s";
     private final String URL_CUSTOM_GAMES = "https://www.haloapi.com/stats/h5/players/%s/matches?modes=custom&start=%s&count=%s";
     private final String URL_CUSTOM_MATCH = "https://www.haloapi.com/stats/h5/custom/matches/%s";
+    private final String URL_CUSTOM_GAME_EVENTS = "https://www.haloapi.com/stats/h5/matches/%s/events";
 
     /**
      * Get the details on a Match.
@@ -31,6 +32,17 @@ public class Halo5ApiWrapper {
      */
     public String match(String matchId) throws IOException {
         return call(String.format(URL_CUSTOM_MATCH, URLEncoder.encode(matchId, "UTF-8")));
+    }
+
+    /**
+     * Get the events of a Match.
+     * 
+     * @param matchId
+     * @return
+     * @throws IOException
+     */
+    public String matchEvents(String matchId) throws IOException {
+        return call(String.format(URL_CUSTOM_GAME_EVENTS, URLEncoder.encode(matchId, "UTF-8")));
     }
 
     /**

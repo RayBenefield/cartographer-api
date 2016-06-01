@@ -72,7 +72,7 @@ echo
 ##################################################
 
 ##### TODO: Move Domain Stacks to JSON file and use JQ for parsing
-DomainStacks=( "Core" "Games" "MapGames" "PlayerGames" "PlayerGameCounts" )
+DomainStacks=( "Core" "Games" "GameEvents" "MapGames" "PlayerGames" "PlayerGameCounts" )
 for Stack in "${DomainStacks[@]}"
 do
 	if aws cloudformation describe-stacks --stack-name Capi-${Stack} > /dev/null 2>&1; then

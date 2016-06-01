@@ -2,13 +2,17 @@ package com.cartographerapi.domain.game;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.document.Item;
-import com.cartographerapi.domain.JsonNodeMarshaller;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMarshalling;
+
+import com.cartographerapi.domain.JsonNodeMarshaller;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMarshalling;
+
 import java.io.IOException;
+
 import java.util.Map;
 import java.util.LinkedHashMap;
 

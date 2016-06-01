@@ -41,6 +41,14 @@
         "FuncArnMapGamesBulkGetter": {
             "Type": "String",
             "Description": "Arn for the MapGamesBulkGetter."
+        },
+        "FuncArnGameEventsBulkGetter": {
+            "Type": "String",
+            "Description": "Arn for the GameEventsBulkGetter."
+        },
+        "FuncArnGameEventsGetter": {
+            "Type": "String",
+            "Description": "Arn for the GameEventsGetter."
         }
     },
     "Resources": {
@@ -227,6 +235,44 @@
                         { "Fn::Join": [ "", [
                             { "Ref": "CAPI" },
                             "/*/POST/map/game"
+                        ] ] }
+                    ] ]
+                }
+            }
+        },
+        "CapiToGameEventsBulkGetter": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+                "Action": "lambda:*",
+                "FunctionName": { "Ref": "FuncArnGameEventsBulkGetter" },
+                "Principal": "apigateway.amazonaws.com",
+                "SourceArn": {
+                    "Fn::Join": [ ":", [
+                        "arn:aws:execute-api",
+                        { "Ref": "AWS::Region" },
+                        { "Ref": "AWS::AccountId" },
+                        { "Fn::Join": [ "", [
+                            { "Ref": "CAPI" },
+                            "/*/POST/game/event"
+                        ] ] }
+                    ] ]
+                }
+            }
+        },
+        "CapiToGameEventsGetter": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+                "Action": "lambda:*",
+                "FunctionName": { "Ref": "FuncArnGameEventsGetter" },
+                "Principal": "apigateway.amazonaws.com",
+                "SourceArn": {
+                    "Fn::Join": [ ":", [
+                        "arn:aws:execute-api",
+                        { "Ref": "AWS::Region" },
+                        { "Ref": "AWS::AccountId" },
+                        { "Fn::Join": [ "", [
+                            { "Ref": "CAPI" },
+                            "/*/GET/game/*/event"
                         ] ] }
                     ] ]
                 }

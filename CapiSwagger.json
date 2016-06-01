@@ -9,6 +9,105 @@
         "https"
     ],
     "paths": {
+        "/game/event": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "200 response",
+                        "schema": {
+                            "$ref": "#/definitions/Empty"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ],
+                "x-amazon-apigateway-integration": {
+                    "responses": {
+                        "default": {
+                            "statusCode": "200"
+                        }
+                    },
+                    "requestTemplates": {
+                        "application/json": "[\n    #foreach($MatchId in $input.path('$'))\n    #if($MatchId.matchId != \"\")\n    {\n        \"MatchId\": \"$MatchId.matchId\"\n    }\n    #elseif($MatchId.MatchId != \"\")\n    {\n        \"MatchId\": \"$MatchId.MatchId\"\n    }\n    #else\n    {\n        \"MatchId\": \"$MatchId\"\n    }\n    #end\n    #if($foreach.hasNext),#end\n    #end\n]"
+                    },
+                    "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:789201490085:function:GameEventsBulkGetter/invocations",
+                    "passthroughBehavior": "when_no_templates",
+                    "httpMethod": "POST",
+                    "type": "aws"
+                }
+            }
+        },
+        "/game/{MatchId}/event": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "MatchId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "MatchId",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/MatchId"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "200 response",
+                        "schema": {
+                            "$ref": "#/definitions/Empty"
+                        }
+                    },
+                    "404": {
+                        "description": "404 response"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ],
+                "x-amazon-apigateway-integration": {
+                    "responses": {
+                        "default": {
+                            "statusCode": "200"
+                        },
+                        ".*404 Not Found.*": {
+                            "statusCode": "404",
+                            "responseTemplates": {
+                                "application/json": "{\n    \"statusCode\": 404,\n    \"message\": \"$input.path('$.errorMessage')\"\n}"
+                            }
+                        }
+                    },
+                    "requestTemplates": {
+                        "application/json": "#set($mi = $input.params('MatchId'))\n{\n    \"MatchId\" : \"$util.urlDecode($mi)\"\n}"
+                    },
+                    "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:789201490085:function:GameEventsGetter/invocations",
+                    "passthroughBehavior": "when_no_match",
+                    "httpMethod": "POST",
+                    "type": "aws"
+                }
+            }
+        },
         "/game": {
             "post": {
                 "consumes": [

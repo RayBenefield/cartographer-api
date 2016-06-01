@@ -1,0 +1,172 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Parameters": {
+        "Stage" : {
+            "Type" : "String",
+            "Default" : "test",
+            "Description" : "The environment/stage for this stack."
+        }
+    },
+    "Resources": {
+        "GamesForGameEvents": {
+            "Type": "AWS::SQS::Queue",
+            "Properties": {
+                "QueueName": "Capi-GamesForGameEvents"
+            }
+        },
+        "GamesForGameEventsPolicy": {
+            "Type" : "AWS::SQS::QueuePolicy",
+            "Properties" : {
+                "PolicyDocument" : {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": "*",
+                            "Action": "SQS:*",
+                            "Resource": { "Fn::GetAtt": [ "GamesForGameEvents", "Arn" ] }
+                        }
+                    ]
+                },
+                "Queues" : [ { "Ref": "GamesForGameEvents" } ]
+            }
+        },
+        "CartographerApiLambdaRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Sid": "",
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": "lambda.amazonaws.com"
+                            },
+                            "Action": "sts:AssumeRole"
+                        }
+                    ]
+                },
+                "ManagedPolicyArns": [
+                    "arn:aws:iam::789201490085:policy/lambda_basic_execution_role_policy_7889af1c-44c9-4841-8228-b63a2a89050b",
+                    "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
+                    "arn:aws:iam::aws:policy/AmazonSNSFullAccess"
+                ]
+            }
+        },
+        "GameEventsAdder": {
+            "Type": "AWS::Lambda::Function",
+            "DependsOn": [ "GamesForGameEvents" ],
+            "Properties": {
+                "FunctionName": "GameEventsAdder",
+                "Description": "Add game events to the cache.",
+                "Runtime": "java8",
+                "Handler": "com.cartographerapi.functions.GameEventsAdder",
+                "Code": {
+                    "S3Bucket": "cartographer-api-lambda-code",
+                    "S3Key": "GameEventsAdder-0.0.1-SNAPSHOT.jar"
+                },
+                "Role": { "Fn::GetAtt": ["CartographerApiLambdaRole", "Arn"] },
+                "Timeout": "300",
+                "MemorySize": "512"
+            }
+        },
+        "GameEvents": {
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+                "TableName": "GameEvents",
+                "ProvisionedThroughput": {
+                    "ReadCapacityUnits": 1,
+                    "WriteCapacityUnits": 1
+                },
+                "AttributeDefinitions": [
+                    {
+                        "AttributeName": "MatchId",
+                        "AttributeType": "S"
+                    }
+                ],
+                "KeySchema": [
+                    {
+                        "AttributeName": "MatchId",
+                        "KeyType": "HASH"
+                    }
+                ],
+                "StreamSpecification": {
+                    "StreamViewType": "NEW_AND_OLD_IMAGES"
+                }
+            }
+        },
+        "GameEventsGetter": {
+            "Type": "AWS::Lambda::Function",
+            "DependsOn": [ "GameEvents" ],
+            "Properties": {
+                "FunctionName": "GameEventsGetter",
+                "Description": "Get the GameEvents from the cache.",
+                "Runtime": "java8",
+                "Handler": "com.cartographerapi.functions.GameEventsGetter",
+                "Code": {
+                    "S3Bucket": "cartographer-api-lambda-code",
+                    "S3Key": "GameEventsGetter-0.0.1-SNAPSHOT.jar"
+                },
+                "Role": { "Fn::GetAtt": ["CartographerApiLambdaRole", "Arn"] },
+                "Timeout": "15",
+                "MemorySize": "512"
+            }
+        },
+        "GameEventsBulkGetter": {
+            "Type": "AWS::Lambda::Function",
+            "DependsOn": [ "GameEvents" ],
+            "Properties": {
+                "FunctionName": "GameEventsBulkGetter",
+                "Description": "Get a bulk of game events.",
+                "Runtime": "java8",
+                "Handler": "com.cartographerapi.functions.GameEventsBulkGetter",
+                "Code": {
+                    "S3Bucket": "cartographer-api-lambda-code",
+                    "S3Key": "GameEventsBulkGetter-0.0.1-SNAPSHOT.jar"
+                },
+                "Role": { "Fn::GetAtt": ["CartographerApiLambdaRole", "Arn"] },
+                "Timeout": "15",
+                "MemorySize": "512"
+            }
+        }
+    },
+    "Outputs": {
+        "QueueArnGamesForGameEvents": {
+            "Description": "The ARN for the GamesForGameEvents queue.",
+            "Value": { "Fn::GetAtt" : [ "GamesForGameEvents", "Arn" ] }
+        },
+        "QueueUrlGamesForGameEvents": {
+            "Description": "The url for the GamesForGameEvents queue.",
+            "Value": { "Ref": "GamesForGameEvents" }
+        },
+        "QueueNameGamesForGameEvents": {
+            "Description": "The name for the GamesForGameEvents queue.",
+            "Value": { "Fn::GetAtt" : [ "GamesForGameEvents", "QueueName" ] }
+        },
+        "FuncArnGameEventsAdder": {
+            "Description": "The ARN for the GameEventsAdder function.",
+            "Value": { "Fn::GetAtt" : [ "GameEventsAdder", "Arn" ] }
+        },
+        "FuncIdGameEventsAdder": {
+            "Description": "The logical ID for the GameEventsAdder function.",
+            "Value": { "Ref": "GameEventsAdder" }
+        },
+        "FuncArnGameEventsGetter": {
+            "Description": "The ARN for the GameEventsGetter function.",
+            "Value": { "Fn::GetAtt" : [ "GameEventsGetter", "Arn" ] }
+        },
+        "FuncIdGameEventsGetter": {
+            "Description": "The logical ID for the GameEventsGetter function.",
+            "Value": { "Ref": "GameEventsGetter" }
+        },
+        "FuncArnGameEventsBulkGetter": {
+            "Description": "The ARN for the GameEventsBulkGetter function.",
+            "Value": { "Fn::GetAtt" : [ "GameEventsBulkGetter", "Arn" ] }
+        },
+        "FuncIdGameEventsBulkGetter": {
+            "Description": "The logical ID for the GameEventsBulkGetter function.",
+            "Value": { "Ref": "GameEventsBulkGetter" }
+        }
+    }
+}
