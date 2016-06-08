@@ -1,4 +1,5 @@
 .invokeResults
+.DS_Store
 
 .metadata
 */**/bin/
