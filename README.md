@@ -8,7 +8,7 @@ This extension of the Halo API will add the ability to access User Generated Con
 
 This image represents the current systems in place that make CAPI work. Anything in RED is currently not implemented.
 
-![CAPI Architecture](https://bytebucket.org/GodlyPerfection/cartographer-api/raw/045916f1cc464237d65fc37c75819108aee3b2cd/images/CapiArchitecture.jpg "CAPI Architecture")
+![CAPI Architecture](http://i.imgur.com/FIFwgYv.jpg "CAPI Architecture")
 
 # Architecture Goals
 
